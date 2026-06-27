@@ -44,7 +44,8 @@ export async function GET(request: NextRequest) {
       totalPages: Math.ceil(total / limit),
       page,
     });
-  } catch {
+  } catch (e) {
+    console.error("GET /api/properties error:", e);
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }

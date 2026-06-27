@@ -4,6 +4,11 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Icon, faArrowRight } from "@/components/icons";
 
+export const metadata = {
+  title: "Services & Activités à Marrakech",
+  description: "Conciergerie, gastronomie, transport, bien-être, sports, excursions dans le désert et plus encore. Tous nos services pour un séjour inoubliable à Marrakech.",
+};
+
 const services = [
   { title: "Votre séjour", href: "/service/votre-sejour", image: "/images/activities/sonotherapie.webp", category: "Conciergerie" },
   { title: "Vos repas", href: "/service/vos-repas", image: "/images/activities/voiture-luxe.webp", category: "Gastronomie" },

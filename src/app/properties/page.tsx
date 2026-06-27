@@ -3,6 +3,11 @@ import PropertiesPageClient from "./PropertiesPageClient";
 
 export const dynamic = "force-dynamic";
 
+export const metadata = {
+  title: "Propriétés à Marrakech",
+  description: "Découvrez nos villas et propriétés de luxe à Marrakech. Filtrez par prix, nombre de chambres, quartier et plus. Service de conciergerie premium.",
+};
+
 const ITEMS_PER_PAGE = 9;
 
 export default async function PropertiesPage({

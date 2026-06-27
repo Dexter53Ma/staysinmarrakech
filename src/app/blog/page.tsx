@@ -2,6 +2,11 @@ import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
+export const metadata = {
+  title: "Blog — Évasion",
+  description: "Conseils, idées et inspirations pour votre séjour à Marrakech : villas de luxe, immobilier, activités, événements et découverte de la ville rouge.",
+};
+
 const articles = [
   {
     title: "Plongée au cœur de nos 10 villas de luxe les plus somptueuses au Maroc",
