@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { usePathname, useRouter } from "next/navigation";
 import { createSupabaseBrowser } from "@/lib/supabase-browser";
 import {
@@ -12,7 +13,7 @@ import {
   FileText,
   Star,
   Mail,
-  Image,
+  Image as ImageIcon,
   MapPin,
   File,
   Bell,
@@ -52,7 +53,7 @@ const NAV_SECTIONS: { title?: string; items: NavItem[] }[] = [
     items: [
       { label: "Témoignages", href: "/admin/testimonials", icon: Star },
       { label: "Contacts", href: "/admin/contacts", icon: Mail },
-      { label: "Slides Hero", href: "/admin/hero-slides", icon: Image },
+      { label: "Slides Hero", href: "/admin/hero-slides", icon: ImageIcon },
       { label: "Locations", href: "/admin/locations", icon: MapPin },
       { label: "Pages", href: "/admin/pages", icon: File },
     ],
@@ -126,11 +127,18 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       >
         <div className="flex items-center h-16 px-5 border-b border-gray-100">
           <Link href="/admin" className="flex items-center gap-3">
-            <div className="w-9 h-9 bg-gray-900 rounded-xl flex items-center justify-center">
-              <span className="text-white font-bold text-sm">S</span>
+            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center overflow-hidden shrink-0">
+              <Image
+                src="/images/logo.png"
+                alt="StaysInMarrakech"
+                width={40}
+                height={40}
+                className="object-contain"
+                priority
+              />
             </div>
-            <div>
-              <p className="font-bold text-sm text-gray-900 leading-tight">StaysInMarrakech</p>
+            <div className="min-w-0">
+              <p className="font-bold text-sm text-gray-900 leading-tight truncate">StaysInMarrakech</p>
               <p className="text-[11px] text-gray-400 leading-tight">Administration</p>
             </div>
           </Link>
