@@ -114,6 +114,25 @@ export default function PropertiesPageClient({
             </div>
           </div>
         </section>
+
+        <section className="bg-gray-50 py-12 md:py-16">
+          <div className="max-w-[900px] mx-auto px-4">
+            <h2 className="text-2xl font-bold text-[#34495e] mb-4">
+              Villas de luxe à Marrakech — Trouvez la propriété idéale
+            </h2>
+            <div className="space-y-4 text-gray-600 leading-relaxed">
+              <p>
+                Explorez notre catalogue complet de villas et propriétés de luxe à Marrakech. Chaque bien est soigneusement sélectionné pour son emplacement privilégié, son architecture distinctive et ses prestations haut de gamme. Que vous cherchiez une villa avec piscine chauffée dans la Palmeraie, un riad rénové dans la Médina ou un domaine de charme près du golf Amelkis, notre équipe vous accompagne à chaque étape.
+              </p>
+              <p>
+                Filtrez vos résultats par type de propriété, budget, nombre de chambres ou quartier. Nous proposons des villas pour toutes les occasions : séjours en famille, vacances entre amis, mariages d&apos;exception, séminaires d&apos;entreprise ou investissement immobilier. Nos biens sont situés dans les quartiers les plus prisés — <strong>Gueliz</strong>, <strong>La Palmeraie</strong>, <strong>Route de l&apos;Ourika</strong>, <strong>Targa</strong>, <strong>Amelkis</strong> et <strong>Sidi Youssef Ben Ali</strong>.
+              </p>
+              <p>
+                Chaque villa dispose d&apos;une page détaillée avec galerie photos, description complète, tarifs, disponibilité en temps réel et avis de nos clients. Vous pouvez directement effectuer une demande de réservation en ligne ou contacter notre équipe pour un conseil personnalisé.
+              </p>
+            </div>
+          </div>
+        </section>
       </main>
       <Footer />
     </div>

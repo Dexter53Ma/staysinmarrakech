@@ -17,6 +17,7 @@ const rubik = Rubik({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL("https://staysinmarrakech.netlify.app"),
   title: {
     default: "Location et vente de villas de luxe à Marrakech - StaysInMarrakech",
     template: "%s | StaysInMarrakech",
