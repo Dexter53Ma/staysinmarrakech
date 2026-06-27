@@ -78,8 +78,13 @@ export default function RootLayout({
       className={`${raleway.variable} ${rubik.variable} h-full antialiased`}
     >
       <body className="min-h-full flex flex-col font-sans">
+        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[9999] focus:bg-[#0d47a1] focus:text-white focus:px-4 focus:py-2 focus:rounded">
+          Aller au contenu principal
+        </a>
         <SettingsProvider>
-          {children}
+          <div id="main-content" className="flex-1 flex flex-col">
+            {children}
+          </div>
           <FloatingContact />
         </SettingsProvider>
       </body>

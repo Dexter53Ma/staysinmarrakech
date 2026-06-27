@@ -755,6 +755,24 @@ export default function ServiceDetail({ service }: { service: ServiceDetailData 
                 </div>
               </div>
             )}
+
+            {/* Rich SEO Content */}
+            <div className="mt-10 pt-8 border-t border-gray-100">
+              <h3 className="text-xl font-bold text-[#34495e] mb-4">
+                Pourquoi choisir StaysInMarrakech pour {service.title.toLowerCase()} ?
+              </h3>
+              <div className="space-y-4 text-gray-600 leading-relaxed text-sm md:text-base">
+                <p>
+                  Depuis 2014, StaysInMarrakech accompagne les voyageurs les plus exigeants dans la recherche de prestations d&apos;exception à Marrakech. Notre équipe locale, composée de professionnels passionnés, connaît parfaitement la ville et ses secrets. Nous sélectionnons rigoureusement nos partenaires et fournisseurs pour vous garantir une expérience sans compromis.
+                </p>
+                <p>
+                  Que vous soyez en famille, en couple ou entre amis, nous adaptons chaque prestation à vos envies et à votre budget. Notre service de conciergerie est disponible 7 jours sur 7, par téléphone et WhatsApp, pour répondre à toutes vos demandes en temps réel. Avec plus de 1000 clients satisfaits et une note moyenne de 4.8/5, nous sommes fiers de la confiance que nous accordent les voyageurs du monde entier.
+                </p>
+                <p>
+                  Marrakech est une ville qui se vit pleinement. De la Palmeraie à l&apos;Atlas, de la Médina à Gueliz, chaque quartier a son caractère. Nos conseils d&apos;initiés vous aideront à découvrir les meilleures adresses, les moments forts et les expériences incontournables pour un séjour mémorable dans la ville rouge.
+                </p>
+              </div>
+            </div>
           </div>
 
           {/* Sidebar */}

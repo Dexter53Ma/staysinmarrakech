@@ -9,6 +9,8 @@ export interface BlogPost {
   image: string;
   date: string;
   category: string;
+  author?: string;
+  authorRole?: string;
 }
 
 export const blogPosts: Record<string, BlogPost> = {
@@ -19,6 +21,8 @@ export const blogPosts: Record<string, BlogPost> = {
     image: "/images/blog/marrakech-travel.jpg",
     date: "15 Janvier 2024",
     category: "Voyage",
+    author: "Cyrille",
+    authorRole: "Fondateur de StaysInMarrakech",
     content: `
 Marrakech, surnommée la « Ville Rouge » pour ses remparts en terre cuite, est une destination qui fascine voyageurs du monde entier. Entre palais millénaires, souks grouillants et jardins luxuriants, voici les 10 choses incontournables à faire lors de votre séjour.
 
@@ -62,6 +66,8 @@ Marrakech, surnommée la « Ville Rouge » pour ses remparts en terre cuite, est
     image: "/images/blog/marrakech-gastronomie.jpg",
     date: "20 Décembre 2023",
     category: "Gastronomie",
+    author: "Amine",
+    authorRole: "Rédacteur culinaire",
     content: `
 La gastronomie marocaine est reconnue mondialement pour sa richesse et sa diversité. À Marrakech, capitale culinaire du royaume, chaque repas est une aventure sensorielle. Découvrez notre guide complet pour goûter aux saveurs authentiques de la ville rouge.
 
@@ -95,6 +101,8 @@ La gastronomie marocaine est reconnue mondialement pour sa richesse et sa divers
     image: "/images/blog/marrakech-palmeraie.jpg",
     date: "10 Novembre 2023",
     category: "Découverte",
+    author: "Cyrille",
+    authorRole: "Fondateur de StaysInMarrakech",
     content: `
 S'étendant sur plus de 13 000 hectares au nord de Marrakech, la Palmeraie est l'un des plus vastes oasis du monde. Ses 100 000 palmiers-dattiers, dont certains centenaires, créent un paysage vert saisissant au cœur de la terre aride. Découvrez cette merveille naturelle qui a façonné l'histoire de la ville rouge.
 
@@ -125,6 +133,8 @@ S'étendant sur plus de 13 000 hectares au nord de Marrakech, la Palmeraie est l
     image: "/images/blog/marrakech-villa.jpg",
     date: "5 Octobre 2023",
     category: "Voyage",
+    author: "Cyrille",
+    authorRole: "Fondateur de StaysInMarrakech",
     content: `
 Marrakech est une destination idéale pour un séjour en famille. Entre les activités adaptées aux petits et grands, le cadre luxuriant des villas et la richesse culturelle de la ville, tout est réuni pour des vacances mémorables. Voici notre guide complet pour un séjour en famille à Marrakech.
 
@@ -158,6 +168,8 @@ Marrakech est une destination idéale pour un séjour en famille. Entre les acti
     image: "/images/blog/marrakech-coucher-soleil.jpg",
     date: "15 Septembre 2023",
     category: "Voyage",
+    author: "Amine",
+    authorRole: "Rédacteur voyage",
     content: `
 Marrakech est souvent perçue comme une destination de luxe, mais il tout à fait possible de découvrir ses merveilles avec un budget modeste. Voici nos conseils et astuces pour profiter de la ville rouge sans se ruiner.
 
@@ -186,6 +198,8 @@ Marrakech est souvent perçue comme une destination de luxe, mais il tout à fai
     image: "/images/blog/marrakech-villa-luxe.jpg",
     date: "1 Septembre 2023",
     category: "Conseils",
+    author: "Cyrille",
+    authorRole: "Fondateur de StaysInMarrakech",
     content: `
 Louer une villa de luxe à Marrakech est de plus en plus populaire auprès des voyageurs exigeants. Comparée à un hôtel, même de grande catégorie, la villa offre une expérience unique qui combine intimité, espace et service personnalisé. Voici pourquoi c'est le choix idéal pour un séjour d'exception.
 
@@ -217,6 +231,8 @@ Louer une villa de luxe à Marrakech est de plus en plus populaire auprès des v
     image: "/images/blog/marrakech-evenement.jpg",
     date: "20 Août 2023",
     category: "Événements",
+    author: "Cyrille",
+    authorRole: "Fondateur de StaysInMarrakech",
     content: `
 Marrakech s'est imposée comme l'une des destinations les plus prisées au monde pour l'organisation d'événements privés et professionnels. Cadre somptueux, infrastructures de luxe, savoir-faire des organisateurs locaux et cadre fiscal avantageux, tout converge pour faire de la ville rouge le lieu idéal de votre prochain événement.
 
@@ -244,6 +260,8 @@ Marrakech s'est imposée comme l'une des destinations les plus prisées au monde
     image: "/images/blog/marrakech-activites.jpg",
     date: "10 Août 2023",
     category: "Activités",
+    author: "Amine",
+    authorRole: "Rédacteur activités",
     content: `
 Marrakech est une ville qui ne manque jamais d'activités à proposer. Des sports d'aventure dans les paysages spectaculaires de la région aux moments de détente dans les hammams et spas les plus raffinés, chaque jour est une nouvelle aventure. Découvrez notre sélection des meilleures activités.
 
@@ -287,6 +305,8 @@ Marrakech est une ville qui ne manque jamais d'activités à proposer. Des sport
     image: "/images/blog/marrakech-plage.jpg",
     date: "1 Août 2023",
     category: "Bien-être",
+    author: "Cyrille",
+    authorRole: "Fondateur de StaysInMarrakech",
     content: `
 Le hammam est bien plus qu'un simple bain turc : c'est un rituel ancestral au cœur de la culture marocaine. À Marrakech, l'expérience du hammam est une immersion dans une tradition vieille de plusieurs siècles. Découvrez tout ce qu'il faut savoir pour profiter pleinement de cette expérience unique.
 
@@ -320,6 +340,8 @@ Le hammam est bien plus qu'un simple bain turc : c'est un rituel ancestral au c�
     image: "/images/blog/marrakech-gastronomie.jpg",
     date: "15 Juillet 2023",
     category: "Découverte",
+    author: "Amine",
+    authorRole: "Rédacteur découverte",
     content: `
 Les souks et marchés de Marrakech constituent l'un des plus grands labyrinthes commerciaux du monde. Chaque ruelle regorge d'artisans, de commerçants et de marchands proposant des produits d'exception. Découvrez notre guide complet pour vous y retrouver et acquérir de véritables trésors.
 
@@ -400,6 +422,23 @@ export default function BlogPostDetail({ post }: { post: BlogPost }) {
                 [&_p]:text-base [&_p]:mb-6 [&_p]:leading-8"
               dangerouslySetInnerHTML={{ __html: post.content }}
             />
+
+            {post.author && (
+              <div className="mt-12 pt-8 border-t border-gray-200">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 bg-[#0d47a1] rounded-full flex items-center justify-center text-white font-bold text-xl shrink-0">
+                    {post.author.charAt(0)}
+                  </div>
+                  <div>
+                    <p className="font-semibold text-[#34495e]">{post.author}</p>
+                    {post.authorRole && (
+                      <p className="text-sm text-gray-500">{post.authorRole}</p>
+                    )}
+                    <p className="text-xs text-gray-400 mt-1">StaysInMarrakech — Expert en villas de luxe à Marrakech</p>
+                  </div>
+                </div>
+              </div>
+            )}
           </article>
 
           <aside className="lg:w-[300px] shrink-0">
