@@ -187,7 +187,7 @@ export default function PropertyDetailClient({
   const [submitMessage, setSubmitMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [showMap, setShowMap] = useState(false);
 
-  const isRental = property.pricePeriod === "nightly" || !!property.minStay || !!property.checkInTime;
+  const isRental = property.pricePeriod === "nightly" || property.pricePeriod === "weekly" || property.pricePeriod === "monthly" || !!property.minStay || !!property.checkInTime;
 
   const features: string[] = useMemo(() => {
     if (Array.isArray(property.features)) return property.features;
@@ -485,7 +485,6 @@ export default function PropertyDetailClient({
                 </div>
               )}
 
-              {isRental && (
               <div>
                 <h2 className="text-xl font-bold text-gray-900 mb-4">Disponibilité</h2>
                 <div className="bg-gray-50 rounded-xl p-4 inline-block">
@@ -516,7 +515,6 @@ export default function PropertyDetailClient({
                   </span>
                 </div>
               </div>
-              )}
 
               {property.latitude && property.longitude && (
                 <div>

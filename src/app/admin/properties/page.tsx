@@ -1,10 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -17,15 +15,11 @@ import {
   DialogTrigger,
   DialogClose,
 } from "@/components/ui/dialog";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import { Plus, Search, Edit, Trash2, Eye, ChevronLeft, ChevronRight } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin";
+import { StatusBadge } from "@/components/admin";
+import { EmptyState } from "@/components/admin";
+import { TableSkeleton } from "@/components/admin";
+import { Plus, Search, Edit, Trash2, Eye, ChevronLeft, ChevronRight, Home } from "lucide-react";
 
 interface PropertyImage {
   url: string;
@@ -73,10 +67,7 @@ export default function PropertiesPage() {
 
   const fetchProperties = useCallback(async () => {
     setLoading(true);
-    const params = new URLSearchParams({
-      page: page.toString(),
-      limit: "10",
-    });
+    const params = new URLSearchParams({ page: page.toString(), limit: "10" });
     if (typeFilter !== "ALL") params.set("type", typeFilter);
     if (statusFilter !== "ALL") params.set("status", statusFilter);
     if (search) params.set("search", search);
@@ -90,24 +81,25 @@ export default function PropertiesPage() {
   }, [page, typeFilter, statusFilter, search]);
 
   useEffect(() => {
+    let cancelled = false;
     const load = async () => {
       setLoading(true);
-      const params = new URLSearchParams({
-        page: page.toString(),
-        limit: "10",
-      });
+      const params = new URLSearchParams({ page: page.toString(), limit: "10" });
       if (typeFilter !== "ALL") params.set("type", typeFilter);
       if (statusFilter !== "ALL") params.set("status", statusFilter);
       if (search) params.set("search", search);
 
       const res = await fetch(`/api/properties?${params}`);
       const data = await res.json();
-      setProperties(data.properties || []);
-      setTotal(data.total || 0);
-      setTotalPages(data.totalPages || 1);
-      setLoading(false);
+      if (!cancelled) {
+        setProperties(data.properties || []);
+        setTotal(data.total || 0);
+        setTotalPages(data.totalPages || 1);
+        setLoading(false);
+      }
     };
     load();
+    return () => { cancelled = true; };
   }, [page, typeFilter, statusFilter, search]);
 
   const handleDelete = async (id: string) => {
@@ -119,220 +111,181 @@ export default function PropertiesPage() {
     return new Intl.NumberFormat("fr-FR", { style: "currency", currency }).format(price);
   };
 
-  const typeBadgeColor = (type: string) => {
-    const colors: Record<string, string> = {
-      VILLA: "bg-purple-100 text-purple-800",
-      APARTMENT: "bg-blue-100 text-blue-800",
-      HOUSE: "bg-green-100 text-green-800",
-      LAND: "bg-yellow-100 text-yellow-800",
-      COMMERCIAL: "bg-red-100 text-red-800",
-    };
-    return colors[type] || "bg-gray-100 text-gray-800";
-  };
-
-  const statusBadgeColor = (status: string) => {
-    const colors: Record<string, string> = {
-      AVAILABLE: "bg-green-100 text-green-800",
-      SOLD: "bg-red-100 text-red-800",
-      RENTED: "bg-blue-100 text-blue-800",
-      PENDING: "bg-yellow-100 text-yellow-800",
-    };
-    return colors[status] || "bg-gray-100 text-gray-800";
-  };
-
-  const statusLabel = (status: string) => {
-    const labels: Record<string, string> = {
-      AVAILABLE: "Disponible",
-      SOLD: "Vendu",
-      RENTED: "Loué",
-      PENDING: "En attente",
-    };
-    return labels[status] || status;
-  };
-
   return (
-    <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Propriétés</h1>
-        <Link href="/admin/properties/new">
-          <Button>
-            <Plus className="mr-2 size-4" />
-            Nouvelle propriété
-          </Button>
-        </Link>
-      </div>
+    <div>
+      <AdminPageHeader
+        title="Propriétés"
+        description={`${total} propriété${total > 1 ? "s" : ""} au total`}
+        breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Propriétés" }]}
+        action={{ label: "Nouvelle propriété", href: "/admin/properties/new", icon: Plus }}
+      />
 
-      <Card>
-        <CardHeader>
-          <CardTitle className="text-lg">Liste des propriétés</CardTitle>
-        </CardHeader>
-        <CardContent>
-          {/* Filters */}
-          <div className="flex flex-col sm:flex-row gap-3 mb-6">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+        <div className="p-4 border-b border-gray-100">
+          <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
-              <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 size-4 text-muted-foreground" />
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
               <Input
                 placeholder="Rechercher par titre..."
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                className="pl-9"
+                className="pl-9 bg-gray-50 border-gray-200"
               />
             </div>
             <select
               value={typeFilter}
-                onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-              className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
+              className="h-10 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm outline-none focus:border-gray-400"
             >
               {PROPERTY_TYPES.map((t) => (
-                <option key={t.value} value={t.value}>
-                  {t.label}
-                </option>
+                <option key={t.value} value={t.value}>{t.label}</option>
               ))}
             </select>
             <select
               value={statusFilter}
-                onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-              className="h-8 rounded-lg border border-input bg-transparent px-2.5 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
+              onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
+              className="h-10 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm outline-none focus:border-gray-400"
             >
               {PROPERTY_STATUSES.map((s) => (
-                <option key={s.value} value={s.value}>
-                  {s.label}
-                </option>
+                <option key={s.value} value={s.value}>{s.label}</option>
               ))}
             </select>
           </div>
+        </div>
 
-          {/* Table */}
-          {loading ? (
-            <div className="text-center py-8 text-muted-foreground">Chargement...</div>
-          ) : properties.length === 0 ? (
-            <div className="text-center py-8 text-muted-foreground">Aucune propriété trouvée</div>
-          ) : (
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Image</TableHead>
-                  <TableHead>Titre</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Statut</TableHead>
-                  <TableHead>Prix</TableHead>
-                  <TableHead>Vues</TableHead>
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {properties.map((property) => (
-                  <TableRow key={property.id}>
-                    <TableCell>
-                      <div className="w-16 h-12 rounded-lg overflow-hidden bg-gray-100">
-                        {property.images[0] ? (
-                          <Image
-                            src={property.images[0].url}
-                            alt={property.title}
-                            width={64}
-                            height={48}
-                            unoptimized
-                            className="w-full h-full object-cover"
-                          />
-                        ) : (
-                          <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">
-                            Aucune
-                          </div>
-                        )}
-                      </div>
-                    </TableCell>
-                    <TableCell className="font-medium">{property.title}</TableCell>
-                    <TableCell>
-                      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${typeBadgeColor(property.type)}`}>
-                        {property.type}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <span className={`inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ${statusBadgeColor(property.status)}`}>
-                        {statusLabel(property.status)}
-                      </span>
-                    </TableCell>
-                    <TableCell>{formatPrice(property.price, property.currency)}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-1 text-muted-foreground">
-                        <Eye className="size-3.5" />
-                        {property._count.views}
-                      </div>
-                    </TableCell>
-                    <TableCell className="text-right">
-                      <div className="flex items-center justify-end gap-1">
-                        <Button
-                          variant="ghost"
-                          size="icon-sm"
-                          onClick={() => router.push(`/admin/properties/${property.id}/edit`)}
-                        >
-                          <Edit className="size-4" />
-                        </Button>
-                        <Dialog>
-                          <DialogTrigger
-                            render={<Button variant="ghost" size="icon-sm" />}
+        {loading ? (
+          <div className="p-6">
+            <TableSkeleton rows={5} cols={6} />
+          </div>
+        ) : properties.length === 0 ? (
+          <EmptyState
+            icon={Home}
+            title="Aucune propriété"
+            description="Commencez par ajouter votre première propriété."
+            action={{ label: "Ajouter une propriété", href: "/admin/properties/new" }}
+          />
+        ) : (
+          <>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b border-gray-100">
+                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Image</th>
+                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Titre</th>
+                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Type</th>
+                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Statut</th>
+                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Prix</th>
+                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Vues</th>
+                    <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-gray-50">
+                  {properties.map((property) => (
+                    <tr key={property.id} className="hover:bg-gray-50/50 transition-colors">
+                      <td className="px-6 py-3">
+                        <div className="w-16 h-12 rounded-xl overflow-hidden bg-gray-100">
+                          {property.images[0] ? (
+                            <Image
+                              src={property.images[0].url}
+                              alt={property.title}
+                              width={64}
+                              height={48}
+                              unoptimized
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">
+                              —
+                            </div>
+                          )}
+                        </div>
+                      </td>
+                      <td className="px-6 py-3">
+                        <p className="font-medium text-sm text-gray-900">{property.title}</p>
+                      </td>
+                      <td className="px-6 py-3">
+                        <StatusBadge status={property.type} />
+                      </td>
+                      <td className="px-6 py-3">
+                        <StatusBadge status={property.status} />
+                      </td>
+                      <td className="px-6 py-3 text-sm font-medium text-gray-900">
+                        {formatPrice(property.price, property.currency)}
+                      </td>
+                      <td className="px-6 py-3">
+                        <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                          <Eye className="size-3.5" />
+                          {property._count.views}
+                        </div>
+                      </td>
+                      <td className="px-6 py-3">
+                        <div className="flex items-center justify-end gap-1">
+                          <button
+                            onClick={() => router.push(`/admin/properties/${property.id}/edit`)}
+                            className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
                           >
-                            <Trash2 className="size-4 text-destructive" />
-                          </DialogTrigger>
-                          <DialogContent>
-                            <DialogHeader>
-                              <DialogTitle>Supprimer la propriété</DialogTitle>
-                              <DialogDescription>
-                                Êtes-vous sûr de vouloir supprimer &quot;{property.title}&quot; ? Cette action est irréversible.
-                              </DialogDescription>
-                            </DialogHeader>
-                            <DialogFooter>
-                              <DialogClose render={<Button variant="outline" />}>
-                                Annuler
-                              </DialogClose>
-                              <DialogClose
-                                render={<Button variant="destructive" />}
-                                onClick={() => handleDelete(property.id)}
-                              >
-                                Supprimer
-                              </DialogClose>
-                            </DialogFooter>
-                          </DialogContent>
-                        </Dialog>
-                      </div>
-                    </TableCell>
-                  </TableRow>
-                ))}
-              </TableBody>
-            </Table>
-          )}
-
-          {/* Pagination */}
-          {totalPages > 1 && (
-            <div className="flex items-center justify-between mt-6 pt-4 border-t">
-              <p className="text-sm text-muted-foreground">
-                {total} propriété{total > 1 ? "s" : ""} au total
-              </p>
-              <div className="flex items-center gap-2">
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={page === 1}
-                  onClick={() => setPage(page - 1)}
-                >
-                  <ChevronLeft className="size-4" />
-                </Button>
-                <span className="text-sm">
-                  Page {page} / {totalPages}
-                </span>
-                <Button
-                  variant="outline"
-                  size="sm"
-                  disabled={page === totalPages}
-                  onClick={() => setPage(page + 1)}
-                >
-                  <ChevronRight className="size-4" />
-                </Button>
-              </div>
+                            <Edit className="size-4" />
+                          </button>
+                          <Dialog>
+                            <DialogTrigger
+                              render={<button className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors" />}
+                            >
+                              <Trash2 className="size-4" />
+                            </DialogTrigger>
+                            <DialogContent>
+                              <DialogHeader>
+                                <DialogTitle>Supprimer la propriété</DialogTitle>
+                                <DialogDescription>
+                                  Êtes-vous sûr de vouloir supprimer &quot;{property.title}&quot; ? Cette action est irréversible.
+                                </DialogDescription>
+                              </DialogHeader>
+                              <DialogFooter>
+                                <DialogClose render={<Button variant="outline" />}>
+                                  Annuler
+                                </DialogClose>
+                                <DialogClose
+                                  render={<Button variant="destructive" />}
+                                  onClick={() => handleDelete(property.id)}
+                                >
+                                  Supprimer
+                                </DialogClose>
+                              </DialogFooter>
+                            </DialogContent>
+                          </Dialog>
+                        </div>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
-          )}
-        </CardContent>
-      </Card>
+
+            {totalPages > 1 && (
+              <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100">
+                <p className="text-sm text-gray-500">
+                  Page {page} sur {totalPages}
+                </p>
+                <div className="flex items-center gap-2">
+                  <button
+                    disabled={page === 1}
+                    onClick={() => setPage(page - 1)}
+                    className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <ChevronLeft className="size-4" />
+                  </button>
+                  <button
+                    disabled={page === totalPages}
+                    onClick={() => setPage(page + 1)}
+                    className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                  >
+                    <ChevronRight className="size-4" />
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+      </div>
     </div>
   );
 }

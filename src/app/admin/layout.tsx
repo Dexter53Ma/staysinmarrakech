@@ -4,7 +4,6 @@ import { useState } from "react";
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { createSupabaseBrowser } from "@/lib/supabase-browser";
-import { Icon, faBars, faTimes } from "@/components/icons";
 import {
   LayoutDashboard,
   Home,
@@ -20,31 +19,77 @@ import {
   Settings,
   History,
   LogOut,
+  Menu,
+  X,
+  ChevronRight,
+  ExternalLink,
 } from "lucide-react";
 
-const navItems = [
-  { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  { label: "Propriétés", href: "/admin/properties", icon: Home },
-  { label: "Réservations", href: "/admin/bookings", icon: CalendarDays },
-  { label: "Services", href: "/admin/services", icon: Wrench },
-  { label: "Blog", href: "/admin/blog", icon: FileText },
-  { label: "Témoignages", href: "/admin/testimonials", icon: Star },
-  { label: "Contacts", href: "/admin/contacts", icon: Mail },
-  { label: "Slides Hero", href: "/admin/hero-slides", icon: Image },
-  { label: "Locations", href: "/admin/locations", icon: MapPin },
-  { label: "Pages", href: "/admin/pages", icon: File },
-  { label: "Notifications", href: "/admin/notifications", icon: Bell },
-  { label: "Newsletter", href: "/admin/newsletter", icon: Mail },
-  { label: "Paramètres", href: "/admin/settings", icon: Settings },
-  { label: "Journal", href: "/admin/audit-log", icon: History },
+interface NavItem {
+  label: string;
+  href: string;
+  icon: typeof LayoutDashboard;
+  badge?: number;
+}
+
+const NAV_SECTIONS: { title?: string; items: NavItem[] }[] = [
+  {
+    items: [
+      { label: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    ],
+  },
+  {
+    title: "Gestion",
+    items: [
+      { label: "Propriétés", href: "/admin/properties", icon: Home },
+      { label: "Réservations", href: "/admin/bookings", icon: CalendarDays },
+      { label: "Services", href: "/admin/services", icon: Wrench },
+      { label: "Blog", href: "/admin/blog", icon: FileText },
+    ],
+  },
+  {
+    title: "Contenu",
+    items: [
+      { label: "Témoignages", href: "/admin/testimonials", icon: Star },
+      { label: "Contacts", href: "/admin/contacts", icon: Mail },
+      { label: "Slides Hero", href: "/admin/hero-slides", icon: Image },
+      { label: "Locations", href: "/admin/locations", icon: MapPin },
+      { label: "Pages", href: "/admin/pages", icon: File },
+    ],
+  },
+  {
+    title: "Système",
+    items: [
+      { label: "Notifications", href: "/admin/notifications", icon: Bell },
+      { label: "Newsletter", href: "/admin/newsletter", icon: Mail },
+      { label: "Paramètres", href: "/admin/settings", icon: Settings },
+      { label: "Journal", href: "/admin/audit-log", icon: History },
+    ],
+  },
 ];
+
+const PAGE_TITLES: Record<string, string> = {
+  "/admin": "Dashboard",
+  "/admin/properties": "Propriétés",
+  "/admin/bookings": "Réservations",
+  "/admin/services": "Services",
+  "/admin/blog": "Blog",
+  "/admin/testimonials": "Témoignages",
+  "/admin/contacts": "Contacts",
+  "/admin/hero-slides": "Slides Hero",
+  "/admin/locations": "Locations",
+  "/admin/pages": "Pages",
+  "/admin/notifications": "Notifications",
+  "/admin/newsletter": "Newsletter",
+  "/admin/settings": "Paramètres",
+  "/admin/audit-log": "Journal",
+};
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  // Skip layout for login page
   if (pathname === "/admin/login") {
     return <>{children}</>;
   }
@@ -55,89 +100,130 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
     router.push("/admin/login");
   };
 
+  const getPageTitle = () => {
+    if (PAGE_TITLES[pathname]) return PAGE_TITLES[pathname];
+    const parts = pathname.split("/").filter(Boolean);
+    if (parts.length >= 3) {
+      if (pathname.includes("/new")) return "Nouveau";
+      if (pathname.includes("/edit")) return "Modifier";
+    }
+    return "";
+  };
+
   return (
-    <div className="min-h-screen bg-gray-50 flex">
-      {/* Mobile overlay */}
+    <div className="min-h-screen bg-gray-50/50 flex">
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/50 z-40 lg:hidden"
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-64 bg-[#001122] text-white flex flex-col transition-transform lg:translate-x-0 ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[280px] bg-white border-r border-gray-200 flex flex-col transition-transform lg:translate-x-0 ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center justify-between h-16 px-4 border-b border-white/10">
-          <Link href="/admin" className="font-bold text-lg text-[#ffb000]">
-            StaysInMarrakech
+        <div className="flex items-center h-16 px-5 border-b border-gray-100">
+          <Link href="/admin" className="flex items-center gap-3">
+            <div className="w-9 h-9 bg-gray-900 rounded-xl flex items-center justify-center">
+              <span className="text-white font-bold text-sm">S</span>
+            </div>
+            <div>
+              <p className="font-bold text-sm text-gray-900 leading-tight">StaysInMarrakech</p>
+              <p className="text-[11px] text-gray-400 leading-tight">Administration</p>
+            </div>
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden text-white/70 hover:text-white"
+            className="lg:hidden ml-auto p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
           >
-            <Icon icon={faTimes} />
+            <X className="size-5" />
           </button>
         </div>
 
         <nav className="flex-1 overflow-y-auto py-4 px-3">
-          {navItems.map((item) => {
-            const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setSidebarOpen(false)}
-                className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm transition-colors mb-1 ${
-                  isActive
-                    ? "bg-[#0d47a1] text-white"
-                    : "text-white/70 hover:text-white hover:bg-white/5"
-                }`}
-              >
-                <item.icon size={18} />
-                <span>{item.label}</span>
-              </Link>
-            );
-          })}
+          {NAV_SECTIONS.map((section, si) => (
+            <div key={si} className="mb-4">
+              {section.title && (
+                <p className="px-3 mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                  {section.title}
+                </p>
+              )}
+              {section.items.map((item) => {
+                const isActive = pathname === item.href || pathname.startsWith(item.href + "/");
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all mb-0.5 ${
+                      isActive
+                        ? "bg-gray-900 text-white shadow-sm"
+                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                    }`}
+                  >
+                    <item.icon className="size-[18px]" />
+                    <span className="flex-1">{item.label}</span>
+                    {item.badge && item.badge > 0 && (
+                      <span className="px-1.5 py-0.5 text-[10px] font-bold bg-red-500 text-white rounded-full">
+                        {item.badge}
+                      </span>
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+          ))}
         </nav>
 
-        <div className="p-3 border-t border-white/10">
+        <div className="p-3 border-t border-gray-100">
+          <Link
+            href="/"
+            target="_blank"
+            className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-50 transition-colors mb-1"
+          >
+            <ExternalLink className="size-[18px]" />
+            <span>Voir le site</span>
+          </Link>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-lg text-sm text-white/70 hover:text-white hover:bg-white/5 transition-colors"
+            className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 transition-colors"
           >
-            <LogOut size={18} />
+            <LogOut className="size-[18px]" />
             <span>Déconnexion</span>
           </button>
         </div>
       </aside>
 
-      {/* Main content */}
       <div className="flex-1 flex flex-col min-w-0">
-        {/* Top bar */}
-        <header className="h-16 bg-white border-b flex items-center justify-between px-4 lg:px-6 shrink-0">
-          <button
-            onClick={() => setSidebarOpen(true)}
-            className="lg:hidden text-gray-600 hover:text-gray-900"
-          >
-            <Icon icon={faBars} className="text-xl" />
-          </button>
-          <div className="flex items-center gap-3 ml-auto">
-            <Link
-              href="/"
-              target="_blank"
-              className="text-sm text-gray-500 hover:text-[#0d47a1] transition-colors"
+        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center justify-between px-4 lg:px-6 shrink-0 sticky top-0 z-30">
+          <div className="flex items-center gap-3">
+            <button
+              onClick={() => setSidebarOpen(true)}
+              className="lg:hidden p-2 rounded-lg text-gray-500 hover:text-gray-700 hover:bg-gray-100 transition-colors"
             >
-              Voir le site
-            </Link>
+              <Menu className="size-5" />
+            </button>
+            <nav className="hidden sm:flex items-center gap-1.5 text-sm">
+              <Link href="/admin" className="text-gray-400 hover:text-gray-600 transition-colors">
+                Admin
+              </Link>
+              {pathname !== "/admin" && (
+                <>
+                  <ChevronRight className="size-3.5 text-gray-300" />
+                  <span className="text-gray-700 font-medium">{getPageTitle()}</span>
+                </>
+              )}
+            </nav>
+          </div>
+          <div className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center">
+              <span className="text-white text-xs font-bold">A</span>
+            </div>
           </div>
         </header>
 
-        {/* Page content */}
-        <main className="flex-1 p-4 lg:p-6 overflow-auto">
+        <main className="flex-1 p-4 lg:p-8 overflow-auto">
           {children}
         </main>
       </div>

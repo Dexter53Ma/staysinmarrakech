@@ -1,9 +1,22 @@
 import { prisma } from "@/lib/prisma";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Home, CalendarDays, Mail, Eye, TrendingUp, Clock } from "lucide-react";
+import { Home, CalendarDays, Mail, Eye, TrendingUp, Clock, ArrowUpRight, Plus, Wrench, FileText } from "lucide-react";
 import Link from "next/link";
 
 export const dynamic = "force-dynamic";
+
+const STATUS_LABELS: Record<string, string> = {
+  PENDING: "En attente",
+  CONFIRMED: "Confirmée",
+  REJECTED: "Refusée",
+  CANCELLED: "Annulée",
+};
+
+const STATUS_COLORS: Record<string, string> = {
+  PENDING: "bg-amber-50 text-amber-700 ring-amber-600/20",
+  CONFIRMED: "bg-emerald-50 text-emerald-700 ring-emerald-600/20",
+  REJECTED: "bg-red-50 text-red-700 ring-red-600/20",
+  CANCELLED: "bg-gray-50 text-gray-600 ring-gray-500/20",
+};
 
 export default async function AdminDashboard() {
   let totalProperties = 0;
@@ -51,113 +64,191 @@ export default async function AdminDashboard() {
   }
 
   const stats = [
-    { label: "Propriétés", value: totalProperties, icon: Home, color: "text-blue-600", href: "/admin/properties" },
-    { label: "Annonces actives", value: activeListings, icon: TrendingUp, color: "text-green-600", href: "/admin/properties" },
-    { label: "Réservations", value: totalBookings, icon: CalendarDays, color: "text-purple-600", href: "/admin/bookings" },
-    { label: "En attente", value: pendingBookings + pendingContacts, icon: Clock, color: "text-orange-600", href: "/admin/bookings" },
-    { label: "Total vues", value: totalViews, icon: Eye, color: "text-cyan-600", href: "/admin/properties" },
-    { label: "Messages", value: pendingContacts, icon: Mail, color: "text-red-600", href: "/admin/contacts" },
+    {
+      label: "Propriétés",
+      value: totalProperties,
+      icon: Home,
+      color: "from-blue-500 to-blue-600",
+      bgColor: "bg-blue-50",
+      iconColor: "text-blue-600",
+      href: "/admin/properties",
+    },
+    {
+      label: "Annonces actives",
+      value: activeListings,
+      icon: TrendingUp,
+      color: "from-emerald-500 to-emerald-600",
+      bgColor: "bg-emerald-50",
+      iconColor: "text-emerald-600",
+      href: "/admin/properties",
+    },
+    {
+      label: "Réservations",
+      value: totalBookings,
+      icon: CalendarDays,
+      color: "from-purple-500 to-purple-600",
+      bgColor: "bg-purple-50",
+      iconColor: "text-purple-600",
+      href: "/admin/bookings",
+    },
+    {
+      label: "En attente",
+      value: pendingBookings + pendingContacts,
+      icon: Clock,
+      color: "from-amber-500 to-amber-600",
+      bgColor: "bg-amber-50",
+      iconColor: "text-amber-600",
+      href: "/admin/bookings",
+      highlight: pendingBookings + pendingContacts > 0,
+    },
+    {
+      label: "Total vues",
+      value: totalViews,
+      icon: Eye,
+      color: "from-cyan-500 to-cyan-600",
+      bgColor: "bg-cyan-50",
+      iconColor: "text-cyan-600",
+      href: "/admin/properties",
+    },
+    {
+      label: "Messages",
+      value: pendingContacts,
+      icon: Mail,
+      color: "from-rose-500 to-rose-600",
+      bgColor: "bg-rose-50",
+      iconColor: "text-rose-600",
+      href: "/admin/contacts",
+      highlight: pendingContacts > 0,
+    },
+  ];
+
+  const quickActions = [
+    { label: "Nouvelle propriété", href: "/admin/properties/new", icon: Plus, color: "bg-gray-900 hover:bg-gray-800 text-white" },
+    { label: "Nouveau service", href: "/admin/services/new", icon: Wrench, color: "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50" },
+    { label: "Nouvel article", href: "/admin/blog/new", icon: FileText, color: "bg-white border border-gray-200 text-gray-700 hover:bg-gray-50" },
   ];
 
   return (
-    <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
-
+    <div className="space-y-8">
       {!dbConnected && (
-        <Card className="border-orange-200 bg-orange-50">
-          <CardContent className="p-4">
-            <p className="text-orange-800 text-sm">
-              ⚠️ Base de données non connectée. Configurez votre <code>.env</code> avec les identifiants Supabase, puis lancez <code>npx prisma db push</code>.
-            </p>
-          </CardContent>
-        </Card>
+        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-5">
+          <p className="text-amber-800 text-sm font-medium">
+            Base de données non connectée. Configurez votre <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs">.env</code> puis lancez <code className="bg-amber-100 px-1.5 py-0.5 rounded text-xs">npx prisma db push</code>.
+          </p>
+        </div>
       )}
 
-      {/* Stats grid */}
+      <div>
+        <h1 className="text-2xl font-bold text-gray-900">Dashboard</h1>
+        <p className="text-sm text-gray-500 mt-1">Vue d&apos;ensemble de votre activité</p>
+      </div>
+
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((stat) => (
           <Link key={stat.label} href={stat.href}>
-            <Card className="hover:shadow-md transition-shadow cursor-pointer">
-              <CardContent className="flex items-center gap-4 p-4">
-                <div className={`p-3 rounded-lg bg-gray-100 ${stat.color}`}>
-                  <stat.icon size={24} />
+            <div className="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md hover:border-gray-200 transition-all cursor-pointer group">
+              <div className="flex items-start justify-between">
+                <div className={`w-11 h-11 rounded-xl ${stat.bgColor} flex items-center justify-center`}>
+                  <stat.icon className={`size-5 ${stat.iconColor}`} />
                 </div>
-                <div>
-                  <p className="text-sm text-gray-500">{stat.label}</p>
-                  <p className="text-2xl font-bold">{stat.value}</p>
+                <ArrowUpRight className="size-4 text-gray-300 group-hover:text-gray-500 transition-colors" />
+              </div>
+              <div className="mt-4">
+                <p className="text-sm text-gray-500">{stat.label}</p>
+                <p className="text-3xl font-bold text-gray-900 mt-0.5">{stat.value}</p>
+              </div>
+              {stat.highlight && (
+                <div className="mt-3 flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse" />
+                  <span className="text-xs font-medium text-amber-600">Action requise</span>
                 </div>
-              </CardContent>
-            </Card>
+              )}
+            </div>
+          </Link>
+        ))}
+      </div>
+
+      <div className="flex flex-wrap gap-3">
+        {quickActions.map((action) => (
+          <Link key={action.label} href={action.href}>
+            <span className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${action.color}`}>
+              <action.icon className="size-4" />
+              {action.label}
+            </span>
           </Link>
         ))}
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent bookings */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Réservations récentes</CardTitle>
-          </CardHeader>
-          <CardContent>
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h2 className="font-semibold text-gray-900">Réservations récentes</h2>
+            <Link href="/admin/bookings" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+              Tout voir
+            </Link>
+          </div>
+          <div className="divide-y divide-gray-50">
             {recentBookings.length === 0 ? (
-              <p className="text-sm text-gray-500">Aucune réservation</p>
-            ) : (
-              <div className="space-y-3">
-                {recentBookings.map((booking) => (
-                  <div
-                    key={booking.id}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                  >
-                    <div>
-                      <p className="font-medium text-sm">{booking.guestName}</p>
-                      <p className="text-xs text-gray-500">{booking.property.title}</p>
-                    </div>
-                    <span
-                      className={`text-xs px-2 py-1 rounded-full ${
-                        booking.status === "PENDING"
-                          ? "bg-yellow-100 text-yellow-800"
-                          : booking.status === "CONFIRMED"
-                          ? "bg-green-100 text-green-800"
-                          : "bg-red-100 text-red-800"
-                      }`}
-                    >
-                      {booking.status}
-                    </span>
-                  </div>
-                ))}
+              <div className="px-6 py-10 text-center">
+                <CalendarDays className="size-8 text-gray-300 mx-auto mb-2" />
+                <p className="text-sm text-gray-500">Aucune réservation</p>
               </div>
-            )}
-          </CardContent>
-        </Card>
-
-        {/* Popular properties */}
-        <Card>
-          <CardHeader>
-            <CardTitle className="text-lg">Propriétés populaires</CardTitle>
-          </CardHeader>
-          <CardContent>
-            {popularProperties.length === 0 ? (
-              <p className="text-sm text-gray-500">Aucune vue enregistrée</p>
             ) : (
-              <div className="space-y-3">
-                {popularProperties.map((prop) => (
-                  <div
-                    key={prop.slug}
-                    className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"
-                  >
-                    <div>
-                      <p className="font-medium text-sm">{prop.title}</p>
+              recentBookings.map((booking) => (
+                <div
+                  key={booking.id}
+                  className="px-6 py-3.5 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
+                >
+                  <div className="min-w-0">
+                    <p className="font-medium text-sm text-gray-900 truncate">{booking.guestName}</p>
+                    <p className="text-xs text-gray-500 truncate">{booking.property.title}</p>
+                  </div>
+                  <span className={`shrink-0 ml-4 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${STATUS_COLORS[booking.status] || ""}`}>
+                    {STATUS_LABELS[booking.status] || booking.status}
+                  </span>
+                </div>
+              ))
+            )}
+          </div>
+        </div>
+
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+          <div className="flex items-center justify-between px-6 py-4 border-b border-gray-100">
+            <h2 className="font-semibold text-gray-900">Propriétés populaires</h2>
+            <Link href="/admin/properties" className="text-sm text-gray-500 hover:text-gray-700 transition-colors">
+              Tout voir
+            </Link>
+          </div>
+          <div className="divide-y divide-gray-50">
+            {popularProperties.length === 0 ? (
+              <div className="px-6 py-10 text-center">
+                <Home className="size-8 text-gray-300 mx-auto mb-2" />
+                <p className="text-sm text-gray-500">Aucune vue enregistrée</p>
+              </div>
+            ) : (
+              popularProperties.map((prop, i) => (
+                <div
+                  key={prop.slug}
+                  className="px-6 py-3.5 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
+                >
+                  <div className="flex items-center gap-3 min-w-0">
+                    <span className="w-7 h-7 rounded-lg bg-gray-100 flex items-center justify-center text-xs font-bold text-gray-500 shrink-0">
+                      {i + 1}
+                    </span>
+                    <div className="min-w-0">
+                      <p className="font-medium text-sm text-gray-900 truncate">{prop.title}</p>
                       <p className="text-xs text-gray-500">/{prop.slug}</p>
                     </div>
-                    <span className="text-sm font-medium text-gray-600">
-                      {prop._count.views} vues
-                    </span>
                   </div>
-                ))}
-              </div>
+                  <div className="flex items-center gap-1.5 shrink-0 ml-4">
+                    <Eye className="size-3.5 text-gray-400" />
+                    <span className="text-sm font-medium text-gray-600">{prop._count.views}</span>
+                  </div>
+                </div>
+              ))
             )}
-          </CardContent>
-        </Card>
+          </div>
+        </div>
       </div>
     </div>
   );
