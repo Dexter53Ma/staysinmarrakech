@@ -197,15 +197,20 @@ export default async function AdminDashboard() {
               recentBookings.map((booking) => (
                 <div
                   key={booking.id}
-                  className="px-6 py-3.5 flex items-center justify-between hover:bg-gray-50/50 transition-colors"
+                  className="px-6 py-3.5 hover:bg-gray-50/50 transition-colors"
                 >
-                  <div className="min-w-0">
+                  <div className="flex items-center justify-between mb-1.5">
                     <p className="font-medium text-sm text-gray-900 truncate">{booking.guestName}</p>
-                    <p className="text-xs text-gray-500 truncate">{booking.property.title}</p>
+                    <span className={`shrink-0 ml-4 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${STATUS_COLORS[booking.status] || ""}`}>
+                      {STATUS_LABELS[booking.status] || booking.status}
+                    </span>
                   </div>
-                  <span className={`shrink-0 ml-4 inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium ring-1 ring-inset ${STATUS_COLORS[booking.status] || ""}`}>
-                    {STATUS_LABELS[booking.status] || booking.status}
-                  </span>
+                  <p className="text-xs text-gray-500 truncate mb-1">{booking.property.title}</p>
+                  <p className="text-xs text-gray-400">
+                    {new Date(booking.checkIn).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}
+                    {" → "}
+                    {new Date(booking.checkOut).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" })}
+                  </p>
                 </div>
               ))
             )}
