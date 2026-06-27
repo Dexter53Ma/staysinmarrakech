@@ -16,6 +16,12 @@ export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "contact@staysinmarrakech.
 const SITE_URL = () => process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 const LOGO_URL = () => `${SITE_URL()}/images/logo.png`;
 
+// IMPORTANT: "onboarding@resend.dev" is Resend's SANDBOX domain.
+// It can ONLY send to the email that verified your Resend account.
+// To send to any email, verify your own domain (e.g. staysinmarrakech.com)
+// in Resend dashboard → Settings → Domains, then update the FROM address below.
+const FROM_ADDRESS = process.env.RESEND_FROM || "StaysInMarrakech <onboarding@resend.dev>";
+
 function emailWrapper(content: string): string {
   return `
 <!DOCTYPE html>
@@ -95,7 +101,7 @@ export async function sendBookingNotification(booking: {
     </div>`;
 
   await getResend().emails.send({
-    from: "StaysInMarrakech <onboarding@resend.dev>",
+    from: FROM_ADDRESS,
     to: ADMIN_EMAIL,
     subject: `Nouvelle demande de réservation — ${booking.propertyTitle}`,
     html: emailWrapper(content),
@@ -119,7 +125,7 @@ export async function sendBookingConfirmation(guestEmail: string, guestName: str
     <p style="margin:24px 0 0;font-size:13px;color:#999;">Cordialement,<br><strong>L&apos;quipe StaysInMarrakech</strong></p>`;
 
   await getResend().emails.send({
-    from: "StaysInMarrakech <onboarding@resend.dev>",
+    from: FROM_ADDRESS,
     to: guestEmail,
     subject: isConfirmed
       ? `Réservation confirmée — ${propertyTitle}`
@@ -145,7 +151,7 @@ export async function sendContactConfirmation(guestEmail: string, guestName: str
     <p style="margin:24px 0 0;font-size:13px;color:#999;">Cordialement,<br><strong>L&apos;quipe StaysInMarrakech</strong></p>`;
 
   await getResend().emails.send({
-    from: "StaysInMarrakech <onboarding@resend.dev>",
+    from: FROM_ADDRESS,
     to: guestEmail,
     subject: "Votre message a bien été envoyé",
     html: emailWrapper(content),
@@ -170,7 +176,7 @@ export async function sendContactNotification(name: string, email: string, subje
     </div>`;
 
   await getResend().emails.send({
-    from: "StaysInMarrakech <onboarding@resend.dev>",
+    from: FROM_ADDRESS,
     to: ADMIN_EMAIL,
     subject: `Nouveau message de contact — ${subject}`,
     html: emailWrapper(content),

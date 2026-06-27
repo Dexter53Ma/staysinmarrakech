@@ -60,8 +60,8 @@ export async function PUT(
           booking.property.title,
           body.status
         );
-      } catch {
-        // Email failure shouldn't block status update
+      } catch (e) {
+        console.error("[Email] booking confirmation failed:", e);
       }
     }
 

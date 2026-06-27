@@ -59,8 +59,8 @@ export async function POST(request: NextRequest) {
         guestsCount: booking.guestsCount,
         message: booking.message || undefined,
       });
-    } catch {
-      // Email failure shouldn't block booking creation
+    } catch (e) {
+      console.error("[Email] booking notification failed:", e);
     }
 
     return NextResponse.json(booking, { status: 201 });

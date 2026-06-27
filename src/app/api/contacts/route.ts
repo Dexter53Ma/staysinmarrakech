@@ -39,10 +39,18 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // Send notification emails (non-blocking)
+    // Send notification emails
     const subjectText = subject || "Sans objet";
-    sendContactNotification(name, email, subjectText, message).catch(() => {});
-    sendContactConfirmation(email, name).catch(() => {});
+    try {
+      await sendContactNotification(name, email, subjectText, message);
+    } catch (e) {
+      console.error("[Email] contact notification failed:", e);
+    }
+    try {
+      await sendContactConfirmation(email, name);
+    } catch (e) {
+      console.error("[Email] contact confirmation failed:", e);
+    }
 
     return NextResponse.json(contact, { status: 201 });
   } catch {
