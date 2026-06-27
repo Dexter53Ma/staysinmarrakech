@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { writeFile, mkdir } from "fs/promises";
 import { requireApiAuth } from "@/lib/auth";
-import path from "path";
+import { createClient } from "@supabase/supabase-js";
 
 const ALLOWED_TYPES = [
   "image/jpeg",
@@ -14,6 +13,7 @@ const ALLOWED_TYPES = [
 ];
 
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+const BUCKET = "uploads";
 
 export async function POST(request: NextRequest) {
   const auth = await requireApiAuth();
@@ -41,17 +41,28 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+
+    const ext = file.name.split(".").pop() || "jpg";
+    const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
+
     const bytes = await file.arrayBuffer();
     const buffer = Buffer.from(bytes);
 
-    const ext = path.extname(file.name) || ".jpg";
-    const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}${ext}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
+    const { error: uploadError } = await supabase.storage
+      .from(BUCKET)
+      .upload(filename, buffer, { contentType: file.type, upsert: false });
 
-    await mkdir(uploadDir, { recursive: true });
-    await writeFile(path.join(uploadDir, filename), buffer);
+    if (uploadError) {
+      return NextResponse.json({ error: `Erreur upload: ${uploadError.message}` }, { status: 500 });
+    }
 
-    return NextResponse.json({ url: `/uploads/${filename}` });
+    const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(filename);
+
+    return NextResponse.json({ url: urlData.publicUrl });
   } catch {
     return NextResponse.json({ error: "Erreur lors de l'upload" }, { status: 500 });
   }
