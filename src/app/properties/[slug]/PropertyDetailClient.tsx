@@ -286,37 +286,8 @@ export default function PropertyDetailClient({
   const handleSubmitBooking = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!isRental) {
-      setSubmitting(true);
-      setSubmitMessage(null);
-      try {
-        const res = await fetch("/api/contacts", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            name: formData.guestName,
-            email: formData.guestEmail,
-            phone: formData.guestPhone || null,
-            subject: `Demande d'information - ${property.title}`,
-            message: formData.message || `Intéressé par ${property.title} (${formatPrice(property.price, property.currency)})`,
-          }),
-        });
-        if (res.ok) {
-          setSubmitMessage({ type: "success", text: "Votre demande a été envoyée ! Nous vous contacterons bientôt." });
-          setFormData({ guestName: "", guestEmail: "", guestPhone: "", message: "" });
-        } else {
-          setSubmitMessage({ type: "error", text: "Erreur lors de l'envoi. Veuillez réessayer." });
-        }
-      } catch {
-        setSubmitMessage({ type: "error", text: "Erreur réseau. Veuillez réessayer." });
-      } finally {
-        setSubmitting(false);
-      }
-      return;
-    }
-
     if (!checkIn || !checkOut) {
-      setSubmitMessage({ type: "error", text: "Veuillez sélectionner vos dates" });
+      setSubmitMessage({ type: "error", text: "Veuillez sélectionner vos dates d'arrivée et de départ" });
       return;
     }
 
@@ -624,13 +595,13 @@ export default function PropertyDetailClient({
                   <p className="text-3xl font-bold text-[#0d47a1] mb-1">
                     {formatPrice(property.price, property.currency)}
                   </p>
-                  {isRental && property.pricePeriod && (
+                  {property.pricePeriod && (
                     <p className="text-sm text-gray-500 mb-4">
-                      /{property.pricePeriod === "nightly" ? "nuit" : property.pricePeriod}
+                      /{property.pricePeriod === "nightly" ? "nuit" : property.pricePeriod === "weekly" ? "semaine" : property.pricePeriod === "monthly" ? "mois" : property.pricePeriod}
                     </p>
                   )}
-                  {!isRental && (
-                    <p className="text-sm text-gray-500 mb-4">Prix de vente</p>
+                  {!property.pricePeriod && (
+                    <p className="text-sm text-gray-500 mb-4">Prix</p>
                   )}
 
                   <div className="flex items-center gap-2 mb-4">
@@ -674,7 +645,6 @@ export default function PropertyDetailClient({
                     </div>
                   </div>
 
-                  {isRental ? (
                   <form onSubmit={handleSubmitBooking} className="space-y-3">
                     <div>
                       <label className="block text-sm font-medium text-gray-700 mb-1">Arrivée</label>
@@ -791,63 +761,9 @@ export default function PropertyDetailClient({
                       </p>
                     )}
                   </form>
-                  ) : (
-                  <form onSubmit={handleSubmitBooking} className="space-y-3">
-                    <p className="text-sm text-gray-600 mb-2">
-                      Intéressé par cette propriété ? Contactez-nous pour plus d&apos;informations.
-                    </p>
-                    <input
-                      type="text"
-                      placeholder="Votre nom"
-                      required
-                      value={formData.guestName}
-                      onChange={(e) => setFormData({ ...formData, guestName: e.target.value })}
-                      className="w-full h-9 rounded-lg border border-gray-300 px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                    />
-                    <input
-                      type="email"
-                      placeholder="Votre email"
-                      required
-                      value={formData.guestEmail}
-                      onChange={(e) => setFormData({ ...formData, guestEmail: e.target.value })}
-                      className="w-full h-9 rounded-lg border border-gray-300 px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                    />
-                    <input
-                      type="tel"
-                      placeholder="Téléphone"
-                      value={formData.guestPhone}
-                      onChange={(e) => setFormData({ ...formData, guestPhone: e.target.value })}
-                      className="w-full h-9 rounded-lg border border-gray-300 px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                    />
-                    <textarea
-                      placeholder="Votre message (budget, visite, financement...)"
-                      rows={3}
-                      value={formData.message}
-                      onChange={(e) => setFormData({ ...formData, message: e.target.value })}
-                      className="w-full rounded-lg border border-gray-300 px-3 py-2 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 resize-none"
-                    />
-                    <button
-                      type="submit"
-                      disabled={submitting}
-                      className="w-full bg-[#27ae60] text-white py-3 rounded-lg font-medium hover:bg-[#219a52] transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
-                    >
-                      <Send className="size-4" />
-                      {submitting ? "Envoi..." : "Contacter l'agent"}
-                    </button>
-                    {submitMessage && (
-                      <p
-                        className={`text-sm text-center ${
-                          submitMessage.type === "success" ? "text-green-600" : "text-red-600"
-                        }`}
-                      >
-                        {submitMessage.text}
-                      </p>
-                    )}
-                  </form>
-                  )}
                 </div>
 
-                {isRental && (
+                {(property.checkInTime || property.checkOutTime || property.minStay) && (
                 <div className="bg-gray-50 rounded-xl p-4 text-sm text-gray-600 space-y-1">
                   {property.checkInTime && (
                     <p>Check-in : {property.checkInTime}</p>
