@@ -1,8 +1,17 @@
 import { Resend } from "resend";
 
-export const resend = new Resend(process.env.RESEND_API_KEY);
+let _resend: Resend | null = null;
 
-export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "contact@villapremium.fr";
+function getResend(): Resend {
+  if (!_resend) {
+    const key = process.env.RESEND_API_KEY;
+    if (!key) throw new Error("RESEND_API_KEY is not set");
+    _resend = new Resend(key);
+  }
+  return _resend;
+}
+
+export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "contact@staysinmarrakech.com";
 
 export async function sendBookingNotification(booking: {
   guestName: string;
@@ -13,7 +22,7 @@ export async function sendBookingNotification(booking: {
   guestsCount: number;
   message?: string;
 }) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: "StaysInMarrakech <onboarding@resend.dev>",
     to: ADMIN_EMAIL,
     subject: `Nouvelle demande de réservation — ${booking.propertyTitle}`,
@@ -33,7 +42,7 @@ export async function sendBookingNotification(booking: {
 
 export async function sendBookingConfirmation(guestEmail: string, guestName: string, propertyTitle: string, status: string) {
   const isConfirmed = status === "CONFIRMED";
-  await resend.emails.send({
+  await getResend().emails.send({
     from: "StaysInMarrakech <onboarding@resend.dev>",
     to: guestEmail,
     subject: isConfirmed
@@ -49,7 +58,7 @@ export async function sendBookingConfirmation(guestEmail: string, guestName: str
 }
 
 export async function sendContactConfirmation(guestEmail: string, guestName: string) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: "StaysInMarrakech <onboarding@resend.dev>",
     to: guestEmail,
     subject: "Votre message a bien été envoyé",
@@ -62,7 +71,7 @@ export async function sendContactConfirmation(guestEmail: string, guestName: str
 }
 
 export async function sendContactNotification(name: string, email: string, subject: string, message: string) {
-  await resend.emails.send({
+  await getResend().emails.send({
     from: "StaysInMarrakech <onboarding@resend.dev>",
     to: ADMIN_EMAIL,
     subject: `Nouveau message de contact — ${subject}`,
