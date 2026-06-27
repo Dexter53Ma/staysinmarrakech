@@ -10,6 +10,7 @@ import ActivitiesCarousel from "@/components/ActivitiesCarousel";
 import Newsletter from "@/components/Newsletter";
 import BlogSection from "@/components/BlogSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
+import HomepageContent from "@/components/HomepageContent";
 import Footer from "@/components/Footer";
 
 export const metadata = {
@@ -66,6 +67,7 @@ export default function Home() {
         <ActivitiesCarousel />
         <Newsletter />
         <BlogSection />
+        <HomepageContent />
         <TestimonialsSection />
       </main>
       <Footer />
