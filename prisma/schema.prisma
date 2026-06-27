@@ -1,0 +1,349 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Auth ───────────────────────────────────────────────
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  passwordHash  String    @map("password_hash")
+  name          String
+  role          UserRole  @default(ADMIN)
+  avatarUrl     String?   @map("avatar_url")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
+
+  auditLogs     AuditLog[]
+
+  @@map("users")
+}
+
+enum UserRole {
+  ADMIN
+  EDITOR
+}
+
+// ─── Properties ─────────────────────────────────────────
+
+model Property {
+  id            String          @id @default(cuid())
+  title         String
+  slug          String          @unique
+  description   String          @db.Text
+  type          PropertyType
+  status        PropertyStatus  @default(AVAILABLE)
+
+  price         Float
+  currency      String          @default("EUR")
+  pricePeriod   String?         @map("price_period") // nightly, weekly, monthly, yearly, sale
+
+  address       String
+  city          String          @default("Marrakech")
+  quarter       String?
+  latitude      Float?
+  longitude     Float?
+
+  bedrooms      Int             @default(0)
+  bathrooms     Int             @default(0)
+  garages       Int             @default(0)
+  maxGuests     Int?            @map("max_guests")
+
+  plotArea      Float?          @map("plot_area") // m²
+  builtArea     Float?          @map("built_area") // m²
+  yearBuilt     Int?            @map("year_built")
+
+  features      Json            @default("[]") // ["pool","garden","wifi","ac","gym"...]
+  cleaningFee   Float?          @map("cleaning_fee")
+  serviceFee    Float?          @map("service_fee")
+
+  minStay       Int?            @map("min_stay") // nights
+  maxStay       Int?            @map("max_stay") // nights
+  checkInTime   String?         @map("check_in_time") // "15:00"
+  checkOutTime  String?         @map("check_out_time") // "11:00"
+
+  isFeatured    Boolean         @default(false) @map("is_featured")
+
+  createdAt     DateTime        @default(now()) @map("created_at")
+  updatedAt     DateTime        @updatedAt @map("updated_at")
+
+  images        PropertyImage[]
+  bookings      Booking[]
+  favorites     Favorite[]
+  views         PropertyView[]
+  contactInquiries ContactInquiry[]
+
+  @@map("properties")
+}
+
+enum PropertyType {
+  VILLA
+  APARTMENT
+  HOUSE
+  LAND
+  COMMERCIAL
+}
+
+enum PropertyStatus {
+  AVAILABLE
+  SOLD
+  RENTED
+  PENDING
+}
+
+model PropertyImage {
+  id          String   @id @default(cuid())
+  propertyId  String   @map("property_id")
+  url         String
+  alt         String?
+  isPrimary   Boolean  @default(false) @map("is_primary")
+  sortOrder   Int      @default(0) @map("sort_order")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("property_images")
+}
+
+model PropertyView {
+  id          String   @id @default(cuid())
+  propertyId  String   @map("property_id")
+  viewerIp    String?  @map("viewer_ip")
+  userAgent   String?  @map("user_agent")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("property_views")
+}
+
+// ─── Bookings ───────────────────────────────────────────
+
+model Booking {
+  id            String        @id @default(cuid())
+  propertyId    String        @map("property_id")
+  guestName     String        @map("guest_name")
+  guestEmail    String        @map("guest_email")
+  guestPhone    String?       @map("guest_phone")
+  checkIn       DateTime      @map("check_in")
+  checkOut      DateTime      @map("check_out")
+  guestsCount   Int           @map("guests_count")
+  totalPrice    Float?        @map("total_price")
+  status        BookingStatus @default(PENDING)
+  message       String?       @db.Text
+  adminNotes    String?       @map("admin_notes") @db.Text
+  createdAt     DateTime      @default(now()) @map("created_at")
+  updatedAt     DateTime      @updatedAt @map("updated_at")
+
+  property      Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@map("bookings")
+}
+
+enum BookingStatus {
+  PENDING
+  CONFIRMED
+  REJECTED
+  CANCELLED
+}
+
+// ─── Services ───────────────────────────────────────────
+
+model Service {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  description String    @db.Text
+  image       String?
+  category    String?
+  price       Float?
+  priceUnit   String?   @map("price_unit") // per person, per session, per hour
+  isActive    Boolean   @default(true) @map("is_active")
+  sortOrder   Int       @default(0) @map("sort_order")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("services")
+}
+
+// ─── Blog ───────────────────────────────────────────────
+
+model BlogPost {
+  id          String    @id @default(cuid())
+  title       String
+  slug        String    @unique
+  excerpt     String?
+  content     String    @db.Text
+  image       String?
+  author      String    @default("Admin")
+  category    String?
+  isPublished Boolean   @default(false) @map("is_published")
+  publishedAt DateTime? @map("published_at")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("blog_posts")
+}
+
+// ─── Testimonials ───────────────────────────────────────
+
+model Testimonial {
+  id            String   @id @default(cuid())
+  guestName     String   @map("guest_name")
+  guestCountry  String?  @map("guest_country")
+  propertyName  String?  @map("property_name")
+  duration      String?  // "4 jours"
+  year          Int?
+  rating        Int?     // 1-5
+  reviewText    String?  @map("review_text") @db.Text
+  isApproved    Boolean  @default(false) @map("is_approved")
+  createdAt     DateTime @default(now()) @map("created_at")
+
+  @@map("testimonials")
+}
+
+// ─── Contact ────────────────────────────────────────────
+
+model ContactInquiry {
+  id          String        @id @default(cuid())
+  name        String
+  email       String
+  phone       String?
+  subject     String?
+  message     String        @db.Text
+  propertyId  String?       @map("property_id")
+  status      ContactStatus @default(NEW)
+  createdAt   DateTime      @default(now()) @map("created_at")
+
+  property    Property?     @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+
+  @@map("contact_inquiries")
+}
+
+enum ContactStatus {
+  NEW
+  READ
+  REPLIED
+}
+
+// ─── Favorites ──────────────────────────────────────────
+
+model Favorite {
+  id          String   @id @default(cuid())
+  propertyId  String   @map("property_id")
+  sessionId   String?  @map("session_id") // for anonymous users
+  userId      String?  @map("user_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([propertyId, sessionId])
+  @@unique([propertyId, userId])
+  @@map("favorites")
+}
+
+// ─── Locations ──────────────────────────────────────────
+
+model Location {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?   @db.Text
+  image       String?
+  latitude    Float?
+  longitude   Float?
+  sortOrder   Int       @default(0) @map("sort_order")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("locations")
+}
+
+// ─── Hero Slides ────────────────────────────────────────
+
+model HeroSlide {
+  id          String    @id @default(cuid())
+  title       String
+  subtitle    String?
+  image       String
+  link        String?
+  buttonText  String?   @map("button_text")
+  sortOrder   Int       @default(0) @map("sort_order")
+  isActive    Boolean   @default(true) @map("is_active")
+  createdAt   DateTime  @default(now()) @map("created_at")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("hero_slides")
+}
+
+// ─── Static Pages ───────────────────────────────────────
+
+model StaticPage {
+  id          String    @id @default(cuid())
+  slug        String    @unique
+  title       String
+  content     String    @db.Text
+  metaDesc    String?   @map("meta_desc")
+  updatedAt   DateTime  @updatedAt @map("updated_at")
+
+  @@map("static_pages")
+}
+
+// ─── Notifications ──────────────────────────────────────
+
+model Notification {
+  id          String    @id @default(cuid())
+  title       String
+  message     String
+  type        String    @default("info") // info, booking, inquiry
+  referenceId String?   @map("reference_id") // ID of related entity
+  isRead      Boolean   @default(false) @map("is_read")
+  createdAt   DateTime  @default(now()) @map("created_at")
+
+  @@map("notifications")
+}
+
+// ─── Site Settings ──────────────────────────────────────
+
+model SiteSetting {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     String?  @db.Text
+  updatedAt DateTime @updatedAt @map("updated_at")
+
+  @@map("site_settings")
+}
+
+// ─── Audit Log ──────────────────────────────────────────
+
+model AuditLog {
+  id          String   @id @default(cuid())
+  userId      String?  @map("user_id")
+  action      String   // CREATE, UPDATE, DELETE
+  entity      String   // Property, Booking, Service, etc.
+  entityId    String?  @map("entity_id")
+  oldValues   Json?    @map("old_values")
+  newValues   Json?    @map("new_values")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
+
+// ─── Newsletter ──────────────────────────────────────────
+
+model NewsletterSubscriber {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  isActive  Boolean  @default(true) @map("is_active")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  @@map("newsletter_subscribers")
+}

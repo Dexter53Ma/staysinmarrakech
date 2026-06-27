@@ -1,0 +1,93 @@
+import { NextRequest, NextResponse } from "next/server";
+import { prisma } from "@/lib/prisma";
+import { requireApiAuth } from "@/lib/auth";
+
+function generateSlug(title: string): string {
+  return title
+    .toLowerCase()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9\s-]/g, "")
+    .replace(/\s+/g, "-")
+    .replace(/-+/g, "-")
+    .replace(/^-|-$/g, "");
+}
+
+export async function GET(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  try {
+    const { id } = await params;
+    const service = await prisma.service.findUnique({ where: { id } });
+
+    if (!service) {
+      return NextResponse.json({ error: "Service introuvable" }, { status: 404 });
+    }
+
+    return NextResponse.json(service);
+  } catch {
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+  }
+}
+
+export async function PUT(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const auth = await requireApiAuth();
+  if (auth.error) return auth.error;
+  try {
+    const { id } = await params;
+    const body = await request.json();
+    const { title, description, image, category, price, priceUnit, isActive, sortOrder } = body;
+
+    const existing = await prisma.service.findUnique({ where: { id } });
+    if (!existing) {
+      return NextResponse.json({ error: "Service introuvable" }, { status: 404 });
+    }
+
+    let slug = existing.slug;
+    if (title && title !== existing.title) {
+      slug = generateSlug(title);
+      const slugExists = await prisma.service.findFirst({ where: { slug, id: { not: id } } });
+      if (slugExists) {
+        slug = `${slug}-${Date.now()}`;
+      }
+    }
+
+    const service = await prisma.service.update({
+      where: { id },
+      data: {
+        title: title || existing.title,
+        slug,
+        description: description || existing.description,
+        image: image !== undefined ? image : existing.image,
+        category: category !== undefined ? category : existing.category,
+        price: price !== undefined ? (price ? parseFloat(price) : null) : existing.price,
+        priceUnit: priceUnit !== undefined ? priceUnit : existing.priceUnit,
+        isActive: isActive !== undefined ? isActive : existing.isActive,
+        sortOrder: sortOrder !== undefined ? parseInt(sortOrder) : existing.sortOrder,
+      },
+    });
+
+    return NextResponse.json(service);
+  } catch {
+    return NextResponse.json({ error: "Erreur lors de la mise à jour" }, { status: 500 });
+  }
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const auth = await requireApiAuth();
+  if (auth.error) return auth.error;
+  try {
+    const { id } = await params;
+    await prisma.service.delete({ where: { id } });
+    return NextResponse.json({ success: true });
+  } catch {
+    return NextResponse.json({ error: "Erreur lors de la suppression" }, { status: 500 });
+  }
+}

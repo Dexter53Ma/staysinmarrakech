@@ -1,0 +1,315 @@
+"use client";
+
+import { useEffect, useState, useCallback } from "react";
+import Image from "next/image";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Card, CardContent } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Plus, Trash2, ArrowUp, ArrowDown, RefreshCw } from "lucide-react";
+
+interface HeroSlide {
+  id: string;
+  title: string;
+  subtitle: string | null;
+  image: string;
+  link: string | null;
+  buttonText: string | null;
+  sortOrder: number;
+  isActive: boolean;
+}
+
+export default function AdminHeroSlidesPage() {
+  const [slides, setSlides] = useState<HeroSlide[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [dialogOpen, setDialogOpen] = useState(false);
+  const [form, setForm] = useState({
+    title: "",
+    subtitle: "",
+    image: "",
+    link: "",
+    buttonText: "",
+  });
+
+  const fetchSlides = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("/api/hero-slides");
+      const data = await res.json();
+      setSlides(Array.isArray(data) ? data : []);
+    } catch {
+      setSlides([]);
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    async function loadSlides() {
+      setLoading(true);
+      try {
+        const res = await fetch("/api/hero-slides");
+        const data = await res.json();
+        setSlides(Array.isArray(data) ? data : []);
+      } catch {
+        setSlides([]);
+      } finally {
+        setLoading(false);
+      }
+    }
+    loadSlides();
+  }, []);
+
+  const toggleActive = async (id: string, current: boolean) => {
+    try {
+      await fetch(`/api/hero-slides/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isActive: !current }),
+      });
+      fetchSlides();
+    } catch {
+      console.error("Erreur lors de la mise à jour");
+    }
+  };
+
+  const moveSlide = async (id: string, direction: "up" | "down") => {
+    const idx = slides.findIndex((s) => s.id === id);
+    if (idx === -1) return;
+    const target = direction === "up" ? idx - 1 : idx + 1;
+    if (target < 0 || target >= slides.length) return;
+
+    const current = slides[idx];
+    const other = slides[target];
+
+    await Promise.all([
+      fetch(`/api/hero-slides/${current.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sortOrder: other.sortOrder }),
+      }),
+      fetch(`/api/hero-slides/${other.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ sortOrder: current.sortOrder }),
+      }),
+    ]);
+    fetchSlides();
+  };
+
+  const deleteSlide = async (id: string) => {
+    if (!confirm("Supprimer ce slide ?")) return;
+    try {
+      await fetch(`/api/hero-slides/${id}`, { method: "DELETE" });
+      fetchSlides();
+    } catch {
+      console.error("Erreur lors de la suppression");
+    }
+  };
+
+  const createSlide = async () => {
+    if (!form.title || !form.image) {
+      alert("Le titre et l'image sont requis");
+      return;
+    }
+    try {
+      await fetch("/api/hero-slides", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      setDialogOpen(false);
+      setForm({ title: "", subtitle: "", image: "", link: "", buttonText: "" });
+      fetchSlides();
+    } catch {
+      console.error("Erreur lors de la création");
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-2xl font-bold text-gray-900">Slides Hero</h1>
+        <div className="flex gap-2">
+          <Button variant="outline" size="sm" onClick={fetchSlides}>
+            <RefreshCw size={16} />
+          </Button>
+          <Button size="sm" onClick={() => setDialogOpen(true)}>
+            <Plus size={16} className="mr-1" />
+            Nouveau slide
+          </Button>
+        </div>
+      </div>
+
+      <Card>
+        <CardContent className="p-0">
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Image</TableHead>
+                <TableHead>Titre</TableHead>
+                <TableHead>Sous-titre</TableHead>
+                <TableHead>Actif</TableHead>
+                <TableHead>Ordre</TableHead>
+                <TableHead className="text-right">Actions</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {loading ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                    Chargement...
+                  </TableCell>
+                </TableRow>
+              ) : slides.length === 0 ? (
+                <TableRow>
+                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
+                    Aucun slide trouvé
+                  </TableCell>
+                </TableRow>
+              ) : (
+                slides.map((s) => (
+                  <TableRow key={s.id}>
+                    <TableCell>
+                      {s.image ? (
+                        <Image
+                          src={s.image}
+                          alt={s.title}
+                          width={80}
+                          height={48}
+                          className="rounded-lg object-cover"
+                        />
+                      ) : (
+                        <div className="w-20 h-12 bg-gray-100 rounded-lg flex items-center justify-center text-gray-400 text-xs">
+                          —
+                        </div>
+                      )}
+                    </TableCell>
+                    <TableCell className="font-medium">{s.title}</TableCell>
+                    <TableCell>{s.subtitle || "—"}</TableCell>
+                    <TableCell>
+                      <Switch
+                        size="sm"
+                        checked={s.isActive}
+                        onCheckedChange={() => toggleActive(s.id, s.isActive)}
+                      />
+                    </TableCell>
+                    <TableCell>
+                      <Badge variant="secondary">{s.sortOrder}</Badge>
+                    </TableCell>
+                    <TableCell className="text-right">
+                      <div className="flex gap-1 justify-end">
+                        <Button
+                          size="icon-sm"
+                          variant="ghost"
+                          title="Monter"
+                          onClick={() => moveSlide(s.id, "up")}
+                        >
+                          <ArrowUp size={14} />
+                        </Button>
+                        <Button
+                          size="icon-sm"
+                          variant="ghost"
+                          title="Descendre"
+                          onClick={() => moveSlide(s.id, "down")}
+                        >
+                          <ArrowDown size={14} />
+                        </Button>
+                        <Button
+                          size="icon-sm"
+                          variant="ghost"
+                          title="Supprimer"
+                          onClick={() => deleteSlide(s.id)}
+                        >
+                          <Trash2 size={14} className="text-red-600" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))
+              )}
+            </TableBody>
+          </Table>
+        </CardContent>
+      </Card>
+
+      <Dialog open={dialogOpen} onOpenChange={(open) => !open && setDialogOpen(false)}>
+        <DialogContent className="sm:max-w-md">
+          <DialogHeader>
+            <DialogTitle>Nouveau slide</DialogTitle>
+          </DialogHeader>
+          <div className="space-y-4">
+            <div>
+              <Label htmlFor="title">Titre *</Label>
+              <Input
+                id="title"
+                value={form.title}
+                onChange={(e) => setForm({ ...form, title: e.target.value })}
+                placeholder="Titre du slide"
+              />
+            </div>
+            <div>
+              <Label htmlFor="subtitle">Sous-titre</Label>
+              <Input
+                id="subtitle"
+                value={form.subtitle}
+                onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
+                placeholder="Sous-titre"
+              />
+            </div>
+            <div>
+              <Label htmlFor="image">URL de l&apos;image *</Label>
+              <Input
+                id="image"
+                value={form.image}
+                onChange={(e) => setForm({ ...form, image: e.target.value })}
+                placeholder="https://..."
+              />
+            </div>
+            <div>
+              <Label htmlFor="link">Lien</Label>
+              <Input
+                id="link"
+                value={form.link}
+                onChange={(e) => setForm({ ...form, link: e.target.value })}
+                placeholder="/properties"
+              />
+            </div>
+            <div>
+              <Label htmlFor="buttonText">Texte du bouton</Label>
+              <Input
+                id="buttonText"
+                value={form.buttonText}
+                onChange={(e) => setForm({ ...form, buttonText: e.target.value })}
+                placeholder="Découvrir"
+              />
+            </div>
+          </div>
+          <DialogFooter>
+            <Button variant="outline" onClick={() => setDialogOpen(false)}>
+              Annuler
+            </Button>
+            <Button onClick={createSlide}>Créer</Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
+    </div>
+  );
+}
