@@ -50,21 +50,7 @@ export default function AdminServicesPage() {
     }
   }, []);
 
-  useEffect(() => {
-    const load = async () => {
-      setLoading(true);
-      try {
-        const res = await fetch("/api/services");
-        const data = await res.json();
-        setServices(Array.isArray(data) ? data : []);
-      } catch {
-        setServices([]);
-      } finally {
-        setLoading(false);
-      }
-    };
-    load();
-  }, []);
+  useEffect(() => { fetchServices(); }, [fetchServices]);
 
   const toggleActive = async (id: string, current: boolean) => {
     setToggling(id);

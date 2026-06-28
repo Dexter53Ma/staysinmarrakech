@@ -38,21 +38,7 @@ export default function AdminPagesPage() {
     }
   }, []);
 
-  useEffect(() => {
-    async function loadPages() {
-      setLoading(true);
-      try {
-        const res = await fetch("/api/pages");
-        const data = await res.json();
-        setPages(Array.isArray(data) ? data : []);
-      } catch {
-        setPages([]);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadPages();
-  }, []);
+  useEffect(() => { fetchPages(); }, [fetchPages]);
 
   return (
     <div className="space-y-6">

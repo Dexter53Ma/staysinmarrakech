@@ -66,7 +66,7 @@ export default function VillaCarousel() {
       .then((data) => {
         const mapped: Villa[] = (data.properties || []).map((p: RawProperty) => ({
           name: p.title,
-          image: p.images?.[0]?.url || "/images/villas/default.jpg",
+          image: p.images?.[0]?.url || "/images/villas/default.webp",
           quartier: p.quarter || "",
           price: p.price ? `À partir de ${Number(p.price).toLocaleString("fr-FR")} € /nuit` : "",
           terrain: p.plotArea ? `${p.plotArea}m²` : "",

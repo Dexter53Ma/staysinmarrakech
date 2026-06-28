@@ -8,7 +8,7 @@ export const metadata = {
   description: "Découvrez nos villas et propriétés de luxe à Marrakech. Filtrez par prix, nombre de chambres, quartier et plus. Service de conciergerie premium.",
 };
 
-const ITEMS_PER_PAGE = 9;
+const ITEMS_PER_PAGE = 12;
 
 export default async function PropertiesPage({
   searchParams,
