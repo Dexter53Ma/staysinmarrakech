@@ -5,6 +5,8 @@ import { requireApiAuth } from "@/lib/auth";
 export const dynamic = "force-dynamic";
 
 export async function GET() {
+  const auth = await requireApiAuth();
+  if (auth.error) return auth.error;
   try {
     const notifications = await prisma.notification.findMany({
       orderBy: { createdAt: "desc" },

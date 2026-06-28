@@ -67,6 +67,7 @@ export default async function PropertyDetailPage({
     SOLD: "https://schema.org/SoldOut",
     RENTED: "https://schema.org/SoldOut",
     PENDING: "https://schema.org/PreOrder",
+    MAINTENANCE: "https://schema.org/PreOrder",
   };
 
   const productSchema = {

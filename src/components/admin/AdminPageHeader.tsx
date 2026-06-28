@@ -24,7 +24,7 @@ export function AdminPageHeader({ title, description, action, breadcrumbs }: Adm
             <span key={i} className="flex items-center gap-1.5">
               {i > 0 && <span className="text-gray-300">/</span>}
               {crumb.href ? (
-                <Link href={crumb.href} className="hover:text-gray-700 transition-colors">
+                <Link href={crumb.href} className="hover:text-gray-700 transition-colors duration-150">
                   {crumb.label}
                 </Link>
               ) : (
@@ -36,7 +36,7 @@ export function AdminPageHeader({ title, description, action, breadcrumbs }: Adm
       )}
       <div className="flex items-start justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">{title}</h1>
+          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{title}</h1>
           {description && <p className="text-sm text-gray-500 mt-1">{description}</p>}
         </div>
         {action && (
@@ -44,7 +44,7 @@ export function AdminPageHeader({ title, description, action, breadcrumbs }: Adm
             {action.href ? (
               <Link
                 href={action.href}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 active:bg-gray-950 active:scale-[0.98] transition-all duration-150 shadow-sm"
               >
                 {action.icon && <action.icon className="size-4" />}
                 {action.label}
@@ -52,7 +52,7 @@ export function AdminPageHeader({ title, description, action, breadcrumbs }: Adm
             ) : (
               <button
                 onClick={action.onClick}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 transition-colors shadow-sm"
+                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 active:bg-gray-950 active:scale-[0.98] transition-all duration-150 shadow-sm"
               >
                 {action.icon && <action.icon className="size-4" />}
                 {action.label}

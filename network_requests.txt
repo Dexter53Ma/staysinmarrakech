@@ -1,0 +1,23 @@
+1. [GET] https://staysinmarrakech.netlify.app/ => [200] 
+2. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/3o_xglks233ri.js => [FAILED] net::ERR_ABORTED
+3. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/0un9sz44-dic2.css => [FAILED] net::ERR_ABORTED
+4. [GET] https://staysinmarrakech.netlify.app/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75 => [FAILED] net::ERR_ABORTED
+5. [GET] https://staysinmarrakech.netlify.app/_next/static/media/c825fd02acae0153-s.p.1q3-y3vmyf3p6.woff2 => [200] 
+6. [GET] https://staysinmarrakech.netlify.app/_next/static/media/c9f6ebf08ddd616b-s.p.0sv86lbjkn8rn.woff2 => [200] 
+7. [GET] https://staysinmarrakech.netlify.app/_next/image?url=%2Fimages%2Flogo.png&w=256&q=75
+8. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/02pe8p93kpxrq.css => [200] 
+9. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/0un9sz44-dic2.css
+10. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/2zjueh7t2vecu.js => [200] 
+11. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/3sn7tdzleu1ki.js => [200] 
+12. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/3peubv2924kx4.js => [200] 
+13. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/2oh5rha75m2ak.js => [200] 
+14. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/27jktro2p5rq9.js => [200] 
+15. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/turbopack-0ne3ujv3rxvyf.js => [200] 
+16. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/34c5jx54ss_qh.js => [200] 
+17. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/0nuhp7jw3m346.js => [200] 
+18. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/14mrh2-p_w84d.js => [200] 
+19. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/21kp73eybkeud.js => [200] 
+20. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/3xyt402c62511.js => [200] 
+21. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/3i9e__lxj94lh.js => [200] 
+22. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/3o_xglks233ri.js => [200] 
+23. [GET] https://staysinmarrakech.netlify.app/_next/static/chunks/2fai0fbemmn6v.js => [200] 

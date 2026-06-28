@@ -13,18 +13,18 @@ export default function FloatingContact() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="fixed bottom-6 right-6 z-50">
+    <div className="fixed bottom-20 right-6 z-50">
       {open && (
         <div className="mb-3 flex flex-col gap-3 items-end">
           <a
-            href="tel:+33619078448"
+            href="tel:+212621189496"
             className="flex items-center gap-3 bg-white text-[#34495e] px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-shadow text-sm font-medium"
           >
             <Icon icon={faPhone} className="text-[#0d47a1]" />
             <span className="hidden sm:inline">Appelez-nous</span>
           </a>
           <a
-            href="https://wa.me/212659593349"
+            href="https://wa.me/212621189496"
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center gap-3 bg-[#25D366] text-white px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-shadow text-sm font-medium"
@@ -33,7 +33,7 @@ export default function FloatingContact() {
             <span className="hidden sm:inline">WhatsApp</span>
           </a>
           <a
-            href="mailto:contact@villapremium.fr"
+            href="mailto:contact@staysinmarrakech.com"
             className="flex items-center gap-3 bg-white text-[#34495e] px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-shadow text-sm font-medium"
           >
             <Icon icon={faEnvelope} className="text-[#ea4335]" />

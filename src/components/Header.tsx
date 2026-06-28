@@ -4,6 +4,7 @@ import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSettings } from "@/components/SettingsContext";
+import { useServices, ServiceItem } from "@/components/ServicesContext";
 import {
   Icon,
   faPhone,
@@ -21,20 +22,12 @@ import {
   faConciergeBell,
   faStar,
 } from "@/components/icons";
-import { IconDefinition } from "@fortawesome/fontawesome-common-types";
-
-interface Service {
-  id: number;
-  title: string;
-  slug: string;
-  category: string;
-  isActive: boolean;
-}
+import type { LucideIcon } from "lucide-react";
 
 interface SubMenuItem {
   label: string;
   href: string;
-  icon: IconDefinition;
+  icon: LucideIcon;
   children?: SubMenuItem[];
 }
 
@@ -56,21 +49,14 @@ const languages = ["Français", "English"];
 
 export default function Header() {
   const settings = useSettings();
+  const { services } = useServices();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [villasOpen, setVillasOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [services, setServices] = useState<Service[]>([]);
   const servicesRef = useRef<HTMLDivElement>(null);
   const villasRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    fetch("/api/services")
-      .then((r) => r.json())
-      .then((data) => setServices(data.filter((s: Service) => s.isActive)))
-      .catch(() => {});
-  }, []);
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -91,7 +77,7 @@ export default function Header() {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const serviceCategories = services.reduce<Record<string, Service[]>>((acc, s) => {
+  const serviceCategories = services.reduce<Record<string, ServiceItem[]>>((acc, s) => {
     const cat = s.category || "Autres";
     if (!acc[cat]) acc[cat] = [];
     acc[cat].push(s);
@@ -124,19 +110,19 @@ export default function Header() {
             )}
           </div>
           <div className="flex items-center gap-4">
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1">
               {settings.facebook && (
-                <a href={settings.facebook} target="_blank" rel="noopener noreferrer" className="hover:text-[#ffb000] transition-colors">
+                <a href={settings.facebook} target="_blank" rel="noopener noreferrer" className="w-11 h-11 flex items-center justify-center hover:text-[#ffb000] transition-colors">
                   <Icon icon={faFacebookF} className="text-[10px]" />
                 </a>
               )}
               {settings.instagram && (
-                <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="hover:text-[#ffb000] transition-colors">
+                <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="w-11 h-11 flex items-center justify-center hover:text-[#ffb000] transition-colors">
                   <Icon icon={faInstagram} className="text-[10px]" />
                 </a>
               )}
               {settings.linkedin && (
-                <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-[#ffb000] transition-colors">
+                <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" className="w-11 h-11 flex items-center justify-center hover:text-[#ffb000] transition-colors">
                   <Icon icon={faLinkedinIn} className="text-[10px]" />
                 </a>
               )}

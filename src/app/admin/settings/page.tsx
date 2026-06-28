@@ -6,7 +6,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, RefreshCw } from "lucide-react";
+import { Save } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin";
 
 const fields = [
   { key: "site_name", label: "Nom du site", type: "input" },
@@ -90,32 +91,42 @@ export default function AdminSettingsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(settings),
       });
-      alert("Parametres sauvegardes !");
+      // Saved successfully
     } catch {
-      alert("Erreur lors de la sauvegarde");
+      console.error("Erreur lors de la sauvegarde");
     } finally {
       setSaving(false);
     }
   };
 
   if (loading) {
-    return <p className="text-sm text-gray-500">Chargement...</p>;
+    return (
+      <div className="space-y-6 max-w-3xl">
+        <AdminPageHeader
+          title="Paramètres du site"
+          description="Configuration générale et contenu des sections"
+          breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Paramètres" }]}
+        />
+        <div className="space-y-4">
+          {Array.from({ length: 6 }).map((_, i) => (
+            <div key={i} className="space-y-2">
+              <div className="h-4 bg-gray-100 rounded w-32 animate-pulse" />
+              <div className="h-10 bg-gray-100 rounded-xl animate-pulse" />
+            </div>
+          ))}
+        </div>
+      </div>
+    );
   }
 
   return (
     <div className="space-y-6 max-w-3xl">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Parametres du site</h1>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fetchSettings}>
-            <RefreshCw size={16} />
-          </Button>
-          <Button size="sm" onClick={handleSave} disabled={saving}>
-            <Save size={16} className="mr-1" />
-            {saving ? "Sauvegarde..." : "Sauvegarder"}
-          </Button>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Paramètres du site"
+        description="Configuration générale et contenu des sections"
+        breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Paramètres" }]}
+        action={{ label: saving ? "Sauvegarde..." : "Sauvegarder", onClick: handleSave, icon: Save }}
+      />
 
       <Card>
         <CardHeader>

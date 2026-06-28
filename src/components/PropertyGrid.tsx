@@ -3,67 +3,14 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, BedDouble, Bath, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
-
-interface PropertyImage {
-  url: string;
-  alt?: string | null;
-}
-
-interface Property {
-  id: string;
-  title: string;
-  slug: string;
-  type: string;
-  status: string;
-  price: number;
-  currency: string;
-  pricePeriod?: string | null;
-  address: string;
-  city: string;
-  quarter?: string | null;
-  bedrooms: number;
-  bathrooms: number;
-  images: PropertyImage[];
-  _count: { views: number };
-}
+import { PropertyListItem, TYPE_LABELS, TYPE_COLORS, STATUS_LABELS, formatPrice } from "@/types";
 
 interface PropertyGridProps {
-  properties: Property[];
+  properties: PropertyListItem[];
   total: number;
   page: number;
   totalPages: number;
   onPageChange: (page: number) => void;
-}
-
-const TYPE_LABELS: Record<string, string> = {
-  VILLA: "Villa",
-  APARTMENT: "Appartement",
-  HOUSE: "Maison",
-  LAND: "Terrain",
-  COMMERCIAL: "Commercial",
-};
-
-const TYPE_COLORS: Record<string, string> = {
-  VILLA: "bg-purple-100 text-purple-800",
-  APARTMENT: "bg-blue-100 text-blue-800",
-  HOUSE: "bg-green-100 text-green-800",
-  LAND: "bg-yellow-100 text-yellow-800",
-  COMMERCIAL: "bg-red-100 text-red-800",
-};
-
-const STATUS_LABELS: Record<string, string> = {
-  AVAILABLE: "Disponible",
-  SOLD: "Vendu",
-  RENTED: "Loué",
-  PENDING: "En attente",
-};
-
-function formatPrice(price: number, currency: string) {
-  return new Intl.NumberFormat("fr-FR", {
-    style: "currency",
-    currency,
-    maximumFractionDigits: 0,
-  }).format(price);
 }
 
 export default function PropertyGrid({
@@ -125,7 +72,7 @@ export default function PropertyGrid({
               </div>
               <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1">
                 <Eye className="size-3" />
-                {property._count.views}
+                {property._count?.views ?? 0}
               </div>
             </div>
 

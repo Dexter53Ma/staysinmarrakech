@@ -13,7 +13,6 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -23,7 +22,10 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { Plus, Trash2, ArrowUp, ArrowDown, RefreshCw } from "lucide-react";
+import { Plus, Trash2, ArrowUp, ArrowDown, Pencil, Image as ImageIcon } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin";
+import { EmptyState } from "@/components/admin";
+import { TableSkeleton } from "@/components/admin";
 
 interface HeroSlide {
   id: string;
@@ -40,6 +42,7 @@ export default function AdminHeroSlidesPage() {
   const [slides, setSlides] = useState<HeroSlide[]>([]);
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
+  const [editingSlide, setEditingSlide] = useState<HeroSlide | null>(null);
   const [form, setForm] = useState({
     title: "",
     subtitle: "",
@@ -130,36 +133,44 @@ export default function AdminHeroSlidesPage() {
       return;
     }
     try {
-      await fetch("/api/hero-slides", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
-      });
+      if (editingSlide) {
+        await fetch(`/api/hero-slides/${editingSlide.id}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+      } else {
+        await fetch("/api/hero-slides", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(form),
+        });
+      }
       setDialogOpen(false);
+      setEditingSlide(null);
       setForm({ title: "", subtitle: "", image: "", link: "", buttonText: "" });
       fetchSlides();
     } catch {
-      console.error("Erreur lors de la création");
+      console.error("Erreur lors de la sauvegarde");
     }
+  };
+
+  const openEdit = (slide: HeroSlide) => {
+    setEditingSlide(slide);
+    setForm({ title: slide.title, subtitle: slide.subtitle || "", image: slide.image, link: slide.link || "", buttonText: slide.buttonText || "" });
+    setDialogOpen(true);
   };
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Slides Hero</h1>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fetchSlides}>
-            <RefreshCw size={16} />
-          </Button>
-          <Button size="sm" onClick={() => setDialogOpen(true)}>
-            <Plus size={16} className="mr-1" />
-            Nouveau slide
-          </Button>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Slides Hero"
+        description={`${slides.length} slide${slides.length > 1 ? "s" : ""}`}
+        breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Slides Hero" }]}
+        action={{ label: "Nouveau slide", onClick: () => setDialogOpen(true), icon: Plus }}
+      />
 
-      <Card>
-        <CardContent className="p-0">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
@@ -174,14 +185,19 @@ export default function AdminHeroSlidesPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                    Chargement...
+                  <TableCell colSpan={6}>
+                    <TableSkeleton rows={3} cols={5} />
                   </TableCell>
                 </TableRow>
               ) : slides.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                    Aucun slide trouvé
+                  <TableCell colSpan={6}>
+                    <EmptyState
+                      icon={ImageIcon}
+                      title="Aucun slide"
+                      description="Ajoutez votre premier slide hero."
+                      action={{ label: "Nouveau slide", onClick: () => setDialogOpen(true) }}
+                    />
                   </TableCell>
                 </TableRow>
               ) : (
@@ -235,6 +251,14 @@ export default function AdminHeroSlidesPage() {
                         <Button
                           size="icon-sm"
                           variant="ghost"
+                          title="Modifier"
+                          onClick={() => openEdit(s)}
+                        >
+                          <Pencil size={14} className="text-blue-600" />
+                        </Button>
+                        <Button
+                          size="icon-sm"
+                          variant="ghost"
                           title="Supprimer"
                           onClick={() => deleteSlide(s.id)}
                         >
@@ -247,13 +271,12 @@ export default function AdminHeroSlidesPage() {
               )}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+      </div>
 
       <Dialog open={dialogOpen} onOpenChange={(open) => !open && setDialogOpen(false)}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle>Nouveau slide</DialogTitle>
+            <DialogTitle>{editingSlide ? "Modifier le slide" : "Nouveau slide"}</DialogTitle>
           </DialogHeader>
           <div className="space-y-4">
             <div>

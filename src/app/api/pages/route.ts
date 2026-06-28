@@ -1,19 +1,9 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { requireApiAuth } from "@/lib/auth";
+import { generateSlug, ensureUniqueSlug, validateFields, apiError } from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
-
-function generateSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-}
 
 export async function GET() {
   try {
@@ -23,7 +13,7 @@ export async function GET() {
     });
     return NextResponse.json(pages);
   } catch {
-    return NextResponse.json({ error: "Erreur lors de la récupération des pages" }, { status: 500 });
+    return apiError("Erreur lors de la récupération des pages");
   }
 }
 
@@ -35,15 +25,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { title, content, metaDesc } = body;
 
-    if (!title || !content) {
-      return NextResponse.json({ error: "Le titre et le contenu sont requis" }, { status: 400 });
-    }
+    const validationError = validateFields(body, ["title", "content"]);
+    if (validationError) return validationError;
 
     let slug = generateSlug(title);
-    const slugExists = await prisma.staticPage.findUnique({ where: { slug } });
-    if (slugExists) {
-      slug = `${slug}-${Date.now()}`;
-    }
+    slug = await ensureUniqueSlug(slug, (s) => prisma.staticPage.findUnique({ where: { slug: s }, select: { id: true } }));
 
     const page = await prisma.staticPage.create({
       data: {
@@ -56,6 +42,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json(page, { status: 201 });
   } catch {
-    return NextResponse.json({ error: "Erreur lors de la création de la page" }, { status: 500 });
+    return apiError("Erreur lors de la création de la page");
   }
 }

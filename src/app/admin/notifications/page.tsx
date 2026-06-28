@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { CheckCheck, Bell, RefreshCw } from "lucide-react";
+import { CheckCheck, Bell } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin";
+import { EmptyState } from "@/components/admin";
+import { TableSkeleton } from "@/components/admin";
 
 interface Notification {
   id: string;
@@ -90,7 +92,7 @@ export default function AdminNotificationsPage() {
       case "inquiry":
         return <Badge className="bg-green-100 text-green-800">Demande</Badge>;
       default:
-        <Badge variant="secondary">Info</Badge>;
+        return <Badge variant="secondary">Info</Badge>;
     }
   };
 
@@ -98,28 +100,14 @@ export default function AdminNotificationsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <h1 className="text-2xl font-bold text-gray-900">Notifications</h1>
-          {unreadCount > 0 && (
-            <Badge variant="destructive">{unreadCount} non lues</Badge>
-          )}
-        </div>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fetchNotifications}>
-            <RefreshCw size={16} />
-          </Button>
-          {unreadCount > 0 && (
-            <Button size="sm" onClick={markAllAsRead}>
-              <CheckCheck size={16} className="mr-1" />
-              Tout marquer lu
-            </Button>
-          )}
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Notifications"
+        description={unreadCount > 0 ? `${unreadCount} non lue${unreadCount > 1 ? "s" : ""}` : "Tout est lu"}
+        breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Notifications" }]}
+        action={unreadCount > 0 ? { label: "Tout marquer lu", onClick: markAllAsRead, icon: CheckCheck } : undefined}
+      />
 
-      <Card>
-        <CardContent className="p-0">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
@@ -134,15 +122,18 @@ export default function AdminNotificationsPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                    Chargement...
+                  <TableCell colSpan={6}>
+                    <TableSkeleton rows={3} cols={5} />
                   </TableCell>
                 </TableRow>
               ) : notifications.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                    <Bell size={32} className="mx-auto mb-2 text-gray-300" />
-                    Aucune notification
+                  <TableCell colSpan={6}>
+                    <EmptyState
+                      icon={Bell}
+                      title="Aucune notification"
+                      description="Les notifications apparaîtront ici."
+                    />
                   </TableCell>
                 </TableRow>
               ) : (
@@ -175,8 +166,7 @@ export default function AdminNotificationsPage() {
               )}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+      </div>
     </div>
   );
 }

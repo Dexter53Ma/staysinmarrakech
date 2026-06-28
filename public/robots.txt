@@ -4,4 +4,22 @@ Disallow: /api/
 Disallow: /admin/
 Disallow: /_next/
 
+User-agent: GPTBot
+Allow: /
+
+User-agent: OAI-SearchBot
+Allow: /
+
+User-agent: ClaudeBot
+Allow: /
+
+User-agent: PerplexityBot
+Allow: /
+
+User-agent: ChatGPT-User
+Allow: /
+
+User-agent: CCBot
+Disallow: /
+
 Sitemap: https://staysinmarrakech.netlify.app/sitemap.xml

@@ -60,7 +60,7 @@ export default function ActivitiesCarousel() {
   };
 
   return (
-    <section className="max-w-[1140px] mx-auto py-[50px] px-[15px]">
+    <section className="max-w-[1140px] mx-auto py-[50px] px-[15px] overflow-hidden">
       <h2 className="text-[26px] font-bold uppercase text-[#0b1014] mb-6">
         Activités marrakech à découvrir
       </h2>
@@ -69,7 +69,7 @@ export default function ActivitiesCarousel() {
         {canScrollLeft && (
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white shadow-lg rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#0b1014] hover:text-white transition-colors"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#0b1014] hover:text-white transition-colors"
             aria-label="Précédent"
           >
             <Icon icon={faArrowLeft} />
@@ -78,8 +78,7 @@ export default function ActivitiesCarousel() {
 
         <div
           ref={scrollRef}
-          className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
+          className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 scrollbar-hide"
         >
           {activities.map((activity) => (
             <a
@@ -106,7 +105,7 @@ export default function ActivitiesCarousel() {
         {canScrollRight && (
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white shadow-lg rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#0b1014] hover:text-white transition-colors"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#0b1014] hover:text-white transition-colors"
             aria-label="Suivant"
           >
             <Icon icon={faArrowRight} />

@@ -11,8 +11,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Card, CardContent } from "@/components/ui/card";
-import { RefreshCw } from "lucide-react";
+import { History, RefreshCw } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin";
+import { EmptyState } from "@/components/admin";
+import { TableSkeleton } from "@/components/admin";
 
 interface AuditLog {
   id: string;
@@ -79,27 +81,29 @@ export default function AdminAuditLogPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Journal d&apos;audit</h1>
-        <div className="flex gap-2 items-center">
-          <select
-            value={entityFilter}
-            onChange={(e) => setEntityFilter(e.target.value)}
-            className="border rounded-md px-3 py-1.5 text-sm"
-          >
-            <option value="">Toutes les entites</option>
-            {entityTypes.filter(Boolean).map((e) => (
-              <option key={e} value={e}>{e}</option>
-            ))}
-          </select>
-          <Button variant="outline" size="sm" onClick={fetchLogs}>
-            <RefreshCw size={16} />
-          </Button>
-        </div>
+      <AdminPageHeader
+        title="Journal d'audit"
+        description={`${logs.length} entrée${logs.length > 1 ? "s" : ""}`}
+        breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Journal" }]}
+      />
+
+      <div className="flex gap-2 items-center mb-6">
+        <select
+          value={entityFilter}
+          onChange={(e) => setEntityFilter(e.target.value)}
+          className="h-10 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm outline-none focus:border-gray-400 transition-colors duration-150"
+        >
+          <option value="">Toutes les entités</option>
+          {entityTypes.filter(Boolean).map((e) => (
+            <option key={e} value={e}>{e}</option>
+          ))}
+        </select>
+        <Button variant="outline" size="sm" onClick={fetchLogs}>
+          <RefreshCw size={16} />
+        </Button>
       </div>
 
-      <Card>
-        <CardContent className="p-0">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
@@ -113,14 +117,18 @@ export default function AdminAuditLogPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-gray-500">
-                    Chargement...
+                  <TableCell colSpan={5}>
+                    <TableSkeleton rows={5} cols={4} />
                   </TableCell>
                 </TableRow>
               ) : logs.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-gray-500">
-                    Aucun log d&apos;audit
+                  <TableCell colSpan={5}>
+                    <EmptyState
+                      icon={History}
+                      title="Aucun log"
+                      description="L'historique des actions apparaîtra ici."
+                    />
                   </TableCell>
                 </TableRow>
               ) : (
@@ -153,8 +161,7 @@ export default function AdminAuditLogPage() {
               )}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+      </div>
     </div>
   );
 }

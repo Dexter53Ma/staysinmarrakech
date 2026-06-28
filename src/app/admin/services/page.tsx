@@ -14,7 +14,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Card, CardContent } from "@/components/ui/card";
-import { Plus, Pencil, Trash2, RefreshCw } from "lucide-react";
+import { Plus, Pencil, Trash2, RefreshCw, Wrench } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin";
+import { EmptyState } from "@/components/admin";
+import { TableSkeleton } from "@/components/admin";
 
 interface Service {
   id: string;
@@ -89,20 +92,12 @@ export default function AdminServicesPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Services</h1>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fetchServices}>
-            <RefreshCw size={16} />
-          </Button>
-          <Link href="/admin/services/new">
-            <Button size="sm">
-              <Plus size={16} className="mr-1" />
-              Nouveau service
-            </Button>
-          </Link>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Services"
+        description={`${services.length} service${services.length > 1 ? "s" : ""}`}
+        breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Services" }]}
+        action={{ label: "Nouveau service", href: "/admin/services/new", icon: Plus }}
+      />
 
       <Card>
         <CardContent className="p-0">
@@ -120,14 +115,19 @@ export default function AdminServicesPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                    Chargement...
+                  <TableCell colSpan={6}>
+                    <TableSkeleton rows={3} cols={5} />
                   </TableCell>
                 </TableRow>
               ) : services.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8 text-gray-500">
-                    Aucun service trouvé
+                  <TableCell colSpan={6}>
+                    <EmptyState
+                      icon={Wrench}
+                      title="Aucun service"
+                      description="Ajoutez votre premier service."
+                      action={{ label: "Nouveau service", href: "/admin/services/new" }}
+                    />
                   </TableCell>
                 </TableRow>
               ) : (

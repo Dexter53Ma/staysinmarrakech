@@ -1,6 +1,7 @@
 import { createSupabaseServer } from "@/lib/supabase-server";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import type { UserRole } from "@prisma/client";
 
 export async function getUser() {
   const supabase = await createSupabaseServer();
@@ -22,6 +23,9 @@ export async function requireAdmin() {
   if (!user) {
     throw new Error("Unauthorized");
   }
+  if (user.role !== "ADMIN" as UserRole) {
+    throw new Error("Forbidden");
+  }
   return user;
 }
 
@@ -32,8 +36,20 @@ export async function requireApiAuth() {
   } = await supabase.auth.getUser();
 
   if (!user) {
-    return { user: null, error: NextResponse.json({ error: "Non autorisé" }, { status: 401 }) };
+    return { user: null, dbUser: null, error: NextResponse.json({ error: "Non autorisé" }, { status: 401 }) };
   }
 
-  return { user, error: null };
+  const dbUser = await prisma.user.findUnique({
+    where: { email: user.email! },
+  });
+
+  return { user, dbUser, error: null };
+}
+
+export async function requireRole(role: UserRole) {
+  const dbUser = await requireAdmin();
+  if (dbUser.role !== role) {
+    throw new Error("Forbidden");
+  }
+  return dbUser;
 }

@@ -3,6 +3,14 @@
 import { useEffect, useState, useCallback } from "react";
 import { Button } from "@/components/ui/button";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
   Dialog,
   DialogContent,
   DialogHeader,
@@ -114,10 +122,10 @@ export default function AdminBookingsPage() {
           <button
             key={s}
             onClick={() => setFilter(s)}
-            className={`px-3.5 py-1.5 rounded-lg text-sm font-medium transition-colors ${
+            className={`px-3.5 py-1.5 rounded-lg text-sm font-medium active:scale-[0.97] transition-all duration-150 ${
               filter === s
                 ? "bg-gray-900 text-white"
-                : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50"
+                : "bg-white border border-gray-200 text-gray-600 hover:bg-gray-50 active:bg-gray-100"
             }`}
           >
             {STATUS_LABELS[s]}
@@ -138,31 +146,31 @@ export default function AdminBookingsPage() {
           />
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b border-gray-100">
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Client</th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Propriété</th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Arrivée</th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Départ</th>
-                  <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Statut</th>
-                  <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-50">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Client</TableHead>
+                  <TableHead>Propriété</TableHead>
+                  <TableHead>Arrivée</TableHead>
+                  <TableHead>Départ</TableHead>
+                  <TableHead>Statut</TableHead>
+                  <TableHead className="text-right">Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {bookings.map((b) => (
-                  <tr key={b.id} className="hover:bg-gray-50/50 transition-colors">
-                    <td className="px-6 py-3.5">
+                  <TableRow key={b.id}>
+                    <TableCell>
                       <p className="font-medium text-sm text-gray-900">{b.guestName}</p>
                       <p className="text-xs text-gray-500">{b.guestEmail}</p>
-                    </td>
-                    <td className="px-6 py-3.5 text-sm text-gray-700">{b.property.title}</td>
-                    <td className="px-6 py-3.5 text-sm text-gray-700">{formatDate(b.checkIn)}</td>
-                    <td className="px-6 py-3.5 text-sm text-gray-700">{formatDate(b.checkOut)}</td>
-                    <td className="px-6 py-3.5">
+                    </TableCell>
+                    <TableCell className="text-sm text-gray-700">{b.property.title}</TableCell>
+                    <TableCell className="text-sm text-gray-700">{formatDate(b.checkIn)}</TableCell>
+                    <TableCell className="text-sm text-gray-700">{formatDate(b.checkOut)}</TableCell>
+                    <TableCell>
                       <StatusBadge status={b.status} />
-                    </td>
-                    <td className="px-6 py-3.5">
+                    </TableCell>
+                    <TableCell className="text-right">
                       <div className="flex gap-1 justify-end">
                         {b.status === "PENDING" && (
                           <>
@@ -170,7 +178,7 @@ export default function AdminBookingsPage() {
                               title="Confirmer"
                               disabled={actionLoading === b.id}
                               onClick={() => handleStatusChange(b.id, "CONFIRMED")}
-                              className="p-2 rounded-lg text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 transition-colors disabled:opacity-40"
+                              className="p-2 rounded-lg text-gray-400 hover:text-emerald-600 hover:bg-emerald-50 active:bg-emerald-100 active:scale-[0.95] transition-all duration-150 disabled:opacity-40"
                             >
                               <CheckCircle size={16} />
                             </button>
@@ -178,7 +186,7 @@ export default function AdminBookingsPage() {
                               title="Refuser"
                               disabled={actionLoading === b.id}
                               onClick={() => handleStatusChange(b.id, "REJECTED")}
-                              className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors disabled:opacity-40"
+                              className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 active:bg-red-100 active:scale-[0.95] transition-all duration-150 disabled:opacity-40"
                             >
                               <XCircle size={16} />
                             </button>
@@ -187,16 +195,16 @@ export default function AdminBookingsPage() {
                         <button
                           title="Voir les détails"
                           onClick={() => setDetailBooking(b)}
-                          className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                          className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 active:bg-gray-200 active:scale-[0.95] transition-all duration-150"
                         >
                           <Eye size={16} />
                         </button>
                       </div>
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
       </div>

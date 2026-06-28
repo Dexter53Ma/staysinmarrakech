@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function HomepageContent() {
   return (
     <section className="bg-white py-16 md:py-20">
@@ -45,16 +47,40 @@ export default function HomepageContent() {
               Marrakech, la ville rouge, fascine par ses palais, ses jardins et son atmosphère unique. Que vous veniez pour des vacances en famille, un voyage entre amis, un mariage d&apos;exception ou un séjour d&apos;affaires, StaysInMarrakech met à votre disposition des villas de luxe qui sublimeront votre expérience.
             </p>
             <p>
-              Nos villas sont situées dans les quartiers les plus prisés de Marrakech. La <strong>Palmeraie</strong> offre un cadre verdoyant et paisibel à quelques minutes du centre-ville. <strong>Gueliz</strong>, le quartier moderne, combine proximité des commerces et tranquilvilla. La <strong>route de l&apos;Ourika</strong> séduit par ses panoramas sur l&apos;Atlas, tandis qu&apos;<strong>Amelkis</strong> et <strong>Targa</strong> sont réputés pour leurs domaines golfiques et leur tranquillité.
+              Nos villas sont situées dans les quartiers les plus prisés de Marrakech. La <Link href="/locations/palmeraie" className="text-[#0d47a1] underline hover:text-[#0d47a1]/80">Palmeraie</Link> offre un cadre verdoyant et paisibel à quelques minutes du centre-ville. <Link href="/locations/gueliz" className="text-[#0d47a1] underline hover:text-[#0d47a1]/80">Gueliz</Link>, le quartier moderne, combine proximité des commerces et tranquillité. La <Link href="/locations/route-ourika" className="text-[#0d47a1] underline hover:text-[#0d47a1]/80">route de l&apos;Ourika</Link> séduit par ses panoramas sur l&apos;Atlas, tandis qu&apos;<Link href="/locations/amelkis" className="text-[#0d47a1] underline hover:text-[#0d47a1]/80">Amelkis</Link> et <Link href="/locations/targa" className="text-[#0d47a1] underline hover:text-[#0d47a1]/80">Targa</Link> sont réputés pour leurs domaines golfiques et leur tranquillité.
             </p>
             <p>
               Chaque villa proposée par StaysInMarrakech est équipée de <strong>piscines privées chauffées</strong>, de jardins paysagers, d&apos;espaces de vie spacieux et d&apos;équipements haut de gamme. Notre équipe de conciergerie est disponible 7 jours sur 7 pour organiser vos transferts, réservations de restaurants, activités et excursions dans le désert d&apos;Agafay ou les montagnes de l&apos;Atlas.
             </p>
-            <h4 className="text-lg font-semibold text-[#34495e] pt-2">
+
+            <h4 className="text-lg font-semibold text-[#34495e] pt-4">
+              Comment réserver votre villa de luxe à Marrakech ?
+            </h4>
+            <p>
+              Réserver une villa avec StaysInMarrakech est simple et sécurisé. Parcourez notre catalogue de propriétés, sélectionnez les dates de votre séjour et complétez le formulaire de réservation. Notre équipe vous recontacte sous 24 heures pour finaliser votre booking et répondre à toutes vos questions. Vous pouvez également nous contacter directement par téléphone au +212 6 21 18 94 96 ou par email à contact@staysinmarrakech.com pour un accompagnement personnalisé.
+            </p>
+            <p>
+              Chaque réservation inclut un accueil personnalisé à l&apos;aéroport de Marrakech-Ménara, un transfert privé vers votre villa, et un briefing complet avec notre équipe sur site. Vous bénéficiez également d&apos;un interlocuteur dédié pendant toute la durée de votre séjour pour gérer toutes vos demandes.
+            </p>
+
+            <h4 className="text-lg font-semibold text-[#34495e] pt-4">
               Services de conciergerie premium
             </h4>
             <p>
               Au-delà de la location de villas, StaysInMarrakech vous propose une gamme complète de services : <strong>chef privée</strong> pour des dîners gastronomiques, <strong>bien-être et spa</strong> à domicile, <strong>excursions en quad, buggy et balade en dromadaire</strong>, <strong>location de voitures de luxe</strong> et <strong>organisation d&apos;événements</strong> dans des cadres exceptionnels. Notre objectif : transformer votre séjour à Marrakech en une expérience inoubliable.
+            </p>
+            <p>
+              Notre équipe de conciergerie est composée de professionnels locaux qui connaissent intimement Marrakech et ses alentours. Ils se chargent de tout : réservations dans les meilleurs restaurants, organisent des visites privées de la médina, des jardins Majorelle et Bahia, ou des excursions au désert d&apos;Agafay. Que vous souhaitiez une journée détente au bord de la piscine ou une aventure dans les montagnes de l&apos;Atlas, nous créons un programme sur mesure adapté à vos envies.
+            </p>
+
+            <h4 className="text-lg font-semibold text-[#34495e] pt-4">
+              Marrakech — Une destination qui fascine
+            </h4>
+            <p>
+              Marrakech est bien plus qu&apos;une simple destination touristique. C&apos;est une ville qui maroque les esprits par son contraste saisissant entre la médina millénaire et la ville moderne de Gueliz, entre les souks animés et les riads paisibles, entre le désert et les montagnes enneigées de l&apos;Atlas. La ville rouge offre une mosaïque d&apos;expériences culturelles, gastronomiques et sportives qui raviront tous les types de voyageurs.
+            </p>
+            <p>
+              Que vous soyez passionné d&apos;histoire et d&apos;architecture, amateur de bonne cuisine, sportif en quête d&apos;aventure ou simplement en quête de détente et de bien-être, Marrakech a tout pour vous satisfaire. Et avec une villa de luxe StaysInMarrakech comme base, vous profiterez du meilleur de la ville dans le confort et l&apos;élégance les plus absolus.
             </p>
           </div>
         </div>

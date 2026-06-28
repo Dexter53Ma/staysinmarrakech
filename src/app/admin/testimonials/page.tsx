@@ -12,7 +12,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Star, Trash2 } from "lucide-react";
+import { Star, Trash2, MessageSquare } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin";
+import { EmptyState } from "@/components/admin";
+import { TableSkeleton } from "@/components/admin";
 
 interface Testimonial {
   id: string;
@@ -69,14 +72,24 @@ export default function AdminTestimonialsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Témoignages</h1>
+      <AdminPageHeader
+        title="Témoignages"
+        description={`${testimonials.length} témoignage${testimonials.length > 1 ? "s" : ""}`}
+        breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Témoignages" }]}
+      />
 
       {loading ? (
-        <p className="text-sm text-gray-500">Chargement…</p>
+        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <TableSkeleton rows={5} cols={4} />
+        </div>
       ) : testimonials.length === 0 ? (
-        <p className="text-sm text-gray-500">Aucun témoignage.</p>
+        <EmptyState
+          icon={MessageSquare}
+          title="Aucun témoignage"
+          description="Les témoignages clients apparaîtront ici."
+        />
       ) : (
-        <div className="bg-white rounded-lg border overflow-hidden">
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>

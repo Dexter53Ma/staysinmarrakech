@@ -146,7 +146,7 @@ export default async function AdminDashboard() {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
         {stats.map((stat) => (
           <Link key={stat.label} href={stat.href}>
-            <div className="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md hover:border-gray-200 transition-all cursor-pointer group">
+            <div className="bg-white rounded-2xl border border-gray-100 p-5 hover:shadow-md hover:border-gray-200 active:scale-[0.98] transition-all duration-150 cursor-pointer group">
               <div className="flex items-start justify-between">
                 <div className={`w-11 h-11 rounded-xl ${stat.bgColor} flex items-center justify-center`}>
                   <stat.icon className={`size-5 ${stat.iconColor}`} />
@@ -171,7 +171,7 @@ export default async function AdminDashboard() {
       <div className="flex flex-wrap gap-3">
         {quickActions.map((action) => (
           <Link key={action.label} href={action.href}>
-            <span className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium transition-colors ${action.color}`}>
+            <span className={`inline-flex items-center gap-2 px-4 py-2.5 rounded-xl text-sm font-medium active:scale-[0.98] transition-all duration-150 ${action.color}`}>
               <action.icon className="size-4" />
               {action.label}
             </span>

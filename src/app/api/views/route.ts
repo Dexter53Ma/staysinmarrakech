@@ -10,15 +10,24 @@ export async function POST(request: NextRequest) {
     }
 
     const ip = request.headers.get("x-forwarded-for") || request.headers.get("x-real-ip") || "unknown";
-    const userAgent = request.headers.get("user-agent") || "";
 
-    await prisma.propertyView.create({
-      data: {
+    // Rate limit: skip if same IP viewed this property in the last hour
+    const oneHourAgo = new Date(Date.now() - 60 * 60 * 1000);
+    const recentView = await prisma.propertyView.findFirst({
+      where: {
         propertyId,
         viewerIp: ip,
-        userAgent,
+        createdAt: { gte: oneHourAgo },
       },
+      select: { id: true },
     });
+
+    if (!recentView) {
+      const userAgent = request.headers.get("user-agent") || "";
+      await prisma.propertyView.create({
+        data: { propertyId, viewerIp: ip, userAgent },
+      });
+    }
 
     const { _count } = await prisma.propertyView.aggregate({
       where: { propertyId },

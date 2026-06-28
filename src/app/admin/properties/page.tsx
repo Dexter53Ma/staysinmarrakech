@@ -6,6 +6,14 @@ import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
   Dialog,
   DialogContent,
   DialogDescription,
@@ -52,6 +60,7 @@ const PROPERTY_STATUSES = [
   { value: "SOLD", label: "Vendu" },
   { value: "RENTED", label: "Loué" },
   { value: "PENDING", label: "En attente" },
+  { value: "MAINTENANCE", label: "Maintenance" },
 ];
 
 export default function PropertiesPage() {
@@ -135,7 +144,7 @@ export default function PropertiesPage() {
             <select
               value={typeFilter}
               onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-              className="h-10 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm outline-none focus:border-gray-400"
+              className="h-10 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm outline-none focus:border-gray-400 transition-colors duration-150"
             >
               {PROPERTY_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>{t.label}</option>
@@ -144,7 +153,7 @@ export default function PropertiesPage() {
             <select
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-              className="h-10 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm outline-none focus:border-gray-400"
+              className="h-10 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm outline-none focus:border-gray-400 transition-colors duration-150"
             >
               {PROPERTY_STATUSES.map((s) => (
                 <option key={s.value} value={s.value}>{s.label}</option>
@@ -167,22 +176,22 @@ export default function PropertiesPage() {
         ) : (
           <>
             <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-100">
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Image</th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Titre</th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Type</th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Statut</th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Prix</th>
-                    <th className="text-left text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Vues</th>
-                    <th className="text-right text-xs font-semibold text-gray-500 uppercase tracking-wider px-6 py-3">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-50">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Image</TableHead>
+                    <TableHead>Titre</TableHead>
+                    <TableHead>Type</TableHead>
+                    <TableHead>Statut</TableHead>
+                    <TableHead>Prix</TableHead>
+                    <TableHead>Vues</TableHead>
+                    <TableHead className="text-right">Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
                   {properties.map((property) => (
-                    <tr key={property.id} className="hover:bg-gray-50/50 transition-colors">
-                      <td className="px-6 py-3">
+                    <TableRow key={property.id}>
+                      <TableCell>
                         <div className="w-16 h-12 rounded-xl overflow-hidden bg-gray-100">
                           {property.images[0] ? (
                             <Image
@@ -199,36 +208,34 @@ export default function PropertiesPage() {
                             </div>
                           )}
                         </div>
-                      </td>
-                      <td className="px-6 py-3">
-                        <p className="font-medium text-sm text-gray-900">{property.title}</p>
-                      </td>
-                      <td className="px-6 py-3">
+                      </TableCell>
+                      <TableCell className="font-medium">{property.title}</TableCell>
+                      <TableCell>
                         <StatusBadge status={property.type} />
-                      </td>
-                      <td className="px-6 py-3">
+                      </TableCell>
+                      <TableCell>
                         <StatusBadge status={property.status} />
-                      </td>
-                      <td className="px-6 py-3 text-sm font-medium text-gray-900">
+                      </TableCell>
+                      <TableCell className="text-sm font-medium tabular-nums">
                         {formatPrice(property.price, property.currency)}
-                      </td>
-                      <td className="px-6 py-3">
-                        <div className="flex items-center gap-1.5 text-sm text-gray-500">
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-1.5 text-sm text-gray-500 tabular-nums">
                           <Eye className="size-3.5" />
                           {property._count.views}
                         </div>
-                      </td>
-                      <td className="px-6 py-3">
+                      </TableCell>
+                      <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => router.push(`/admin/properties/${property.id}/edit`)}
-                            className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors"
+                            className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 active:bg-gray-200 active:scale-[0.95] transition-all duration-150"
                           >
                             <Edit className="size-4" />
                           </button>
                           <Dialog>
                             <DialogTrigger
-                              render={<button className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 transition-colors" />}
+                              render={<button className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 active:bg-red-100 active:scale-[0.95] transition-all duration-150" />}
                             >
                               <Trash2 className="size-4" />
                             </DialogTrigger>
@@ -253,30 +260,30 @@ export default function PropertiesPage() {
                             </DialogContent>
                           </Dialog>
                         </div>
-                      </td>
-                    </tr>
+                      </TableCell>
+                    </TableRow>
                   ))}
-                </tbody>
-              </table>
+                </TableBody>
+              </Table>
             </div>
 
             {totalPages > 1 && (
               <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100">
-                <p className="text-sm text-gray-500">
+                <p className="text-sm text-gray-500 tabular-nums">
                   Page {page} sur {totalPages}
                 </p>
                 <div className="flex items-center gap-2">
                   <button
                     disabled={page === 1}
                     onClick={() => setPage(page - 1)}
-                    className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 active:bg-gray-100 active:scale-[0.95] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150"
                   >
                     <ChevronLeft className="size-4" />
                   </button>
                   <button
                     disabled={page === totalPages}
                     onClick={() => setPage(page + 1)}
-                    className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+                    className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 active:bg-gray-100 active:scale-[0.95] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150"
                   >
                     <ChevronRight className="size-4" />
                   </button>

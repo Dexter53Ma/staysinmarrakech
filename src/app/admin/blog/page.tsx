@@ -14,7 +14,10 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
-import { Plus, Pencil, Trash2 } from "lucide-react";
+import { Plus, Pencil, Trash2, FileText } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin";
+import { EmptyState } from "@/components/admin";
+import { TableSkeleton } from "@/components/admin";
 
 interface BlogPost {
   id: string;
@@ -72,22 +75,26 @@ export default function AdminBlogPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Articles de blog</h1>
-        <Link href="/admin/blog/new">
-          <Button>
-            <Plus size={16} />
-            Nouvel article
-          </Button>
-        </Link>
-      </div>
+      <AdminPageHeader
+        title="Articles de blog"
+        description={`${posts.length} article${posts.length > 1 ? "s" : ""}`}
+        breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Blog" }]}
+        action={{ label: "Nouvel article", href: "/admin/blog/new", icon: Plus }}
+      />
 
       {loading ? (
-        <p className="text-sm text-gray-500">Chargement…</p>
+        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <TableSkeleton rows={5} cols={5} />
+        </div>
       ) : posts.length === 0 ? (
-        <p className="text-sm text-gray-500">Aucun article.</p>
+        <EmptyState
+          icon={FileText}
+          title="Aucun article"
+          description="Commencez par rédiger votre premier article."
+          action={{ label: "Nouvel article", href: "/admin/blog/new" }}
+        />
       ) : (
-        <div className="bg-white rounded-lg border overflow-hidden">
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>

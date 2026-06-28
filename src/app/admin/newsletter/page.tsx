@@ -1,7 +1,18 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Icon, faEnvelope, faCheck, faTimes } from "@/components/icons";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { AdminPageHeader } from "@/components/admin";
+import { EmptyState } from "@/components/admin";
+import { TableSkeleton } from "@/components/admin";
+import { Mail, CheckCircle, XCircle } from "lucide-react";
 
 interface Subscriber {
   id: string;
@@ -29,17 +40,18 @@ export default function NewsletterPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-bold text-gray-900">Newsletter</h1>
-        <p className="text-gray-500 text-sm mt-1">Gérer les inscriptions à la newsletter</p>
-      </div>
+      <AdminPageHeader
+        title="Newsletter"
+        description={`${subscribers.length} inscrit${subscribers.length > 1 ? "s" : ""} au total`}
+        breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Newsletter" }]}
+      />
 
       {/* Stats */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-blue-50 rounded-lg flex items-center justify-center">
-              <Icon icon={faEnvelope} className="text-[#0d47a1]" />
+              <Mail className="size-5 text-blue-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">{subscribers.length}</p>
@@ -47,10 +59,10 @@ export default function NewsletterPage() {
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-green-50 rounded-lg flex items-center justify-center">
-              <Icon icon={faCheck} className="text-green-600" />
+            <div className="w-10 h-10 bg-emerald-50 rounded-lg flex items-center justify-center">
+              <CheckCircle className="size-5 text-emerald-600" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">{activeCount}</p>
@@ -58,10 +70,10 @@ export default function NewsletterPage() {
             </div>
           </div>
         </div>
-        <div className="bg-white rounded-xl border border-gray-200 p-5">
+        <div className="bg-white rounded-2xl border border-gray-100 p-5">
           <div className="flex items-center gap-3">
             <div className="w-10 h-10 bg-red-50 rounded-lg flex items-center justify-center">
-              <Icon icon={faTimes} className="text-red-500" />
+              <XCircle className="size-5 text-red-500" />
             </div>
             <div>
               <p className="text-2xl font-bold text-gray-900">{subscribers.length - activeCount}</p>
@@ -72,42 +84,45 @@ export default function NewsletterPage() {
       </div>
 
       {/* Table */}
-      <div className="bg-white rounded-xl border border-gray-200 overflow-hidden">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
         {loading ? (
-          <div className="p-8 text-center text-gray-400">Chargement...</div>
-        ) : subscribers.length === 0 ? (
-          <div className="p-8 text-center text-gray-400">
-            <Icon icon={faEnvelope} className="text-3xl mb-2" />
-            <p>Aucun inscrit pour le moment</p>
+          <div className="p-6">
+            <TableSkeleton rows={5} cols={4} />
           </div>
+        ) : subscribers.length === 0 ? (
+          <EmptyState
+            icon={Mail}
+            title="Aucun inscrit"
+            description="Les inscriptions apparaîtront ici."
+          />
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-sm">
-              <thead className="bg-gray-50 border-b border-gray-200">
-                <tr>
-                  <th className="text-left px-5 py-3 font-semibold text-gray-600">Email</th>
-                  <th className="text-left px-5 py-3 font-semibold text-gray-600">Nom</th>
-                  <th className="text-left px-5 py-3 font-semibold text-gray-600">Statut</th>
-                  <th className="text-left px-5 py-3 font-semibold text-gray-600">Date</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-gray-100">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Nom</TableHead>
+                  <TableHead>Statut</TableHead>
+                  <TableHead>Date</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
                 {subscribers.map((sub) => (
-                  <tr key={sub.id} className="hover:bg-gray-50">
-                    <td className="px-5 py-3 font-medium text-gray-900">{sub.email}</td>
-                    <td className="px-5 py-3 text-gray-500">{sub.name || "—"}</td>
-                    <td className="px-5 py-3">
-                      <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${sub.isActive ? "bg-green-100 text-green-700" : "bg-red-100 text-red-700"}`}>
+                  <TableRow key={sub.id}>
+                    <TableCell className="font-medium">{sub.email}</TableCell>
+                    <TableCell>{sub.name || "—"}</TableCell>
+                    <TableCell>
+                      <span className={`inline-flex items-center gap-1 text-xs font-medium px-2.5 py-1 rounded-full ${sub.isActive ? "bg-emerald-50 text-emerald-700 ring-emerald-600/20 ring-1 ring-inset" : "bg-red-50 text-red-700 ring-red-600/20 ring-1 ring-inset"}`}>
                         {sub.isActive ? "Actif" : "Désabonné"}
                       </span>
-                    </td>
-                    <td className="px-5 py-3 text-gray-400">
+                    </TableCell>
+                    <TableCell className="text-gray-500">
                       {new Date(sub.createdAt).toLocaleDateString("fr-FR")}
-                    </td>
-                  </tr>
+                    </TableCell>
+                  </TableRow>
                 ))}
-              </tbody>
-            </table>
+              </TableBody>
+            </Table>
           </div>
         )}
       </div>

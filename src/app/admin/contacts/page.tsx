@@ -11,7 +11,10 @@ import {
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Eye, Trash2 } from "lucide-react";
+import { Eye, Trash2, CheckCircle, Mail } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin";
+import { EmptyState } from "@/components/admin";
+import { TableSkeleton } from "@/components/admin";
 import {
   Dialog,
   DialogContent,
@@ -67,6 +70,21 @@ export default function AdminContactsPage() {
     }
   };
 
+  const markAsReplied = async (id: string) => {
+    try {
+      await fetch(`/api/contacts/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "REPLIED" }),
+      });
+      setContacts((prev) =>
+        prev.map((c) => (c.id === id ? { ...c, status: "REPLIED" } : c))
+      );
+    } catch {
+      console.error("Erreur lors de la mise à jour");
+    }
+  };
+
   const deleteContact = async (id: string) => {
     if (!confirm("Supprimer ce message ?")) return;
     try {
@@ -93,14 +111,24 @@ export default function AdminContactsPage() {
 
   return (
     <div className="space-y-6">
-      <h1 className="text-2xl font-bold text-gray-900">Messages de contact</h1>
+      <AdminPageHeader
+        title="Messages de contact"
+        description={`${contacts.length} message${contacts.length > 1 ? "s" : ""}`}
+        breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Contacts" }]}
+      />
 
       {loading ? (
-        <p className="text-sm text-gray-500">Chargement…</p>
+        <div className="bg-white rounded-2xl border border-gray-100 p-6">
+          <TableSkeleton rows={5} cols={5} />
+        </div>
       ) : contacts.length === 0 ? (
-        <p className="text-sm text-gray-500">Aucun message.</p>
+        <EmptyState
+          icon={Mail}
+          title="Aucun message"
+          description="Les messages de contact apparaîtront ici."
+        />
       ) : (
-        <div className="bg-white rounded-lg border overflow-hidden">
+        <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
@@ -134,6 +162,16 @@ export default function AdminContactsPage() {
                       >
                         <Eye size={14} />
                       </Button>
+                      {c.status !== "REPLIED" && (
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          title="Marquer comme répondu"
+                          onClick={() => markAsReplied(c.id)}
+                        >
+                          <CheckCircle size={14} className="text-green-600" />
+                        </Button>
+                      )}
                       <Button
                         variant="ghost"
                         size="icon-sm"

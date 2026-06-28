@@ -1,13 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireApiAuth } from "@/lib/auth";
-
-function generateSlug(title: string): string {
-  return title
-    .toLowerCase()
-    .replace(/[^a-z0-9]+/g, "-")
-    .replace(/(^-|-$)/g, "");
-}
+import { generateSlug, ensureUniqueSlug, validateFields, apiError } from "@/lib/api-helpers";
 
 export async function GET(request: NextRequest) {
   try {
@@ -46,7 +40,7 @@ export async function GET(request: NextRequest) {
     });
   } catch (e) {
     console.error("GET /api/properties error:", e);
-    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
+    return apiError("Erreur serveur");
   }
 }
 
@@ -57,9 +51,11 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const { images, ...data } = body;
 
+    const validationError = validateFields(body, ["title", "description", "type", "price", "address"]);
+    if (validationError) return validationError;
+
     let slug = generateSlug(data.title);
-    const existing = await prisma.property.findUnique({ where: { slug } });
-    if (existing) slug = `${slug}-${Date.now()}`;
+    slug = await ensureUniqueSlug(slug, (s) => prisma.property.findUnique({ where: { slug: s }, select: { id: true } }));
 
     const property = await prisma.property.create({
       data: {
@@ -76,6 +72,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json(property, { status: 201 });
   } catch (e: unknown) {
     const message = e instanceof Error ? e.message : "Erreur serveur";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return apiError(message);
   }
 }

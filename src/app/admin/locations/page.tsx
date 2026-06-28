@@ -11,7 +11,6 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -22,7 +21,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Plus, Pencil, Trash2, RefreshCw } from "lucide-react";
+import { Plus, Pencil, Trash2, MapPin } from "lucide-react";
+import { AdminPageHeader } from "@/components/admin";
+import { EmptyState } from "@/components/admin";
+import { TableSkeleton } from "@/components/admin";
 
 interface Location {
   id: string;
@@ -133,21 +135,14 @@ export default function AdminLocationsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-gray-900">Locations</h1>
-        <div className="flex gap-2">
-          <Button variant="outline" size="sm" onClick={fetchLocations}>
-            <RefreshCw size={16} />
-          </Button>
-          <Button size="sm" onClick={openCreate}>
-            <Plus size={16} className="mr-1" />
-            Nouvelle location
-          </Button>
-        </div>
-      </div>
+      <AdminPageHeader
+        title="Locations"
+        description={`${locations.length} location${locations.length > 1 ? "s" : ""}`}
+        breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Locations" }]}
+        action={{ label: "Nouvelle location", onClick: openCreate, icon: Plus }}
+      />
 
-      <Card>
-        <CardContent className="p-0">
+      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
           <Table>
             <TableHeader>
               <TableRow>
@@ -161,14 +156,19 @@ export default function AdminLocationsPage() {
             <TableBody>
               {loading ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-gray-500">
-                    Chargement...
+                  <TableCell colSpan={5}>
+                    <TableSkeleton rows={3} cols={4} />
                   </TableCell>
                 </TableRow>
               ) : locations.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center py-8 text-gray-500">
-                    Aucune location trouvée
+                  <TableCell colSpan={5}>
+                    <EmptyState
+                      icon={MapPin}
+                      title="Aucune location"
+                      description="Ajoutez votre première location."
+                      action={{ label: "Nouvelle location", onClick: openCreate }}
+                    />
                   </TableCell>
                 </TableRow>
               ) : (
@@ -207,8 +207,7 @@ export default function AdminLocationsPage() {
               )}
             </TableBody>
           </Table>
-        </CardContent>
-      </Card>
+      </div>
 
       <Dialog open={dialogOpen} onOpenChange={(open) => !open && setDialogOpen(false)}>
         <DialogContent className="sm:max-w-md">

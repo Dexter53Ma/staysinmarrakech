@@ -1,19 +1,15 @@
 import type { Metadata } from "next";
-import { Raleway, Rubik } from "next/font/google";
+import { Raleway } from "next/font/google";
 import { SettingsProvider } from "@/components/SettingsContext";
+import { ServicesProvider } from "@/components/ServicesContext";
 import FloatingContact from "@/components/FloatingContact";
+import BackToTop from "@/components/BackToTop";
 import "./globals.css";
 
 const raleway = Raleway({
   variable: "--font-raleway",
   subsets: ["latin"],
   weight: ["300", "400", "500", "600", "700", "800"],
-});
-
-const rubik = Rubik({
-  variable: "--font-rubik",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
@@ -35,7 +31,7 @@ export const metadata: Metadata = {
     description: "Découvrez nos villas de luxe à Marrakech avec piscine privée. Location pour vacances, mariages et événements.",
     images: [
       {
-        url: "/seo/og-default.jpg",
+        url: "https://staysinmarrakech.netlify.app/seo/og-default.svg",
         width: 1200,
         height: 630,
         alt: "StaysInMarrakech - Villas de luxe à Marrakech",
@@ -46,7 +42,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Location et vente de villas de luxe à Marrakech - StaysInMarrakech",
     description: "Découvrez nos villas de luxe à Marrakech avec piscine privée. Location pour vacances, mariages et événements.",
-    images: ["/seo/og-default.jpg"],
+    images: ["https://staysinmarrakech.netlify.app/seo/og-default.svg"],
   },
   icons: {
     icon: "/seo/favicon.png",
@@ -64,6 +60,9 @@ export const metadata: Metadata = {
   },
   alternates: {
     canonical: "https://staysinmarrakech.netlify.app",
+    languages: {
+      "fr": "https://staysinmarrakech.netlify.app",
+    },
   },
 };
 
@@ -75,17 +74,24 @@ export default function RootLayout({
   return (
     <html
       lang="fr"
-      className={`${raleway.variable} ${rubik.variable} h-full antialiased`}
+      className={`${raleway.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+      </head>
       <body className="min-h-full flex flex-col font-sans">
         <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[9999] focus:bg-[#0d47a1] focus:text-white focus:px-4 focus:py-2 focus:rounded">
           Aller au contenu principal
         </a>
         <SettingsProvider>
-          <div id="main-content" className="flex-1 flex flex-col">
-            {children}
-          </div>
-          <FloatingContact />
+          <ServicesProvider>
+            <div id="main-content" className="flex-1 flex flex-col">
+              {children}
+            </div>
+            <FloatingContact />
+            <BackToTop />
+          </ServicesProvider>
         </SettingsProvider>
       </body>
     </html>

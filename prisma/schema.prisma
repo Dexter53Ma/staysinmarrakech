@@ -94,6 +94,7 @@ enum PropertyStatus {
   SOLD
   RENTED
   PENDING
+  MAINTENANCE
 }
 
 model PropertyImage {

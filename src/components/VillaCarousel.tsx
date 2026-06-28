@@ -81,7 +81,7 @@ export default function VillaCarousel() {
       .catch(() => {});
   }, []);
 
-  const phone = settings.phone_2 || "+212600000000";
+  const phone = settings.phone_1 || "+212621189496";
   const whatsappNumber = phone.replace(/[^0-9]/g, "");
   const email = settings.email || "info@villapremium.ma";
 
@@ -115,7 +115,7 @@ export default function VillaCarousel() {
   };
 
   return (
-    <section className="py-16 px-4 max-w-[1200px] mx-auto">
+    <section className="py-16 px-4 max-w-[1200px] mx-auto overflow-hidden">
       <div className="text-center mb-10">
         <h2 className="text-2xl md:text-3xl font-bold text-[#0d47a1] mb-3">
           Découvrez notre sélection de villas de luxe à Marrakech
@@ -129,7 +129,7 @@ export default function VillaCarousel() {
         {canScrollLeft && (
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white shadow-lg rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#0d47a1] hover:text-white transition-colors"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#0d47a1] hover:text-white transition-colors"
             aria-label="Précédent"
           >
             <Icon icon={faArrowLeft} />
@@ -139,7 +139,6 @@ export default function VillaCarousel() {
         <div
           ref={scrollRef}
           className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-hide pb-4"
-          style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
         >
           {villas.map((villa) => (
             <div
@@ -162,7 +161,7 @@ export default function VillaCarousel() {
                   )}
                   <button
                     onClick={(e) => { e.preventDefault(); toggleWishlist(villa.name); }}
-                    className="absolute top-2 right-2 w-8 h-8 rounded-full bg-white/80 flex items-center justify-center hover:bg-white transition-colors z-10"
+                    className="absolute top-2 right-2 w-11 h-11 rounded-full bg-white/80 flex items-center justify-center hover:bg-white transition-colors z-10"
                     aria-label={wishlist.includes(villa.name) ? "Retirer de la sélection" : "Ajouter à la sélection"}
                   >
                     <Icon
@@ -237,7 +236,7 @@ export default function VillaCarousel() {
         {canScrollRight && (
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white shadow-lg rounded-full w-10 h-10 flex items-center justify-center hover:bg-[#0d47a1] hover:text-white transition-colors"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#0d47a1] hover:text-white transition-colors"
             aria-label="Suivant"
           >
             <Icon icon={faArrowRight} />

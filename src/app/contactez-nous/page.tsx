@@ -8,8 +8,8 @@ import { useSettings } from "@/components/SettingsContext";
 
 const FALLBACK = {
   address: "Résidence Farah, Camp Mangin, Gueliz, 40000 Marrakech",
-  phone1: "+212 6 59 59 33 49",
-  phone2: "+33 6 19 07 84 48",
+phone1: "+212 6 21 18 94 96",
+    phone2: "+212 6 21 94 74 93",
   email: "contact@staysinmarrakech.com",
 };
 

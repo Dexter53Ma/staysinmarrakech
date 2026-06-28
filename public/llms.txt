@@ -1,0 +1,35 @@
+# StaysInMarrakech — Luxury Villa Rental Marrakech
+
+> StaysInMarrakech is a luxury villa rental and concierge agency in Marrakech, Morocco, established in 2014. We manage 50+ premium villas with private heated pools across Palmeraie, Gueliz, Route de l'Ourika, Amelkis, and Targa. Our founder Cyrille previously served as Commercial Director at Filovent, Europe's leading boat rental platform.
+
+## Key Pages
+
+- [Luxury Villa Rental](https://staysinmarrakech.netlify.app/marrakech-villas/location-villa-marrakech): Browse 50+ verified luxury villas with private pools in Marrakech
+- [Villa Sales](https://staysinmarrakech.netlify.app/marrakech-villas/vente-villa-marrakech): Purchase luxury villas in Marrakech's prestigious neighborhoods
+- [Concierge Services](https://staysinmarrakech.netlify.app/service): Private chef, spa, excursions, event planning, luxury car rental
+- [About Us](https://staysinmarrakech.netlify.app/agence): Our team and 10+ years of expertise in Marrakech luxury rentals
+- [Blog](https://staysinmarrakech.netlify.app/blog): Marrakech travel guides and villa insights
+- [Contact](https://staysinmarrakech.netlify.app/contactez-nous): Get in touch with our team
+
+## Key Facts
+
+- Established in 2014, 1000+ satisfied clients
+- 50+ luxury villas verified every 3 months for quality
+- Concierge service available 7 days/7, 9h to 20h
+- Based in Gueliz, Marrakech (Residence Farah, Camp Mangin, 40000 Marrakech)
+- Contact: +212 6 21 18 94 96 / +212 6 21 94 74 93
+- Email: contact@staysinmarrakech.com
+- Neighborhoods served: Palmeraie, Gueliz, Route de l'Ourika, Amelkis, Targa, Royal Palm, Samanah Golf
+
+## Services
+
+- Villa rental (short-term and long-term)
+- Villa sales and acquisition
+- Private chef and catering
+- Spa and wellness treatments
+- Quad, buggy, and desert excursions
+- Luxury car rental with chauffeur
+- Airport transfers
+- Event organization (weddings, birthdays, corporate)
+- Photography and videography
+- Babysitting and family services
