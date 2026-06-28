@@ -156,18 +156,21 @@ enum BookingStatus {
 // ─── Services ───────────────────────────────────────────
 
 model Service {
-  id          String    @id @default(cuid())
-  title       String
-  slug        String    @unique
-  description String    @db.Text
-  image       String?
-  category    String?
-  price       Float?
-  priceUnit   String?   @map("price_unit") // per person, per session, per hour
-  isActive    Boolean   @default(true) @map("is_active")
-  sortOrder   Int       @default(0) @map("sort_order")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  description     String    @db.Text
+  longDescription String?   @db.Text @map("long_description")
+  metaDescription String?   @db.Text @map("meta_description")
+  features        String?   @db.Text // JSON array of feature strings
+  image           String?
+  category        String?
+  price           Float?
+  priceUnit       String?   @map("price_unit") // per person, per session, per hour
+  isActive        Boolean   @default(true) @map("is_active")
+  sortOrder       Int       @default(0) @map("sort_order")
+  createdAt       DateTime  @default(now()) @map("created_at")
+  updatedAt       DateTime  @updatedAt @map("updated_at")
 
   @@map("services")
 }

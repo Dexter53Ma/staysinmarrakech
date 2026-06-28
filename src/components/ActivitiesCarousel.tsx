@@ -84,14 +84,14 @@ export default function ActivitiesCarousel() {
             <a
               key={activity.slug}
               href={`/services/${activity.slug}`}
-              className="relative flex-none w-[200px] h-[150px] rounded-[4px] overflow-hidden snap-start group cursor-pointer block"
+              className="relative flex-none w-[70vw] sm:w-[240px] lg:w-[280px] h-[180px] sm:h-[200px] rounded-lg overflow-hidden snap-start group cursor-pointer block"
             >
               <Image
                 src={activity.image || "/images/placeholder.svg"}
                 alt={activity.name}
                 fill
                 className="object-cover transition-transform duration-200 group-hover:scale-105"
-                sizes="200px"
+                sizes="(max-width: 640px) 70vw, (max-width: 1024px) 240px, 280px"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-3">
                 <span className="text-white text-[14px] font-bold uppercase">

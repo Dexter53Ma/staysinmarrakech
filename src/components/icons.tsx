@@ -41,8 +41,16 @@ import {
 // ─── Social brand icons (Lucide doesn't ship these) ─────
 
 function createBrandIcon(paths: string, viewBox = "0 0 24 24"): LucideIcon {
-  const BrandIcon = ({ className = "", ...props }: React.SVGProps<SVGSVGElement>) => (
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox={viewBox} fill="currentColor" className={className} {...props}>
+  const BrandIcon = ({ className = "", width = 24, height = 24, ...props }: React.SVGProps<SVGSVGElement>) => (
+    <svg
+      xmlns="http://www.w3.org/2000/svg"
+      viewBox={viewBox}
+      width={width}
+      height={height}
+      fill="currentColor"
+      className={className}
+      {...props}
+    >
       <path d={paths} />
     </svg>
   );
@@ -116,6 +124,21 @@ export {
 
 export { LucideIcon as IconDefinition };
 
-export function Icon({ icon: IconComponent, className = "", ...props }: { icon: LucideIcon; className?: string; [key: string]: unknown }) {
+export function Icon({
+  icon: IconComponent,
+  className = "",
+  size,
+  ...props
+}: {
+  icon: LucideIcon;
+  className?: string;
+  size?: number;
+  [key: string]: unknown;
+}) {
+  // If a numeric size is passed, use it for both width and height
+  if (size !== undefined) {
+    return <IconComponent size={size} className={className} {...props} />;
+  }
+  // Otherwise let Lucide use its default (24px) and apply className for sizing
   return <IconComponent className={className} {...props} />;
 }

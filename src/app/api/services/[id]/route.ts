@@ -40,7 +40,7 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, description, image, category, price, priceUnit, isActive, sortOrder } = body;
+    const { title, description, longDescription, metaDescription, features, image, category, price, priceUnit, isActive, sortOrder } = body;
 
     const existing = await prisma.service.findUnique({ where: { id } });
     if (!existing) {
@@ -56,12 +56,20 @@ export async function PUT(
       }
     }
 
+    // Convert features from newline-separated string to JSON array
+    const featuresJson = features !== undefined
+      ? (features ? JSON.stringify(features.split("\n").map((f: string) => f.trim()).filter(Boolean)) : null)
+      : existing.features;
+
     const service = await prisma.service.update({
       where: { id },
       data: {
         title: title || existing.title,
         slug,
         description: description || existing.description,
+        longDescription: longDescription !== undefined ? longDescription : existing.longDescription,
+        metaDescription: metaDescription !== undefined ? metaDescription : existing.metaDescription,
+        features: featuresJson,
         image: image !== undefined ? image : existing.image,
         category: category !== undefined ? category : existing.category,
         price: price !== undefined ? (price ? parseFloat(price) : null) : existing.price,

@@ -183,10 +183,10 @@ export default function PropertyDetailClient({
                 </span>
               </div>
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{property.title}</h1>
-              <div className="flex items-center gap-4 text-sm text-gray-500">
-                <span className="flex items-center gap-1">
-                  <MapPin className="size-4" />
-                  {property.address}, {property.city}{property.quarter ? ` - ${property.quarter}` : ""}
+              <div className="flex items-center gap-4 text-sm text-gray-500 min-w-0">
+                <span className="flex items-center gap-1 min-w-0">
+                  <MapPin className="size-4 shrink-0" />
+                  <span className="truncate">{property.address}, {property.city}{property.quarter ? ` - ${property.quarter}` : ""}</span>
                 </span>
                 <span className="flex items-center gap-1">
                   <Eye className="size-4" />
@@ -217,19 +217,21 @@ export default function PropertyDetailClient({
 
             <div>
               <h2 className="text-xl font-bold text-gray-900 mb-4">Disponibilité</h2>
-              <div className="bg-gray-50 rounded-xl p-4 inline-block">
-                <DatePicker
-                  mode="multiple"
-                  selected={bookedDates.flatMap((b) => {
-                    const dates: Date[] = [];
-                    const d = new Date(b.start);
-                    while (d < b.end) { dates.push(new Date(d)); d.setDate(d.getDate() + 1); }
-                    return dates;
-                  })}
-                  disabled={[]}
-                  locale={fr}
-                  className="rounded-lg"
-                />
+              <div className="bg-gray-50 rounded-xl p-4 overflow-x-auto">
+                <div className="min-w-[320px]">
+                  <DatePicker
+                    mode="multiple"
+                    selected={bookedDates.flatMap((b) => {
+                      const dates: Date[] = [];
+                      const d = new Date(b.start);
+                      while (d < b.end) { dates.push(new Date(d)); d.setDate(d.getDate() + 1); }
+                      return dates;
+                    })}
+                    disabled={[]}
+                    locale={fr}
+                    className="rounded-lg"
+                  />
+                </div>
               </div>
               <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
                 <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-red-200 border border-red-300" /> Réservé</span>
@@ -250,7 +252,7 @@ export default function PropertyDetailClient({
 
       {/* Sticky Booking Bar */}
       {property.status === "AVAILABLE" && (
-        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-gray-200 safe-area-pb">
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-gray-200 pb-[env(safe-area-inset-bottom)]">
           <div className="max-w-[1200px] mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <div className="flex-1 min-w-0">
               <p className="text-lg font-bold text-gray-900 truncate">
@@ -318,7 +320,7 @@ export default function PropertyDetailClient({
               </div>
             </div>
 
-            <div className="flex-1 overflow-y-auto px-5 pb-6 safe-area-pb">
+            <div className="flex-1 overflow-y-auto px-5 pb-6 pb-[calc(24px+env(safe-area-inset-bottom,0px))]">
               <form onSubmit={handleSubmitBooking}>
                 {bookingStep === 1 && (
                   <div className="space-y-4 animate-fadeIn">

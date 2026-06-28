@@ -60,15 +60,15 @@ export default function Footer() {
   ];
 
   return (
-    <footer style={{ backgroundColor: "rgb(0, 17, 34)", padding: "50px 15px 20px" }}>
-      <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-[30px] max-w-[1140px] mx-auto">
+    <footer className="bg-[#001122] py-12 px-4 lg:px-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-8 max-w-[1140px] mx-auto">
         {columns.map((col) => (
           <div key={col.title}>
-            <h4 style={{ fontSize: 18, fontWeight: 600, color: "#d9d9d9", marginBottom: 8 }}>
+            <h4 className="text-lg font-semibold text-gray-300 mb-2">
               {col.title}
             </h4>
             {col.description ? (
-              <p style={{ fontSize: 14, color: "#d9d9d9", lineHeight: "20px" }}>
+              <p className="text-sm text-gray-300 leading-5">
                 {col.description}
               </p>
             ) : (
@@ -78,8 +78,7 @@ export default function Footer() {
                     <a
                       key={link.label}
                       href={link.href}
-                      style={{ fontSize: 14, color: "#d9d9d9" }}
-                      className="block py-2 hover:text-white transition-colors min-h-[44px] flex items-center"
+                      className="text-sm text-gray-300 py-2 hover:text-white transition-colors min-h-[44px] flex items-center"
                       target={link.href.startsWith("http") ? "_blank" : undefined}
                       rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
                     >
@@ -88,8 +87,7 @@ export default function Footer() {
                   ) : (
                     <span
                       key={link.label}
-                      style={{ fontSize: 14, color: "#d9d9d9" }}
-                      className="block py-2 min-h-[44px] flex items-center"
+                      className="text-sm text-gray-300 py-2 min-h-[44px] flex items-center"
                     >
                       {link.label}
                     </span>
@@ -101,10 +99,10 @@ export default function Footer() {
         ))}
       </div>
 
-      <h4 style={{ fontSize: 16, fontWeight: 600, color: "#d9d9d9", marginBottom: 8, marginTop: 20 }} className="max-w-[1140px] mx-auto">
+      <h4 className="text-base font-semibold text-gray-300 mt-5 mb-2 max-w-[1140px] mx-auto">
         Suivez-nous
       </h4>
-      <div className="flex gap-[15px] mt-2 max-w-[1140px] mx-auto">
+      <div className="flex gap-3.5 mt-2 max-w-[1140px] mx-auto">
         {socialLinks.map((social) => (
           <a
             key={social.label}
@@ -112,17 +110,14 @@ export default function Footer() {
             target="_blank"
             rel="noopener noreferrer"
             aria-label={social.label}
-            className="w-11 h-11 rounded-full flex items-center justify-center text-[#d9d9d9] hover:text-white hover:bg-white/10 transition-colors"
+            className="w-11 h-11 rounded-full flex items-center justify-center text-gray-300 hover:text-white hover:bg-white/10 transition-colors"
           >
             <Icon icon={social.icon} />
           </a>
         ))}
       </div>
 
-      <div
-        className="text-center mt-[30px] pt-5 max-w-[1140px] mx-auto"
-        style={{ borderTop: "1px solid rgba(217, 217, 217, 0.2)", fontSize: 14, color: "#d9d9d9" }}
-      >
+      <div className="text-center mt-7 pt-5 border-t border-white/20 max-w-[1140px] mx-auto text-sm text-gray-300">
         &copy; {new Date().getFullYear()} StaysInMarrakech. Tous droits réservés.
       </div>
     </footer>

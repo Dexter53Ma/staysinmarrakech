@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
   if (auth.error) return auth.error;
   try {
     const body = await request.json();
-    const { title, description, image, category, price, priceUnit, isActive, sortOrder } = body;
+    const { title, description, longDescription, metaDescription, features, image, category, price, priceUnit, isActive, sortOrder } = body;
 
     const validationError = validateFields(body, ["title", "description"]);
     if (validationError) return validationError;
@@ -29,11 +29,17 @@ export async function POST(request: NextRequest) {
     let slug = generateSlug(title);
     slug = await ensureUniqueSlug(slug, (s) => prisma.service.findUnique({ where: { slug: s }, select: { id: true } }));
 
+    // Convert features from newline-separated string to JSON array
+    const featuresJson = features ? JSON.stringify(features.split("\n").map((f: string) => f.trim()).filter(Boolean)) : null;
+
     const service = await prisma.service.create({
       data: {
         title,
         slug,
         description,
+        longDescription: longDescription || null,
+        metaDescription: metaDescription || null,
+        features: featuresJson,
         image: image || null,
         category: category || null,
         price: price ? parseFloat(price) : null,

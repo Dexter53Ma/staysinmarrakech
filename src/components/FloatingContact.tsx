@@ -13,7 +13,7 @@ export default function FloatingContact() {
   const [open, setOpen] = useState(false);
 
   return (
-    <div className="fixed bottom-20 right-6 z-50">
+    <div className="fixed bottom-20 right-4 sm:right-6 z-50" style={{ bottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
       {open && (
         <div className="mb-3 flex flex-col gap-3 items-end">
           <a

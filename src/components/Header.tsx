@@ -64,6 +64,16 @@ export default function Header() {
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
+  // Lock body scroll when mobile menu is open
+  useEffect(() => {
+    if (mobileOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => { document.body.style.overflow = ""; };
+  }, [mobileOpen]);
+
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (servicesRef.current && !servicesRef.current.contains(e.target as Node)) setServicesOpen(false);
@@ -319,12 +329,24 @@ export default function Header() {
 
               {/* Links */}
               {extraNavLinks.map((link) => (
-                <Link key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="text-white text-sm font-semibold uppercase py-3 border-b border-white/10 hover:text-[#ffb000] transition-colors">
+                <Link key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="text-white text-sm font-semibold uppercase py-3 border-b border-white/10 hover:text-[#ffb000] transition-colors min-h-[44px] flex items-center">
                   {link.label}
                 </Link>
               ))}
 
-              <Link href="/contactez-nous" onClick={() => setMobileOpen(false)} className="mt-2 bg-[#ffb000] text-black text-sm font-bold py-3 rounded-lg text-center block">
+              {/* Language Switcher */}
+              <div className="py-3 border-b border-white/10">
+                <p className="text-white/40 text-xs uppercase tracking-wider mb-2">Langue</p>
+                <div className="flex gap-2">
+                  {languages.map((l) => (
+                    <button key={l} onClick={() => setMobileOpen(false)} className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${l === "Français" ? "bg-[#ffb000] text-black" : "bg-white/10 text-white/70 hover:bg-white/20"}`}>
+                      {l}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <Link href="/contactez-nous" onClick={() => setMobileOpen(false)} className="mt-2 bg-[#ffb000] text-black text-sm font-bold py-3.5 rounded-lg text-center block min-h-[44px] flex items-center justify-center">
                 Réserver maintenant
               </Link>
 

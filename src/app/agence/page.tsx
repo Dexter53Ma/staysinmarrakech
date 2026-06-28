@@ -67,7 +67,7 @@ export default function Agence() {
           >
             <div style={{ flex: 1, minWidth: 0 }}>
               <Image
-                src="/images/agence/cyrille.jpg"
+                src="/images/owner.webp"
                 alt="Cyrille - StaysInMarrakech"
                 width={600}
                 height={400}

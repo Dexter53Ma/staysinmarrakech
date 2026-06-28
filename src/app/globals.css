@@ -208,10 +208,6 @@
     transform: skewX(10deg);
   }
 
-  .safe-area-pb {
-    padding-bottom: max(0.75rem, env(safe-area-inset-bottom));
-  }
-
   .animate-fadeIn {
     animation: fadeIn 0.3s ease-out;
   }
