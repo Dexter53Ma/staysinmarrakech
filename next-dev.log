@@ -1,0 +1,115 @@
+▲ Next.js 16.2.9 (Turbopack)
+- Local:         http://localhost:3000
+- Network:       http://192.168.1.7:3000
+- Environments: .env
+✓ Ready in 593ms
+⚠ The "middleware" file convention is deprecated. Please use "proxy" instead. Learn more: https://nextjs.org/docs/messages/middleware-to-proxy
+
+ GET /admin/login 200 in 1379ms (next.js: 886ms, proxy.ts: 109ms, application-code: 383ms)
+ GET / 200 in 889ms (next.js: 50ms, application-code: 839ms)
+[browser] Image with src "/images/logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/sections/location-villa-marrakech.webp" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET /api/services 200 in 524ms (next.js: 94ms, application-code: 430ms)
+ GET /api/settings 200 in 574ms (next.js: 141ms, application-code: 433ms)
+ GET /api/locations 200 in 496ms (next.js: 69ms, application-code: 427ms)
+ GET /api/services 200 in 251ms (next.js: 4ms, application-code: 247ms)
+ GET /api/properties?limit=6 200 in 597ms (next.js: 35ms, application-code: 563ms)
+ GET /api/testimonials 200 in 597ms (next.js: 141ms, application-code: 456ms)
+ GET /api/blog 200 in 601ms (next.js: 103ms, application-code: 498ms)
+[browser] Image with src "/images/activities/sonotherapie.webp" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET /api/settings 200 in 108ms (next.js: 10ms, application-code: 98ms)
+ GET /admin 200 in 1444ms (next.js: 49ms, proxy.ts: 779ms, application-code: 616ms)
+ GET /api/services 200 in 313ms (next.js: 3ms, application-code: 310ms)
+[browser] Image with src "/images/logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+ GET /admin/properties 200 in 253ms (next.js: 43ms, proxy.ts: 189ms, application-code: 21ms)
+[browser] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior
+ GET /api/properties?page=1&limit=10 200 in 195ms (next.js: 3ms, application-code: 192ms)
+ GET /api/properties?page=1&limit=10 200 in 101ms (next.js: 3ms, application-code: 99ms)
+ GET /admin/bookings 200 in 146ms (next.js: 48ms, proxy.ts: 72ms, application-code: 25ms)
+ GET /api/bookings 200 in 386ms (next.js: 60ms, application-code: 326ms)
+ GET /api/bookings 200 in 175ms (next.js: 2ms, application-code: 173ms)
+ GET /admin/services 200 in 145ms (next.js: 47ms, proxy.ts: 70ms, application-code: 28ms)
+ GET /api/services 200 in 276ms (next.js: 3ms, application-code: 273ms)
+[browser] Image with src "/images/activities/sonotherapie.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/van-chauffeur.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/voiture-luxe.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/quad-buggy.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/montgolfiere.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/wakeboard.jpg" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/vtt.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/grand-canyon.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/golf.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/desert-sensation.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/visites-decouvertes.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/equitation.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/yoga-pilates.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+ GET /api/services 200 in 131ms (next.js: 2ms, application-code: 129ms)
+[browser] Image with src "/images/activities/aqua-karting.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/karting.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/side-car.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/activities/jet-ski.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/sections/evenements.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/sections/vacances-marrakech.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+ GET /admin/blog 200 in 134ms (next.js: 45ms, proxy.ts: 70ms, application-code: 19ms)
+ GET /api/blog 200 in 147ms (next.js: 3ms, application-code: 144ms)
+[browser] Image with src "/images/blog/blog9.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/blog/blog10.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/blog/blog7.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/blog/blog6.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/blog/blog8.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+ GET /api/blog 200 in 57ms (next.js: 2ms, application-code: 55ms)
+[browser] Image with src "/images/blog/blog5.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/blog/blog4.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/blog/blog2.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/blog/blog1.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/blog/blog3.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+ GET /admin/testimonials 200 in 133ms (next.js: 42ms, proxy.ts: 71ms, application-code: 20ms)
+ GET /api/testimonials 200 in 54ms (next.js: 3ms, application-code: 51ms)
+ GET /api/testimonials 200 in 53ms (next.js: 2ms, application-code: 51ms)
+ GET /admin/contacts 200 in 134ms (next.js: 42ms, proxy.ts: 71ms, application-code: 21ms)
+ GET /api/contacts 200 in 256ms (next.js: 36ms, application-code: 220ms)
+ GET /api/contacts 200 in 169ms (next.js: 2ms, application-code: 167ms)
+ GET /admin/locations 200 in 153ms (next.js: 48ms, proxy.ts: 76ms, application-code: 29ms)
+ GET /api/locations 200 in 102ms (next.js: 4ms, application-code: 98ms)
+ GET /api/locations 200 in 52ms (next.js: 2ms, application-code: 49ms)
+ GET /admin/hero-slides 200 in 132ms (next.js: 45ms, proxy.ts: 67ms, application-code: 21ms)
+ GET /api/hero-slides 200 in 130ms (next.js: 33ms, application-code: 97ms)
+[browser] Image with src "/images/sections/location-villa-marrakech.webp" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+ GET /api/hero-slides 200 in 59ms (next.js: 2ms, application-code: 57ms)
+ GET /admin/pages 200 in 131ms (next.js: 42ms, proxy.ts: 68ms, application-code: 20ms)
+ GET /api/pages 200 in 130ms (next.js: 31ms, application-code: 99ms)
+ GET /api/pages 200 in 55ms (next.js: 2ms, application-code: 53ms)
+ GET /admin/notifications 200 in 131ms (next.js: 42ms, proxy.ts: 67ms, application-code: 22ms)
+ GET /api/notifications 200 in 247ms (next.js: 30ms, application-code: 218ms)
+ GET /api/notifications 200 in 167ms (next.js: 2ms, application-code: 165ms)
+ GET /admin/settings 200 in 133ms (next.js: 43ms, proxy.ts: 68ms, application-code: 22ms)
+ GET /api/settings 200 in 102ms (next.js: 3ms, application-code: 99ms)
+ GET /api/settings 200 in 53ms (next.js: 2ms, application-code: 51ms)
+ GET /admin/newsletter 200 in 129ms (next.js: 41ms, proxy.ts: 69ms, application-code: 19ms)
+ GET /api/newsletter 200 in 248ms (next.js: 33ms, application-code: 214ms)
+ GET /api/newsletter 200 in 176ms (next.js: 2ms, application-code: 174ms)
+ GET /admin/audit-log 200 in 131ms (next.js: 40ms, proxy.ts: 71ms, application-code: 20ms)
+ GET /api/audit 200 in 294ms (next.js: 33ms, application-code: 262ms)
+ GET /api/audit 200 in 175ms (next.js: 2ms, application-code: 173ms)
+ GET /admin 200 in 241ms (next.js: 4ms, proxy.ts: 66ms, application-code: 172ms)
+ GET /admin/login 200 in 95ms (next.js: 8ms, proxy.ts: 7ms, application-code: 80ms)
+[browser] Image with src "/images/logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+ GET /api/settings 200 in 111ms (next.js: 12ms, application-code: 99ms)
+ GET /api/services 200 in 357ms (next.js: 4ms, application-code: 353ms)
+ GET /admin/login 200 in 54ms (next.js: 4ms, proxy.ts: 4ms, application-code: 45ms)
+[browser] Image with src "/images/logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+ GET /api/settings 200 in 60ms (next.js: 8ms, application-code: 52ms)
+ GET /api/services 200 in 292ms (next.js: 3ms, application-code: 289ms)
+ GET / 200 in 187ms (next.js: 3ms, application-code: 184ms)
+ GET /api/settings 200 in 63ms (next.js: 11ms, application-code: 52ms)
+[browser] Image with src "/images/logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+[browser] Image with src "/images/sections/location-villa-marrakech.webp" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+ GET /api/services 200 in 300ms (next.js: 5ms, application-code: 295ms)
+ GET /api/locations 200 in 99ms (next.js: 3ms, application-code: 96ms)
+ GET /api/blog 200 in 99ms (next.js: 3ms, application-code: 97ms)
+ GET /api/testimonials 200 in 106ms (next.js: 1880µs, application-code: 104ms)
+ GET /api/properties?limit=6 200 in 195ms (next.js: 4ms, application-code: 191ms)
+ GET /api/services 200 in 426ms (next.js: 4ms, application-code: 422ms)
