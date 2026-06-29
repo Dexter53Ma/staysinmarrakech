@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdminApi } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { validate, serviceSchema } from "@/lib/validations";
 
 function generateSlug(title: string): string {
   return title
@@ -41,7 +42,12 @@ export async function PUT(
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, description, longDescription, metaDescription, features, image, category, price, priceUnit, isActive, sortOrder } = body;
+    const v = validate(serviceSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
+    }
+
+    const { title, description, longDescription, metaDescription, features, image, category, price, priceUnit, isActive, sortOrder } = v.data;
 
     const existing = await prisma.service.findUnique({ where: { id } });
     if (!existing) {
@@ -73,10 +79,10 @@ export async function PUT(
         features: featuresJson,
         image: image !== undefined ? image : existing.image,
         category: category !== undefined ? category : existing.category,
-        price: price !== undefined ? (price ? parseFloat(price) : null) : existing.price,
+        price: price !== undefined ? (price ?? null) : existing.price,
         priceUnit: priceUnit !== undefined ? priceUnit : existing.priceUnit,
         isActive: isActive !== undefined ? isActive : existing.isActive,
-        sortOrder: sortOrder !== undefined ? parseInt(sortOrder) : existing.sortOrder,
+        sortOrder: sortOrder !== undefined ? sortOrder : existing.sortOrder,
       },
     });
 

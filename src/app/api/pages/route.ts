@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/auth";
 import { generateSlug, ensureUniqueSlug, validateFields, apiError } from "@/lib/api-helpers";
+import { validate, pageSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -29,10 +30,12 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { title, content, metaDesc } = body;
+    const v = validate(pageSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
+    }
 
-    const validationError = validateFields(body, ["title", "content"]);
-    if (validationError) return validationError;
+    const { title, content, metaDescription: metaDesc } = v.data;
 
     let slug = generateSlug(title);
     slug = await ensureUniqueSlug(slug, (s) => prisma.staticPage.findUnique({ where: { slug: s }, select: { id: true } }));
@@ -41,7 +44,7 @@ export async function POST(request: NextRequest) {
       data: {
         slug,
         title,
-        content,
+        content: content || "",
         metaDesc: metaDesc || null,
       },
     });

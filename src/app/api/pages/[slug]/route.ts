@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/auth";
+import { validate, pageSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -24,6 +25,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { slug } = await params;
     const body = await request.json();
+    const v = validate(pageSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
+    }
 
     const existing = await prisma.staticPage.findUnique({ where: { slug } });
     if (!existing) {
@@ -33,9 +38,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const page = await prisma.staticPage.update({
       where: { slug },
       data: {
-        title: body.title ?? existing.title,
-        content: body.content ?? existing.content,
-        metaDesc: body.metaDesc !== undefined ? body.metaDesc : existing.metaDesc,
+        title: v.data.title ?? existing.title,
+        content: v.data.content ?? existing.content,
+        metaDesc: v.data.metaDescription !== undefined ? v.data.metaDescription : existing.metaDesc,
       },
     });
 

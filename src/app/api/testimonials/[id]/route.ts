@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { validate, testimonialSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id } = await params;
     const body = await request.json();
+    const v = validate(testimonialSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
+    }
 
     const existing = await prisma.testimonial.findUnique({ where: { id } });
     if (!existing) {
@@ -20,14 +25,14 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const testimonial = await prisma.testimonial.update({
       where: { id },
       data: {
-        guestName: body.guestName ?? existing.guestName,
-        guestCountry: body.guestCountry !== undefined ? body.guestCountry : existing.guestCountry,
-        propertyName: body.propertyName !== undefined ? body.propertyName : existing.propertyName,
-        duration: body.duration !== undefined ? body.duration : existing.duration,
-        year: body.year !== undefined ? body.year : existing.year,
-        rating: body.rating !== undefined ? body.rating : existing.rating,
-        reviewText: body.reviewText !== undefined ? body.reviewText : existing.reviewText,
-        isApproved: body.isApproved ?? existing.isApproved,
+        guestName: v.data.guestName ?? existing.guestName,
+        guestCountry: v.data.guestCountry !== undefined ? v.data.guestCountry : existing.guestCountry,
+        propertyName: v.data.propertyName !== undefined ? v.data.propertyName : existing.propertyName,
+        duration: v.data.duration !== undefined ? v.data.duration : existing.duration,
+        year: v.data.year !== undefined ? v.data.year : existing.year,
+        rating: v.data.rating !== undefined ? v.data.rating : existing.rating,
+        reviewText: v.data.reviewText !== undefined ? v.data.reviewText : existing.reviewText,
+        isApproved: v.data.isApproved ?? existing.isApproved,
       },
     });
 

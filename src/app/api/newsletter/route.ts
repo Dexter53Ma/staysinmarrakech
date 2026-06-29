@@ -4,6 +4,7 @@ import { requireAdminApi } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 import { parsePagination, paginatedResponse } from "@/lib/pagination";
 import { validateCsrfToken } from "@/lib/csrf";
+import { validate, newsletterSchema } from "@/lib/validations";
 
 export async function POST(request: NextRequest) {
   const rl = await rateLimit(request, { limit: 3, windowMs: 60_000 });
@@ -14,15 +15,12 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { email, name } = body;
-
-    if (!email) {
-      return NextResponse.json({ error: "Email requis" }, { status: 400 });
+    const v = validate(newsletterSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json({ error: "Format d'email invalide" }, { status: 400 });
-    }
+    const { email, name } = v.data;
 
     const existing = await prisma.newsletterSubscriber.findUnique({
       where: { email },

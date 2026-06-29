@@ -5,6 +5,7 @@ import { requireAdminApi } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 import { validateCsrfToken } from "@/lib/csrf";
 import { parsePagination, paginatedResponse } from "@/lib/pagination";
+import { validate, contactSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -41,15 +42,12 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { name, email, phone, subject, message, propertyId } = body;
-
-    if (!name || !email || !message) {
-      return NextResponse.json({ error: "Le nom, l'email et le message sont requis" }, { status: 400 });
+    const v = validate(contactSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-      return NextResponse.json({ error: "Format d'email invalide" }, { status: 400 });
-    }
+    const { name, email, phone, subject, message, propertyId } = v.data;
 
     const contact = await prisma.contactInquiry.create({
       data: {

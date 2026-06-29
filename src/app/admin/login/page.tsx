@@ -25,6 +25,22 @@ export default function LoginPage() {
     setLoading(true);
     setError("");
 
+    try {
+      const checkRes = await fetch("/api/auth/login-attempts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, action: "check" }),
+      });
+      const checkData = await checkRes.json();
+      if (checkData.blocked) {
+        setError(`Trop de tentatives. Réessayez dans ${checkData.retryAfter} secondes.`);
+        setLoading(false);
+        return;
+      }
+    } catch {
+      // If check fails, proceed anyway (fail open)
+    }
+
     const supabase = createSupabaseBrowser();
     const { error: authError } = await supabase.auth.signInWithPassword({
       email,
@@ -33,8 +49,31 @@ export default function LoginPage() {
 
     if (authError) {
       setError("Email ou mot de passe incorrect");
+      try {
+        const res = await fetch("/api/auth/login-attempts", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email, action: "failed" }),
+        });
+        const data = await res.json();
+        if (data.blocked) {
+          setError(`Trop de tentatives. Réessayez dans ${data.retryAfter} secondes.`);
+        }
+      } catch {
+        // Ignore tracking errors
+      }
       setLoading(false);
       return;
+    }
+
+    try {
+      await fetch("/api/auth/login-attempts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, action: "success" }),
+      });
+    } catch {
+      // Ignore
     }
 
     router.push("/admin");

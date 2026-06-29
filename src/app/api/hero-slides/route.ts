@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/auth";
 import { parsePagination, paginatedResponse } from "@/lib/pagination";
 import { logAudit } from "@/lib/audit";
+import { validate, heroSlideSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -35,11 +36,12 @@ export async function POST(request: NextRequest) {
   if (auth.error) return auth.error;
   try {
     const body = await request.json();
-    const { title, subtitle, image, link, buttonText, sortOrder, isActive } = body;
-
-    if (!title || !image) {
-      return NextResponse.json({ error: "Le titre et l'image sont requis" }, { status: 400 });
+    const v = validate(heroSlideSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
     }
+
+    const { title, subtitle, image, link, buttonText, sortOrder, isActive } = v.data;
 
     const slide = await prisma.heroSlide.create({
       data: {
@@ -48,8 +50,8 @@ export async function POST(request: NextRequest) {
         image,
         link: link || null,
         buttonText: buttonText || null,
-        sortOrder: sortOrder ? parseInt(sortOrder) : 0,
-        isActive: isActive !== undefined ? isActive : true,
+        sortOrder: sortOrder ?? 0,
+        isActive: isActive ?? true,
       },
     });
 

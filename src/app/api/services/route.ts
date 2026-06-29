@@ -4,6 +4,7 @@ import { requireAdminApi } from "@/lib/auth";
 import { generateSlug, ensureUniqueSlug, validateFields, apiError } from "@/lib/api-helpers";
 import { logAudit } from "@/lib/audit";
 import { parsePagination, paginatedResponse } from "@/lib/pagination";
+import { validate, serviceSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -36,10 +37,12 @@ export async function POST(request: NextRequest) {
   if (auth.error) return auth.error;
   try {
     const body = await request.json();
-    const { title, description, longDescription, metaDescription, features, image, category, price, priceUnit, isActive, sortOrder } = body;
+    const v = validate(serviceSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
+    }
 
-    const validationError = validateFields(body, ["title", "description"]);
-    if (validationError) return validationError;
+    const { title, description, longDescription, metaDescription, features, image, category, price, priceUnit, isActive, sortOrder } = v.data;
 
     let slug = generateSlug(title);
     slug = await ensureUniqueSlug(slug, (s) => prisma.service.findUnique({ where: { slug: s }, select: { id: true } }));
@@ -51,16 +54,16 @@ export async function POST(request: NextRequest) {
       data: {
         title,
         slug,
-        description,
+        description: description || "",
         longDescription: longDescription || null,
         metaDescription: metaDescription || null,
         features: featuresJson,
         image: image || null,
         category: category || null,
-        price: price ? parseFloat(price) : null,
+        price: price ?? null,
         priceUnit: priceUnit || null,
         isActive: isActive !== false,
-        sortOrder: sortOrder ? parseInt(sortOrder) : 0,
+        sortOrder: sortOrder ?? 0,
       },
     });
 

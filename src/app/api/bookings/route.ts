@@ -5,6 +5,7 @@ import { requireAdminApi } from "@/lib/auth";
 import { rateLimit } from "@/lib/rate-limit";
 import { validateCsrfToken } from "@/lib/csrf";
 import { parsePagination, paginatedResponse } from "@/lib/pagination";
+import { validate, bookingSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -44,20 +45,12 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { propertyId, guestName, guestEmail, guestPhone, checkIn, checkOut, guestsCount, message } = body;
-
-    if (!propertyId || !guestName || !guestEmail || !checkIn || !checkOut || !guestsCount) {
-      return NextResponse.json({ error: "Champs requis manquants" }, { status: 400 });
+    const v = validate(bookingSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
     }
 
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(guestEmail)) {
-      return NextResponse.json({ error: "Format d'email invalide" }, { status: 400 });
-    }
-
-    const validatedGuestsCount = parseInt(guestsCount, 10);
-    if (isNaN(validatedGuestsCount) || validatedGuestsCount < 1 || !Number.isInteger(validatedGuestsCount)) {
-      return NextResponse.json({ error: "Le nombre de voyageurs doit être un entier positif" }, { status: 400 });
-    }
+    const { propertyId, guestName, guestEmail, guestPhone, checkIn, checkOut, guestsCount, message } = v.data;
 
     const checkInDate = new Date(checkIn);
     const checkOutDate = new Date(checkOut);
@@ -91,7 +84,7 @@ export async function POST(request: NextRequest) {
         guestPhone: guestPhone || null,
         checkIn: new Date(checkIn),
         checkOut: new Date(checkOut),
-        guestsCount: validatedGuestsCount,
+        guestsCount,
         message: message || null,
       },
       include: { property: { select: { title: true } } },

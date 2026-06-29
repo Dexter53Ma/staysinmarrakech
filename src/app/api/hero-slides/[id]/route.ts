@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { validate, heroSlideSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -11,6 +12,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id } = await params;
     const body = await request.json();
+    const v = validate(heroSlideSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
+    }
 
     const existing = await prisma.heroSlide.findUnique({ where: { id } });
     if (!existing) {
@@ -20,13 +25,13 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const slide = await prisma.heroSlide.update({
       where: { id },
       data: {
-        title: body.title ?? existing.title,
-        subtitle: body.subtitle !== undefined ? body.subtitle : existing.subtitle,
-        image: body.image ?? existing.image,
-        link: body.link !== undefined ? body.link : existing.link,
-        buttonText: body.buttonText !== undefined ? body.buttonText : existing.buttonText,
-        sortOrder: body.sortOrder !== undefined ? parseInt(body.sortOrder) : existing.sortOrder,
-        isActive: body.isActive !== undefined ? body.isActive : existing.isActive,
+        title: v.data.title ?? existing.title,
+        subtitle: v.data.subtitle !== undefined ? v.data.subtitle : existing.subtitle,
+        image: v.data.image ?? existing.image,
+        link: v.data.link !== undefined ? v.data.link : existing.link,
+        buttonText: v.data.buttonText !== undefined ? v.data.buttonText : existing.buttonText,
+        sortOrder: v.data.sortOrder !== undefined ? v.data.sortOrder : existing.sortOrder,
+        isActive: v.data.isActive !== undefined ? v.data.isActive : existing.isActive,
       },
     });
 

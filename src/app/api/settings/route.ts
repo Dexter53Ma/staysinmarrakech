@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { validate, settingsSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -37,8 +38,12 @@ export async function PUT(request: NextRequest) {
 
   try {
     const body = await request.json();
+    const v = validate(settingsSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
+    }
 
-    const filteredEntries = Object.entries(body).filter(([key]) => ALLOWED_KEYS.has(key));
+    const filteredEntries = Object.entries(v.data).filter(([key]) => ALLOWED_KEYS.has(key));
 
     const upserts = filteredEntries.map(([key, value]) =>
       prisma.siteSetting.upsert({

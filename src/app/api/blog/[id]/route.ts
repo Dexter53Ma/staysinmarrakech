@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { validate, blogPostSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -32,7 +33,12 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id } = await params;
     const body = await request.json();
-    const { title, excerpt, content, image, author, category, isPublished } = body;
+    const v = validate(blogPostSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
+    }
+
+    const { title, excerpt, content, image, author, category, isPublished } = v.data;
 
     const existing = await prisma.blogPost.findUnique({ where: { id } });
     if (!existing) {

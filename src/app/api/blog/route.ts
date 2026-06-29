@@ -5,6 +5,7 @@ import { generateSlug, ensureUniqueSlug, validateFields, apiError } from "@/lib/
 import { createSupabaseServer } from "@/lib/supabase-server";
 import { logAudit } from "@/lib/audit";
 import { parsePagination, paginatedResponse } from "@/lib/pagination";
+import { validate, blogPostSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -62,10 +63,12 @@ export async function POST(request: NextRequest) {
   if (auth.error) return auth.error;
   try {
     const body = await request.json();
-    const { title, excerpt, content, image, author, category, isPublished } = body;
+    const v = validate(blogPostSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
+    }
 
-    const validationError = validateFields(body, ["title", "content"]);
-    if (validationError) return validationError;
+    const { title, excerpt, content, image, author, category, isPublished } = v.data;
 
     let slug = generateSlug(title);
     slug = await ensureUniqueSlug(slug, (s) => prisma.blogPost.findUnique({ where: { slug: s }, select: { id: true } }));

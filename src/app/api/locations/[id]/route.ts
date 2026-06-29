@@ -2,6 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
+import { validate, locationSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +26,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
   try {
     const { id } = await params;
     const body = await request.json();
+    const v = validate(locationSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
+    }
 
     const existing = await prisma.location.findUnique({ where: { id } });
     if (!existing) {
@@ -34,12 +39,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     const location = await prisma.location.update({
       where: { id },
       data: {
-        name: body.name ?? existing.name,
-        description: body.description !== undefined ? body.description : existing.description,
-        image: body.image !== undefined ? body.image : existing.image,
-        latitude: body.latitude !== undefined ? (body.latitude ? parseFloat(body.latitude) : null) : existing.latitude,
-        longitude: body.longitude !== undefined ? (body.longitude ? parseFloat(body.longitude) : null) : existing.longitude,
-        sortOrder: body.sortOrder !== undefined ? parseInt(body.sortOrder) : existing.sortOrder,
+        name: v.data.name ?? existing.name,
+        description: v.data.description !== undefined ? v.data.description : existing.description,
+        image: v.data.image !== undefined ? v.data.image : existing.image,
+        sortOrder: v.data.sortOrder !== undefined ? v.data.sortOrder : existing.sortOrder,
       },
     });
 

@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { parsePagination, paginatedResponse } from "@/lib/pagination";
+import { validate, locationSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";
 
@@ -47,11 +48,12 @@ export async function POST(request: NextRequest) {
 
   try {
     const body = await request.json();
-    const { name, description, image, latitude, longitude, sortOrder } = body;
-
-    if (!name) {
-      return NextResponse.json({ error: "Le nom est requis" }, { status: 400 });
+    const v = validate(locationSchema, body);
+    if (!v.success) {
+      return NextResponse.json({ error: v.error }, { status: 400 });
     }
+
+    const { name, description, image, sortOrder } = v.data;
 
     let slug = generateSlug(name);
     const slugExists = await prisma.location.findUnique({ where: { slug } });
@@ -65,9 +67,7 @@ export async function POST(request: NextRequest) {
         slug,
         description: description || null,
         image: image || null,
-        latitude: latitude ? parseFloat(latitude) : null,
-        longitude: longitude ? parseFloat(longitude) : null,
-        sortOrder: sortOrder ? parseInt(sortOrder) : 0,
+        sortOrder: sortOrder ?? 0,
       },
     });
 
