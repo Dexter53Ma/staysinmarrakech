@@ -22,6 +22,7 @@ import { AdminPageHeader } from "@/components/admin";
 import { StatusBadge } from "@/components/admin";
 import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
+import { Pagination } from "@/components/admin/Pagination";
 import { CheckCircle, XCircle, Eye, RefreshCw, CalendarDays } from "lucide-react";
 
 interface Booking {
@@ -55,30 +56,41 @@ export default function AdminBookingsPage() {
   const [filter, setFilter] = useState<string>("ALL");
   const [detailBooking, setDetailBooking] = useState<Booking | null>(null);
   const [actionLoading, setActionLoading] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
     try {
-      const url = filter === "ALL" ? "/api/bookings" : `/api/bookings?status=${filter}`;
-      const res = await fetch(url);
+      const params = new URLSearchParams({ page: page.toString(), limit: "20" });
+      if (filter !== "ALL") params.set("status", filter);
+      const res = await fetch(`/api/bookings?${params}`);
       const data = await res.json();
-      setBookings(Array.isArray(data) ? data : []);
+      setBookings(data.data || []);
+      setTotalPages(data.pagination?.totalPages || 1);
+      setTotal(data.pagination?.total || 0);
     } catch {
       setBookings([]);
     } finally {
       setLoading(false);
     }
-  }, [filter]);
+  }, [filter, page]);
 
   useEffect(() => {
     let cancelled = false;
     const load = async () => {
       setLoading(true);
       try {
-        const url = filter === "ALL" ? "/api/bookings" : `/api/bookings?status=${filter}`;
-        const res = await fetch(url);
+        const params = new URLSearchParams({ page: page.toString(), limit: "20" });
+        if (filter !== "ALL") params.set("status", filter);
+        const res = await fetch(`/api/bookings?${params}`);
         const data = await res.json();
-        if (!cancelled) setBookings(Array.isArray(data) ? data : []);
+        if (!cancelled) {
+          setBookings(data.data || []);
+          setTotalPages(data.pagination?.totalPages || 1);
+          setTotal(data.pagination?.total || 0);
+        }
       } catch {
         if (!cancelled) setBookings([]);
       } finally {
@@ -87,7 +99,7 @@ export default function AdminBookingsPage() {
     };
     load();
     return () => { cancelled = true; };
-  }, [filter]);
+  }, [filter, page]);
 
   const handleStatusChange = async (id: string, status: string) => {
     setActionLoading(id);
@@ -112,7 +124,7 @@ export default function AdminBookingsPage() {
     <div>
       <AdminPageHeader
         title="Réservations"
-        description={`${bookings.length} réservation${bookings.length > 1 ? "s" : ""}`}
+        description={`${total} réservation${total > 1 ? "s" : ""}`}
         breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Réservations" }]}
         action={{ label: "Rafraîchir", onClick: fetchBookings, icon: RefreshCw }}
       />
@@ -121,7 +133,7 @@ export default function AdminBookingsPage() {
         {STATUS_FILTERS.map((s) => (
           <button
             key={s}
-            onClick={() => setFilter(s)}
+            onClick={() => { setFilter(s); setPage(1); }}
             className={`px-3.5 py-1.5 rounded-lg text-sm font-medium active:scale-[0.97] transition-all duration-150 ${
               filter === s
                 ? "bg-gray-900 text-white"
@@ -208,6 +220,8 @@ export default function AdminBookingsPage() {
           </div>
         )}
       </div>
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
 
       <Dialog open={!!detailBooking} onOpenChange={(open) => !open && setDetailBooking(null)}>
         <DialogContent className="sm:max-w-md">

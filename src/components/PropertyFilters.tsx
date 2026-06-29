@@ -21,6 +21,7 @@ interface PropertyFiltersProps {
 const PROPERTY_TYPES = [
   { value: "ALL", label: "Tous" },
   { value: "VILLA", label: "Villa" },
+  { value: "RIAD", label: "Riad" },
   { value: "APARTMENT", label: "Appartement" },
   { value: "HOUSE", label: "Maison" },
   { value: "LAND", label: "Terrain" },

@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
-    const service = await prisma.service.findUnique({
+    const service = await prisma.service.findFirst({
       where: { slug, isActive: true },
     });
     if (!service) {

@@ -25,6 +25,7 @@ import { Plus, Pencil, Trash2, MapPin } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin";
 import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
+import { Pagination } from "@/components/admin/Pagination";
 
 interface Location {
   id: string;
@@ -42,6 +43,9 @@ export default function AdminLocationsPage() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editing, setEditing] = useState<Location | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
   const [form, setForm] = useState({
     name: "",
     description: "",
@@ -53,31 +57,21 @@ export default function AdminLocationsPage() {
   const fetchLocations = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/locations");
+      const res = await fetch(`/api/locations?page=${page}&limit=20`);
       const data = await res.json();
-      setLocations(Array.isArray(data) ? data : []);
+      setLocations(data.data || []);
+      setTotalPages(data.pagination?.totalPages || 1);
+      setTotal(data.pagination?.total || 0);
     } catch {
       setLocations([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page]);
 
   useEffect(() => {
-    async function loadLocations() {
-      setLoading(true);
-      try {
-        const res = await fetch("/api/locations");
-        const data = await res.json();
-        setLocations(Array.isArray(data) ? data : []);
-      } catch {
-        setLocations([]);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadLocations();
-  }, []);
+    fetchLocations();
+  }, [fetchLocations]);
 
   const openCreate = () => {
     setEditing(null);
@@ -137,7 +131,7 @@ export default function AdminLocationsPage() {
     <div className="space-y-6">
       <AdminPageHeader
         title="Locations"
-        description={`${locations.length} location${locations.length > 1 ? "s" : ""}`}
+        description={`${total} location${total > 1 ? "s" : ""}`}
         breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Locations" }]}
         action={{ label: "Nouvelle location", onClick: openCreate, icon: Plus }}
       />
@@ -208,6 +202,8 @@ export default function AdminLocationsPage() {
             </TableBody>
           </Table>
       </div>
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
 
       <Dialog open={dialogOpen} onOpenChange={(open) => !open && setDialogOpen(false)}>
         <DialogContent className="sm:max-w-md">

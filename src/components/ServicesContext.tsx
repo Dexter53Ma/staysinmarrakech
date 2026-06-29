@@ -29,7 +29,7 @@ export function ServicesProvider({ children }: { children: React.ReactNode }) {
     fetch("/api/services")
       .then((r) => r.json())
       .then((data: ServiceItem[]) => setServices(data.filter((s) => s.isActive)))
-      .catch(() => {})
+      .catch((e) => console.error("[ServicesContext] fetch error:", e))
       .finally(() => setLoading(false));
   }, []);
 

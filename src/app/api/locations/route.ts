@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { requireApiAuth } from "@/lib/auth";
+import { requireAdminApi } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
+import { parsePagination, paginatedResponse } from "@/lib/pagination";
 
 export const dynamic = "force-dynamic";
 
@@ -15,11 +17,24 @@ function generateSlug(name: string): string {
     .replace(/^-|-$/g, "");
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const locations = await prisma.location.findMany({
-      orderBy: { sortOrder: "asc" },
-    });
+    const { searchParams } = new URL(request.url);
+    const { page, limit, skip, hasPagination } = parsePagination(searchParams);
+
+    const where = {};
+    const [locations, total] = await Promise.all([
+      prisma.location.findMany({
+        where,
+        orderBy: { sortOrder: "asc" },
+        skip: hasPagination ? skip : undefined,
+        take: hasPagination ? limit : undefined,
+      }),
+      prisma.location.count({ where }),
+    ]);
+    if (hasPagination) {
+      return NextResponse.json(paginatedResponse(locations, total, page, limit));
+    }
     return NextResponse.json(locations);
   } catch {
     return NextResponse.json({ error: "Erreur lors de la récupération des locations" }, { status: 500 });
@@ -27,7 +42,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
 
   try {
@@ -55,6 +70,8 @@ export async function POST(request: NextRequest) {
         sortOrder: sortOrder ? parseInt(sortOrder) : 0,
       },
     });
+
+    await logAudit(auth.dbUser?.id || null, "create", "location", location.id, { name: location.name });
 
     return NextResponse.json(location, { status: 201 });
   } catch {

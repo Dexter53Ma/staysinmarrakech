@@ -56,7 +56,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         Object.entries(data).forEach(([key, value]) => { map[key] = value || ""; });
         setSettings(map as SiteSettings);
       })
-      .catch(() => {});
+      .catch((e) => console.error("[SettingsContext] fetch error:", e));
   }, []);
 
   return (

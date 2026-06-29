@@ -2,18 +2,20 @@
 
 import { useState } from "react";
 import { Icon, faEnvelope, faCheck, faSpinner } from "@/components/icons";
+import { useCsrf } from "@/hooks/useCsrf";
 
 export default function Newsletter() {
   const [email, setEmail] = useState("");
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
+  const { csrfFetch } = useCsrf();
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
     if (!email) return;
     setStatus("loading");
     try {
-      const res = await fetch("/api/newsletter", {
+      const res = await csrfFetch("/api/newsletter", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email }),
@@ -35,21 +37,21 @@ export default function Newsletter() {
   }
 
   return (
-    <section className="bg-gradient-to-r from-[#0d47a1] to-[#1565c0] py-12 md:py-16">
+    <section className="bg-gradient-to-r from-[#0d47a1] to-[#1565c0] py-14 md:py-20">
       <div className="max-w-[1140px] mx-auto px-4 text-center">
-        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-5">
+        <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6 border border-white/10">
           <Icon icon={faEnvelope} className="text-[#ffb000] text-xs" />
           <span className="text-white/90 text-sm font-medium">Newsletter</span>
         </div>
         <h2 className="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-3">
           Restez informé
         </h2>
-        <p className="text-white/70 text-sm sm:text-base mb-8 max-w-xl mx-auto">
+        <p className="text-white/70 text-sm sm:text-base mb-10 max-w-xl mx-auto">
           Rejoignez notre newsletter et restez informé des dernières nouveautés, offres exclusives et événements exceptionnels.
         </p>
 
-        <form onSubmit={handleSubmit} className="max-w-[480px] mx-auto">
-          <div className="flex gap-2">
+        <form onSubmit={handleSubmit} className="max-w-[500px] mx-auto">
+          <div className="flex gap-3">
             <div className="flex-1 relative">
               <Icon icon={faEnvelope} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm" />
               <input
@@ -58,14 +60,14 @@ export default function Newsletter() {
                 onChange={(e) => setEmail(e.target.value)}
                 required
                 placeholder="Votre adresse email"
-                className="w-full h-12 pl-11 pr-4 rounded-xl text-sm text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#ffb000]"
+                className="w-full h-13 pl-11 pr-4 rounded-xl text-sm text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#ffb000] focus:ring-offset-2 transition-all"
                 disabled={status === "loading"}
               />
             </div>
             <button
               type="submit"
               disabled={status === "loading"}
-              className="h-12 px-6 bg-[#ffb000] hover:bg-[#e6a000] text-[#0d47a1] font-bold text-sm rounded-xl transition-all hover:shadow-lg disabled:opacity-50 flex items-center gap-2 shrink-0"
+              className="h-13 px-8 bg-[#ffb000] hover:bg-[#e6a000] text-[#0d47a1] font-bold text-sm rounded-xl transition-all hover:shadow-lg disabled:opacity-50 flex items-center gap-2 shrink-0"
             >
               {status === "loading" ? (
                 <Icon icon={faSpinner} className="text-sm animate-spin" />
@@ -77,7 +79,7 @@ export default function Newsletter() {
             </button>
           </div>
           {message && (
-            <p className={`mt-3 text-sm ${status === "success" ? "text-green-300" : "text-red-300"}`}>
+            <p className={`mt-4 text-sm ${status === "success" ? "text-green-300" : "text-red-300"}`}>
               {message}
             </p>
           )}

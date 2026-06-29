@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireApiAuth } from "@/lib/auth";
+import { requireAdminApi } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 function generateSlug(title: string): string {
   return title
@@ -35,7 +36,7 @@ export async function PUT(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
   try {
     const { id } = await params;
@@ -79,6 +80,8 @@ export async function PUT(
       },
     });
 
+    await logAudit(auth.dbUser?.id || null, "update", "service", id, { title: service.title });
+
     return NextResponse.json(service);
   } catch {
     return NextResponse.json({ error: "Erreur lors de la mise à jour" }, { status: 500 });
@@ -89,10 +92,11 @@ export async function DELETE(
   request: NextRequest,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
   try {
     const { id } = await params;
+    await logAudit(auth.dbUser?.id || null, "delete", "service", id);
     await prisma.service.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch {

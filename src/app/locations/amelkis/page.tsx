@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { prisma } from "@/lib/prisma";
 
 export const metadata: Metadata = {
   title: "Location villa Amelkis Marrakech | StaysInMarrakech",
@@ -14,12 +16,13 @@ export const metadata: Metadata = {
   },
 };
 
-const properties = [
-  { slug: "villa-amber", name: "Villa Amber", price: "3 000" },
-  { slug: "villa-dar-el-bacha", name: "Villa Dar El Bacha", price: "3 800" },
-];
+export default async function AmelkisPage() {
+  const properties = await prisma.property.findMany({
+    where: { quarter: { contains: "amelkis", mode: "insensitive" } },
+    include: { images: { where: { isPrimary: true }, take: 1 } },
+    orderBy: { createdAt: "desc" },
+  });
 
-export default function AmelkisPage() {
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -93,21 +96,44 @@ export default function AmelkisPage() {
             Nos villas disponibles à Amelkis
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
-            {properties.map((p) => (
-              <Link
-                key={p.slug}
-                href={`/properties/${p.slug}`}
-                className="block bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg transition-shadow"
-              >
-                <h3 className="font-bold text-[#34495e]">{p.name}</h3>
-                <p className="text-[#ffb000] font-semibold mt-2">
-                  À partir de {p.price} DH / nuit
-                </p>
-                <span className="text-[#0d47a1] text-sm mt-2 inline-block">
-                  Voir la villa →
-                </span>
-              </Link>
-            ))}
+            {properties.length === 0 ? (
+              <p className="text-gray-500 col-span-full text-center py-8">
+                Aucune villa disponible à Amelkis pour le moment.
+              </p>
+            ) : (
+              properties.map((p) => (
+                <Link
+                  key={p.slug}
+                  href={`/properties/${p.slug}`}
+                  className="block bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
+                >
+                  {p.images[0] ? (
+                    <div className="relative h-48">
+                      <Image
+                        src={p.images[0].url}
+                        alt={p.images[0].alt || p.title}
+                        fill
+                        className="object-cover"
+                        sizes="(max-width: 640px) 100vw, 50vw"
+                      />
+                    </div>
+                  ) : (
+                    <div className="h-48 bg-gray-100 flex items-center justify-center text-gray-400">
+                      Aucune image
+                    </div>
+                  )}
+                  <div className="p-6">
+                    <h3 className="font-bold text-[#34495e]">{p.title}</h3>
+                    <p className="text-[#ffb000] font-semibold mt-2">
+                      À partir de {p.price.toLocaleString("fr-FR")} {p.currency === "MAD" ? "DH" : p.currency} / nuit
+                    </p>
+                    <span className="text-[#0d47a1] text-sm mt-2 inline-block">
+                      Voir la villa →
+                    </span>
+                  </div>
+                </Link>
+              ))
+            )}
           </div>
 
           <div className="bg-[#f8f9fa] rounded-2xl p-8">

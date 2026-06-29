@@ -1,13 +1,19 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { requireApiAuth } from "@/lib/auth";
+import { requireAdminApi } from "@/lib/auth";
 import { generateSlug, ensureUniqueSlug, validateFields, apiError } from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const slug = searchParams.get("slug");
+
+    const where = slug ? { slug } : {};
+
     const pages = await prisma.staticPage.findMany({
+      where,
       orderBy: { slug: "asc" },
       select: { id: true, slug: true, title: true, updatedAt: true },
     });
@@ -18,7 +24,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
 
   try {

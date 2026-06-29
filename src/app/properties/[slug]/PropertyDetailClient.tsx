@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
+import { useCsrf } from "@/hooks/useCsrf";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import {
@@ -22,6 +23,7 @@ import PropertyFeatures from "./components/PropertyFeatures";
 import PropertyMap from "./components/PropertyMap";
 import PropertyTestimonials from "./components/PropertyTestimonials";
 import SimilarPropertiesGrid from "./components/SimilarPropertiesGrid";
+import AvailabilityCalendar from "./components/AvailabilityCalendar";
 
 interface PropertyDetailClientProps {
   property: PropertyData;
@@ -53,6 +55,7 @@ export default function PropertyDetailClient({
   similarProperties,
 }: PropertyDetailClientProps) {
   const router = useRouter();
+  const { csrfFetch } = useCsrf();
   const [selectedImage, setSelectedImage] = useState(0);
   const [checkIn, setCheckIn] = useState<Date | undefined>(undefined);
   const [checkOut, setCheckOut] = useState<Date | undefined>(undefined);
@@ -100,12 +103,12 @@ export default function PropertyDetailClient({
   }, [property.price, nights, property.cleaningFee, property.serviceFee]);
 
   useEffect(() => {
-    fetch("/api/views", {
+    csrfFetch("/api/views", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ propertyId: property.id }),
     }).catch(() => {});
-  }, [property.id]);
+  }, [property.id, csrfFetch]);
 
   const isDateBooked = useCallback(
     (date: Date) => {
@@ -126,7 +129,7 @@ export default function PropertyDetailClient({
     setSubmitting(true);
     setSubmitMessage(null);
     try {
-      const res = await fetch("/api/bookings", {
+      const res = await csrfFetch("/api/bookings", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -215,29 +218,7 @@ export default function PropertyDetailClient({
               </div>
             )}
 
-            <div>
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Disponibilité</h2>
-              <div className="bg-gray-50 rounded-xl p-4 overflow-x-auto">
-                <div className="min-w-[320px]">
-                  <DatePicker
-                    mode="multiple"
-                    selected={bookedDates.flatMap((b) => {
-                      const dates: Date[] = [];
-                      const d = new Date(b.start);
-                      while (d < b.end) { dates.push(new Date(d)); d.setDate(d.getDate() + 1); }
-                      return dates;
-                    })}
-                    disabled={[]}
-                    locale={fr}
-                    className="rounded-lg"
-                  />
-                </div>
-              </div>
-              <div className="flex items-center gap-4 mt-3 text-sm text-gray-500">
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-red-200 border border-red-300" /> Réservé</span>
-                <span className="flex items-center gap-1.5"><span className="w-3 h-3 rounded-full bg-green-200 border border-green-300" /> Disponible</span>
-              </div>
-            </div>
+            <AvailabilityCalendar bookedDates={bookedDates} isDateBooked={isDateBooked} />
 
             {property.latitude && property.longitude && (
               <PropertyMap latitude={property.latitude} longitude={property.longitude} />

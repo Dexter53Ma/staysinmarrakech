@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Icon, faMapMarkerAlt, faPhone, faEnvelope, faFacebookF, faInstagram, faLinkedinIn, faCheck, faCalendarAlt } from "@/components/icons";
 import { useSettings } from "@/components/SettingsContext";
+import { useCsrf } from "@/hooks/useCsrf";
 
 const FALLBACK = {
   address: "Résidence Farah, Camp Mangin, Gueliz, 40000 Marrakech",
@@ -15,6 +16,7 @@ phone1: "+212 6 21 18 94 96",
 
 export default function ContactPage() {
   const settings = useSettings();
+  const { csrfFetch } = useCsrf();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -35,7 +37,7 @@ export default function ContactPage() {
     setSubmitting(true);
     setError("");
     try {
-      const res = await fetch("/api/contacts", {
+      const res = await csrfFetch("/api/contacts", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
@@ -175,14 +177,13 @@ export default function ContactPage() {
             </div>
           </div>
 
-          <div className="mt-8 rounded-lg overflow-hidden shadow-sm">
+          <div className="mt-8 relative w-full aspect-video rounded-xl overflow-hidden shadow-sm">
             <iframe
               src="https://www.google.com/maps?q=Residence+Farah+Camp+Mangin+Gueliz+Marrakech+Morocco&output=embed"
-              width="100%" 
-              height="400" 
-              style={{ border: 0 }} 
-              allowFullScreen 
-              loading="lazy" 
+              className="absolute inset-0 w-full h-full"
+              style={{ border: 0 }}
+              allowFullScreen
+              loading="lazy"
               referrerPolicy="no-referrer-when-downgrade"
               title="StaysInMarrakech — Localisation"
             />

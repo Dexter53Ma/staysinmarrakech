@@ -27,7 +27,8 @@ import { AdminPageHeader } from "@/components/admin";
 import { StatusBadge } from "@/components/admin";
 import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
-import { Plus, Search, Edit, Trash2, Eye, ChevronLeft, ChevronRight, Home } from "lucide-react";
+import { Pagination } from "@/components/admin/Pagination";
+import { Plus, Search, Edit, Trash2, Eye, Home } from "lucide-react";
 
 interface PropertyImage {
   url: string;
@@ -48,6 +49,7 @@ interface Property {
 const PROPERTY_TYPES = [
   { value: "ALL", label: "Tous les types" },
   { value: "VILLA", label: "Villa" },
+  { value: "RIAD", label: "Riad" },
   { value: "APARTMENT", label: "Appartement" },
   { value: "HOUSE", label: "Maison" },
   { value: "LAND", label: "Terrain" },
@@ -83,9 +85,9 @@ export default function PropertiesPage() {
 
     const res = await fetch(`/api/properties?${params}`);
     const data = await res.json();
-    setProperties(data.properties || []);
-    setTotal(data.total || 0);
-    setTotalPages(data.totalPages || 1);
+    setProperties(data.data || []);
+    setTotal(data.pagination?.total || 0);
+    setTotalPages(data.pagination?.totalPages || 1);
     setLoading(false);
   }, [page, typeFilter, statusFilter, search]);
 
@@ -101,9 +103,9 @@ export default function PropertiesPage() {
       const res = await fetch(`/api/properties?${params}`);
       const data = await res.json();
       if (!cancelled) {
-        setProperties(data.properties || []);
-        setTotal(data.total || 0);
-        setTotalPages(data.totalPages || 1);
+        setProperties(data.data || []);
+        setTotal(data.pagination?.total || 0);
+        setTotalPages(data.pagination?.totalPages || 1);
         setLoading(false);
       }
     };
@@ -268,27 +270,7 @@ export default function PropertiesPage() {
             </div>
 
             {totalPages > 1 && (
-              <div className="flex items-center justify-between px-6 py-4 border-t border-gray-100">
-                <p className="text-sm text-gray-500 tabular-nums">
-                  Page {page} sur {totalPages}
-                </p>
-                <div className="flex items-center gap-2">
-                  <button
-                    disabled={page === 1}
-                    onClick={() => setPage(page - 1)}
-                    className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 active:bg-gray-100 active:scale-[0.95] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150"
-                  >
-                    <ChevronLeft className="size-4" />
-                  </button>
-                  <button
-                    disabled={page === totalPages}
-                    onClick={() => setPage(page + 1)}
-                    className="p-2 rounded-lg border border-gray-200 text-gray-600 hover:bg-gray-50 active:bg-gray-100 active:scale-[0.95] disabled:opacity-40 disabled:cursor-not-allowed transition-all duration-150"
-                  >
-                    <ChevronRight className="size-4" />
-                  </button>
-                </div>
-              </div>
+              <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
             )}
           </>
         )}

@@ -1,16 +1,25 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { requireApiAuth } from "@/lib/auth";
+import { requireAdminApi } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
     const { id } = await params;
+    const auth = await requireAdminApi();
+    const isAdmin = !auth.error;
+
     const post = await prisma.blogPost.findUnique({ where: { id } });
     if (!post) {
       return NextResponse.json({ error: "Article non trouvé" }, { status: 404 });
     }
+
+    if (!isAdmin && !post.isPublished) {
+      return NextResponse.json({ error: "Article non trouvé" }, { status: 404 });
+    }
+
     return NextResponse.json(post);
   } catch {
     return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
@@ -18,7 +27,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 }
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
   try {
     const { id } = await params;
@@ -44,6 +53,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       },
     });
 
+    await logAudit(auth.dbUser?.id || null, "update", "blog_post", id, { title: post.title });
+
     return NextResponse.json(post);
   } catch {
     return NextResponse.json({ error: "Erreur lors de la mise à jour" }, { status: 500 });
@@ -51,10 +62,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
   try {
     const { id } = await params;
+    await logAudit(auth.dbUser?.id || null, "delete", "blog_post", id);
     await prisma.blogPost.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch {

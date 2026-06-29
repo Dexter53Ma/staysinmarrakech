@@ -15,15 +15,15 @@ export default function IconsSection() {
   ];
 
   return (
-    <section id="icons-section" className="bg-[#0a1628] py-4 px-3">
-      <div className="max-w-[1200px] mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+    <section id="icons-section" className="bg-[#0a1628] py-6 px-3">
+      <div className="max-w-[1200px] mx-auto grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-4">
         {cards.map((card) => (
           <div
             key={card.title}
-            className="bg-gradient-to-br from-[#0d47a1]/20 to-transparent border border-white/5 rounded-xl p-4 text-center hover:border-[#ffb000]/30 transition-colors"
+            className="bg-gradient-to-br from-[#0d47a1]/20 to-transparent border border-white/5 rounded-xl p-5 text-center hover:border-[#ffb000]/30 hover:-translate-y-1 transition-all duration-300"
           >
-            <div className="w-10 h-10 bg-[#0d47a1]/20 rounded-lg flex items-center justify-center mx-auto mb-3">
-              <Icon icon={card.icon} className="text-[#ffb000] text-lg" />
+            <div className="w-12 h-12 bg-[#0d47a1]/20 rounded-lg flex items-center justify-center mx-auto mb-3">
+              <Icon icon={card.icon} className="text-[#ffb000] text-xl" />
             </div>
             <h3 className="text-white text-xs sm:text-sm font-bold uppercase mb-1">{card.title}</h3>
             <p className="text-white/50 text-[10px] sm:text-xs leading-tight">{card.description}</p>

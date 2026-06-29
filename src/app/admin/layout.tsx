@@ -24,6 +24,7 @@ import {
   X,
   ChevronRight,
   ExternalLink,
+  Search,
 } from "lucide-react";
 
 interface NavItem {
@@ -112,49 +113,46 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
   };
 
   return (
-    <div className="min-h-screen bg-gray-50/50 flex">
+    <div className="min-h-screen bg-slate-50 flex">
       {sidebarOpen && (
         <div
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm z-40 lg:hidden"
+          className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 lg:hidden"
           onClick={() => setSidebarOpen(false)}
         />
       )}
 
+      {/* Sidebar — dark navy */}
       <aside
-        className={`fixed lg:static inset-y-0 left-0 z-50 w-[280px] bg-white border-r border-gray-200/80 flex flex-col transition-transform duration-200 lg:translate-x-0 ${
+        className={`fixed lg:static inset-y-0 left-0 z-50 w-[280px] bg-[#0B1120] flex flex-col transition-transform duration-300 ease-out lg:translate-x-0 sidebar-noise ${
           sidebarOpen ? "translate-x-0" : "-translate-x-full"
         }`}
       >
-        <div className="flex items-center h-16 px-5 border-b border-gray-100">
-          <Link href="/admin" className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-white rounded-xl flex items-center justify-center overflow-hidden shrink-0">
-              <Image
-                src="/images/logo.png"
-                alt="StaysInMarrakech"
-                width={40}
-                height={40}
-                className="object-contain"
-                priority
-              />
-            </div>
-            <div className="min-w-0">
-              <p className="font-bold text-sm text-gray-900 leading-tight truncate">StaysInMarrakech</p>
-              <p className="text-[11px] text-gray-400 leading-tight">Administration</p>
-            </div>
+        {/* Logo */}
+        <div className="flex items-center justify-center py-5 px-5 border-b border-white/[0.06]">
+          <Link href="/admin" className="flex items-center justify-center">
+            <Image
+              src="/images/logo.png"
+              alt="StaysInMarrakech"
+              width={100}
+              height={100}
+              className="object-contain w-24 h-24"
+              priority
+            />
           </Link>
           <button
             onClick={() => setSidebarOpen(false)}
-            className="lg:hidden ml-auto p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 active:bg-gray-200 transition-colors duration-150"
+            className="lg:hidden ml-auto p-1.5 rounded-lg text-slate-400 hover:text-white hover:bg-white/10 transition-colors duration-150"
           >
             <X className="size-5" />
           </button>
         </div>
 
-        <nav className="flex-1 overflow-y-auto py-4 px-3">
+        {/* Navigation */}
+        <nav className="flex-1 overflow-y-auto py-4 px-3 admin-scrollbar">
           {NAV_SECTIONS.map((section, si) => (
-            <div key={si} className="mb-4">
+            <div key={si} className="mb-5">
               {section.title && (
-                <p className="px-3 mb-2 text-[11px] font-semibold uppercase tracking-wider text-gray-400">
+                <p className="px-3 mb-2 text-[10px] font-semibold uppercase tracking-[0.1em] text-slate-500">
                   {section.title}
                 </p>
               )}
@@ -164,16 +162,20 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium transition-all duration-150 mb-0.5 active:scale-[0.98] ${
+                    onClick={() => setSidebarOpen(false)}
+                    className={`relative flex items-center gap-3 px-3 py-2 rounded-xl text-sm font-medium transition-all duration-200 mb-0.5 active:scale-[0.98] ${
                       isActive
-                        ? "bg-gray-900 text-white shadow-sm"
-                        : "text-gray-600 hover:text-gray-900 hover:bg-gray-50"
+                        ? "text-white bg-white/[0.08]"
+                        : "text-slate-400 hover:text-slate-200 hover:bg-white/[0.04]"
                     }`}
                   >
-                    <item.icon className="size-[18px]" />
+                    {isActive && (
+                      <span className="absolute left-0 top-1/2 -translate-y-1/2 w-[3px] h-5 rounded-r-full bg-[#3b82f6]" />
+                    )}
+                    <item.icon className={`size-[18px] ${isActive ? "text-blue-400" : ""}`} />
                     <span className="flex-1">{item.label}</span>
                     {item.badge && item.badge > 0 && (
-                      <span className="px-1.5 py-0.5 text-[10px] font-bold bg-red-500 text-white rounded-full">
+                      <span className="px-1.5 py-0.5 text-[10px] font-bold bg-red-500/90 text-white rounded-full">
                         {item.badge}
                       </span>
                     )}
@@ -184,18 +186,19 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           ))}
         </nav>
 
-        <div className="p-3 border-t border-gray-100">
+        {/* Footer */}
+        <div className="p-3 border-t border-white/[0.06]">
           <Link
             href="/"
             target="_blank"
-            className="flex items-center gap-3 px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-gray-700 hover:bg-gray-50 active:bg-gray-100 transition-colors duration-150 mb-1"
+            className="flex items-center gap-3 px-3 py-2 rounded-xl text-sm text-slate-500 hover:text-slate-300 hover:bg-white/[0.04] transition-colors duration-200 mb-1"
           >
             <ExternalLink className="size-[18px]" />
             <span>Voir le site</span>
           </Link>
           <button
             onClick={handleLogout}
-            className="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-sm text-gray-500 hover:text-red-600 hover:bg-red-50 active:bg-red-100 transition-colors duration-150"
+            className="flex items-center gap-3 w-full px-3 py-2 rounded-xl text-sm text-slate-500 hover:text-red-400 hover:bg-red-500/[0.06] transition-colors duration-200"
           >
             <LogOut className="size-[18px]" />
             <span>Déconnexion</span>
@@ -203,8 +206,10 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         </div>
       </aside>
 
+      {/* Main content area */}
       <div className="flex-1 flex flex-col min-w-0">
-        <header className="h-16 bg-white/80 backdrop-blur-md border-b border-gray-200 flex items-center justify-between px-4 lg:px-6 shrink-0 sticky top-0 z-30">
+        {/* Header */}
+        <header className="h-16 bg-white border-b border-gray-200/80 flex items-center justify-between px-4 lg:px-6 shrink-0 sticky top-0 z-30">
           <div className="flex items-center gap-3">
             <button
               onClick={() => setSidebarOpen(true)}
@@ -224,13 +229,36 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
               )}
             </nav>
           </div>
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 bg-gray-900 rounded-full flex items-center justify-center">
-              <span className="text-white text-xs font-bold">A</span>
+
+          {/* Search bar (center) */}
+          <div className="hidden md:flex items-center flex-1 max-w-md mx-8">
+            <div className="relative w-full">
+              <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400" />
+              <div className="w-full h-9 pl-9 pr-4 rounded-xl bg-gray-50 border border-gray-200/80 text-sm text-gray-400 flex items-center cursor-default select-none">
+                Rechercher...
+              </div>
+            </div>
+          </div>
+
+          {/* Right side: notifications + avatar */}
+          <div className="flex items-center gap-3">
+            <button className="relative p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 transition-colors duration-150">
+              <Bell className="size-5" />
+              <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full ring-2 ring-white" />
+            </button>
+            <div className="h-6 w-px bg-gray-200" />
+            <div className="flex items-center gap-2.5">
+              <div className="w-8 h-8 bg-[#0d47a1] rounded-lg flex items-center justify-center">
+                <span className="text-white text-xs font-bold">A</span>
+              </div>
+              <div className="hidden sm:block">
+                <p className="text-sm font-medium text-gray-700 leading-tight">Admin</p>
+              </div>
             </div>
           </div>
         </header>
 
+        {/* Page content */}
         <main className="flex-1 p-4 lg:p-8 overflow-auto">
           {children}
         </main>

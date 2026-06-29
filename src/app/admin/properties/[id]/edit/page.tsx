@@ -14,6 +14,7 @@ import { ArrowLeft, Upload, X, GripVertical } from "lucide-react";
 
 const PROPERTY_TYPES = [
   { value: "VILLA", label: "Villa" },
+  { value: "RIAD", label: "Riad" },
   { value: "APARTMENT", label: "Appartement" },
   { value: "HOUSE", label: "Maison" },
   { value: "LAND", label: "Terrain" },

@@ -1,5 +1,6 @@
 import Image from "next/image";
 import Link from "next/link";
+import { sanitizeHTML } from "@/lib/sanitize";
 
 export interface BlogPost {
   slug: string;
@@ -69,7 +70,7 @@ export default function BlogPostDetail({ post, recentPosts = [], categories = []
                 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:text-[#0d47a1] [&_h2]:mt-10 [&_h2]:mb-4
                 [&_h3]:text-xl [&_h3]:font-semibold [&_h3]:text-[#34495e] [&_h3]:mt-8 [&_h3]:mb-3
                 [&_p]:text-base [&_p]:mb-6 [&_p]:leading-8"
-              dangerouslySetInnerHTML={{ __html: post.content }}
+              dangerouslySetInnerHTML={{ __html: sanitizeHTML(post.content) }}
             />
 
             {post.author && (

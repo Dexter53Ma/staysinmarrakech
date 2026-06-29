@@ -46,6 +46,15 @@ export async function requireApiAuth() {
   return { user, dbUser, error: null };
 }
 
+export async function requireAdminApi() {
+  const { user, dbUser, error } = await requireApiAuth();
+  if (error) return { user: null, dbUser: null, error };
+  if (!dbUser || dbUser.role !== "ADMIN" as UserRole) {
+    return { user: null, dbUser: null, error: NextResponse.json({ error: "Accès refusé" }, { status: 403 }) };
+  }
+  return { user, dbUser, error: null };
+}
+
 export async function requireRole(role: UserRole) {
   const dbUser = await requireAdmin();
   if (dbUser.role !== role) {

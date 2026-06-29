@@ -26,6 +26,7 @@ import { Plus, Trash2, ArrowUp, ArrowDown, Pencil, Image as ImageIcon } from "lu
 import { AdminPageHeader } from "@/components/admin";
 import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
+import { Pagination } from "@/components/admin/Pagination";
 
 interface HeroSlide {
   id: string;
@@ -43,6 +44,9 @@ export default function AdminHeroSlidesPage() {
   const [loading, setLoading] = useState(true);
   const [dialogOpen, setDialogOpen] = useState(false);
   const [editingSlide, setEditingSlide] = useState<HeroSlide | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
   const [form, setForm] = useState({
     title: "",
     subtitle: "",
@@ -54,31 +58,21 @@ export default function AdminHeroSlidesPage() {
   const fetchSlides = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/hero-slides");
+      const res = await fetch(`/api/hero-slides?page=${page}&limit=20`);
       const data = await res.json();
-      setSlides(Array.isArray(data) ? data : []);
+      setSlides(data.data || []);
+      setTotalPages(data.pagination?.totalPages || 1);
+      setTotal(data.pagination?.total || 0);
     } catch {
       setSlides([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page]);
 
   useEffect(() => {
-    async function loadSlides() {
-      setLoading(true);
-      try {
-        const res = await fetch("/api/hero-slides");
-        const data = await res.json();
-        setSlides(Array.isArray(data) ? data : []);
-      } catch {
-        setSlides([]);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadSlides();
-  }, []);
+    fetchSlides();
+  }, [fetchSlides]);
 
   const toggleActive = async (id: string, current: boolean) => {
     try {
@@ -165,7 +159,7 @@ export default function AdminHeroSlidesPage() {
     <div className="space-y-6">
       <AdminPageHeader
         title="Slides Hero"
-        description={`${slides.length} slide${slides.length > 1 ? "s" : ""}`}
+        description={`${total} slide${total > 1 ? "s" : ""}`}
         breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Slides Hero" }]}
         action={{ label: "Nouveau slide", onClick: () => setDialogOpen(true), icon: Plus }}
       />
@@ -272,6 +266,8 @@ export default function AdminHeroSlidesPage() {
             </TableBody>
           </Table>
       </div>
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
 
       <Dialog open={dialogOpen} onOpenChange={(open) => !open && setDialogOpen(false)}>
         <DialogContent className="sm:max-w-md">

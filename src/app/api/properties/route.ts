@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireApiAuth } from "@/lib/auth";
+import { requireAdminApi } from "@/lib/auth";
 import { generateSlug, ensureUniqueSlug, validateFields, apiError } from "@/lib/api-helpers";
+import { logAudit } from "@/lib/audit";
+import { parsePagination, paginatedResponse } from "@/lib/pagination";
 
 export const dynamic = "force-dynamic";
 
@@ -11,9 +13,7 @@ export async function GET(request: NextRequest) {
     const type = searchParams.get("type");
     const status = searchParams.get("status");
     const search = searchParams.get("search");
-    const page = parseInt(searchParams.get("page") || "1");
-    const limit = parseInt(searchParams.get("limit") || "10");
-    const skip = (page - 1) * limit;
+    const { page, limit, skip } = parsePagination(searchParams);
 
     const where: Record<string, unknown> = {};
     if (type && type !== "ALL") where.type = type;
@@ -34,12 +34,7 @@ export async function GET(request: NextRequest) {
       prisma.property.count({ where }),
     ]);
 
-    return NextResponse.json({
-      properties,
-      total,
-      totalPages: Math.ceil(total / limit),
-      page,
-    });
+    return NextResponse.json(paginatedResponse(properties, total, page, limit));
   } catch (e) {
     console.error("GET /api/properties error:", e);
     return apiError("Erreur serveur");
@@ -47,7 +42,7 @@ export async function GET(request: NextRequest) {
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
   try {
     const body = await request.json();
@@ -71,9 +66,11 @@ export async function POST(request: NextRequest) {
       include: { images: true },
     });
 
+    await logAudit(auth.dbUser?.id || null, "create", "property", property.id, { title: property.title });
+
     return NextResponse.json(property, { status: 201 });
   } catch (e: unknown) {
-    const message = e instanceof Error ? e.message : "Erreur serveur";
-    return apiError(message);
+    console.error("POST /api/properties error:", e);
+    return apiError("Erreur serveur");
   }
 }

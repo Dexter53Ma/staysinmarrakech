@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { requireApiAuth } from "@/lib/auth";
+import { requireAdminApi } from "@/lib/auth";
 import { createClient } from "@supabase/supabase-js";
 
 const ALLOWED_TYPES = [
@@ -8,7 +8,6 @@ const ALLOWED_TYPES = [
   "image/png",
   "image/webp",
   "image/gif",
-  "image/svg+xml",
   "application/pdf",
 ];
 
@@ -16,7 +15,7 @@ const MAX_SIZE = 10 * 1024 * 1024; // 10MB
 const BUCKET = "uploads";
 
 export async function POST(request: NextRequest) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
 
   try {
@@ -29,7 +28,7 @@ export async function POST(request: NextRequest) {
 
     if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
-        { error: "Type de fichier non autorisé. Formats acceptés: JPEG, PNG, WebP, GIF, SVG, PDF" },
+        { error: "Type de fichier non autorisé. Formats acceptés: JPEG, PNG, WebP, GIF, PDF" },
         { status: 400 }
       );
     }
@@ -57,7 +56,8 @@ export async function POST(request: NextRequest) {
       .upload(filename, buffer, { contentType: file.type, upsert: false });
 
     if (uploadError) {
-      return NextResponse.json({ error: `Erreur upload: ${uploadError.message}` }, { status: 500 });
+      console.error("Upload error:", uploadError);
+      return NextResponse.json({ error: "Erreur lors de l'upload" }, { status: 500 });
     }
 
     const { data: urlData } = supabase.storage.from(BUCKET).getPublicUrl(filename);

@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
+import { validateCsrfToken } from "@/lib/csrf";
 
 export async function POST(request: NextRequest) {
   try {
+    const { allowed, response } = await rateLimit(request, { limit: 20, windowMs: 60_000 });
+    if (!allowed) {
+      return response;
+    }
+
+    const csrfError = await validateCsrfToken(request);
+    if (csrfError) return csrfError;
+
     const { propertyId, sessionId } = await request.json();
 
     if (!propertyId || !sessionId) {
@@ -29,6 +39,14 @@ export async function POST(request: NextRequest) {
 
 export async function DELETE(request: NextRequest) {
   try {
+    const { allowed, response } = await rateLimit(request, { limit: 20, windowMs: 60_000 });
+    if (!allowed) {
+      return response;
+    }
+
+    const csrfError = await validateCsrfToken(request);
+    if (csrfError) return csrfError;
+
     const { searchParams } = new URL(request.url);
     const propertyId = searchParams.get("propertyId");
     const sessionId = searchParams.get("sessionId");
@@ -49,6 +67,11 @@ export async function DELETE(request: NextRequest) {
 
 export async function GET(request: NextRequest) {
   try {
+    const { allowed, response } = await rateLimit(request, { limit: 20, windowMs: 60_000 });
+    if (!allowed) {
+      return response;
+    }
+
     const { searchParams } = new URL(request.url);
     const propertyId = searchParams.get("propertyId");
     const sessionId = searchParams.get("sessionId");

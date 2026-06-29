@@ -33,7 +33,7 @@ export default function QuartiersCarousel() {
           }))
         )
       )
-      .catch(() => {});
+      .catch((e) => console.error("[QuartiersCarousel] fetch error:", e));
   }, []);
 
   const updateScrollButtons = () => {
@@ -60,11 +60,11 @@ export default function QuartiersCarousel() {
   };
 
   return (
-    <section className="max-w-[1140px] mx-auto py-[50px] px-[15px] overflow-hidden">
-      <h2 className="text-[26px] font-bold uppercase text-[#0b1014] mb-6">
+    <section className="max-w-[1140px] mx-auto py-[60px] px-[15px] overflow-hidden">
+      <h2 className="text-[26px] font-bold uppercase text-[#0b1014] mb-4">
         Location villas Marrakech
       </h2>
-      <p className="text-[#34495e] text-[16px] mb-8">
+      <p className="text-[#34495e] text-[16px] mb-10">
         Réservez une villa à Marrakech avec StaysInMarrakech pour profiter d&apos;un séjour unique alliant confort, élégance et services haut de gamme.
       </p>
 
@@ -72,7 +72,7 @@ export default function QuartiersCarousel() {
         {canScrollLeft && (
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#0b1014] hover:text-white transition-colors"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#0d47a1] hover:text-white transition-all duration-300"
             aria-label="Précédent"
           >
             <Icon icon={faArrowLeft} />
@@ -81,23 +81,23 @@ export default function QuartiersCarousel() {
 
         <div
           ref={scrollRef}
-          className="flex gap-4 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 scrollbar-hide"
+          className="flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-4 scrollbar-hide"
         >
           {quartiers.map((q) => (
             <Link
               key={q.name}
               href={`/properties?quarter=${q.slug}`}
-              className="relative flex-none w-[200px] h-[150px] rounded-[4px] overflow-hidden snap-start group cursor-pointer"
+              className="relative flex-none w-[220px] h-[170px] rounded-xl overflow-hidden snap-start group cursor-pointer shadow-md hover:shadow-xl transition-all duration-300"
             >
               <Image
                 src={q.image || "/images/placeholder.svg"}
                 alt={q.name}
                 fill
-                className="object-cover transition-transform duration-200 group-hover:scale-105"
-                sizes="200px"
+                className="object-cover transition-transform duration-500 group-hover:scale-110"
+                sizes="220px"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 to-transparent flex items-end p-3">
-                <span className="text-white text-[14px] font-bold uppercase">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent flex items-end p-4">
+                <span className="text-white text-[15px] font-bold uppercase tracking-wide">
                   {q.name}
                 </span>
               </div>
@@ -108,7 +108,7 @@ export default function QuartiersCarousel() {
         {canScrollRight && (
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#0b1014] hover:text-white transition-colors"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#0d47a1] hover:text-white transition-all duration-300"
             aria-label="Suivant"
           >
             <Icon icon={faArrowRight} />

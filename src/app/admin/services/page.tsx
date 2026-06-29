@@ -18,6 +18,7 @@ import { Plus, Pencil, Trash2, RefreshCw, Wrench } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin";
 import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
+import { Pagination } from "@/components/admin/Pagination";
 
 interface Service {
   id: string;
@@ -36,19 +37,26 @@ export default function AdminServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
   const [loading, setLoading] = useState(true);
   const [toggling, setToggling] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const fetchServices = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/services");
+      const res = await fetch(`/api/services?page=${page}&limit=20`);
       const data = await res.json();
-      setServices(Array.isArray(data) ? data : []);
+      setServices(data.data || []);
+      setTotalPages(data.pagination?.totalPages || 1);
+      setTotal(data.pagination?.total || 0);
     } catch {
       setServices([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page]);
 
   useEffect(() => { fetchServices(); }, [fetchServices]);
 
@@ -67,12 +75,15 @@ export default function AdminServicesPage() {
   };
 
   const handleDelete = async (id: string) => {
-    if (!confirm("Supprimer ce service ?")) return;
+    setDeletingId(id);
     try {
       await fetch(`/api/services/${id}`, { method: "DELETE" });
       fetchServices();
     } catch {
       alert("Erreur lors de la suppression");
+    } finally {
+      setDeletingId(null);
+      setConfirmDeleteId(null);
     }
   };
 
@@ -80,7 +91,7 @@ export default function AdminServicesPage() {
     <div className="space-y-6">
       <AdminPageHeader
         title="Services"
-        description={`${services.length} service${services.length > 1 ? "s" : ""}`}
+        description={`${total} service${total > 1 ? "s" : ""}`}
         breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Services" }]}
         action={{ label: "Nouveau service", href: "/admin/services/new", icon: Plus }}
       />
@@ -154,14 +165,36 @@ export default function AdminServicesPage() {
                             <Pencil size={16} />
                           </Button>
                         </Link>
-                        <Button
-                          size="icon-sm"
-                          variant="ghost"
-                          title="Supprimer"
-                          onClick={() => handleDelete(s.id)}
-                        >
-                          <Trash2 size={16} className="text-red-600" />
-                        </Button>
+                        {confirmDeleteId === s.id ? (
+                          <div className="flex items-center gap-1">
+                            <Button
+                              size="icon-sm"
+                              variant="destructive"
+                              disabled={deletingId === s.id}
+                              onClick={() => handleDelete(s.id)}
+                            >
+                              {deletingId === s.id ? (
+                                <span className="w-3.5 h-3.5 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                              ) : "Oui"}
+                            </Button>
+                            <Button
+                              size="icon-sm"
+                              variant="outline"
+                              onClick={() => setConfirmDeleteId(null)}
+                            >
+                              Non
+                            </Button>
+                          </div>
+                        ) : (
+                          <Button
+                            size="icon-sm"
+                            variant="ghost"
+                            title="Supprimer"
+                            onClick={() => setConfirmDeleteId(s.id)}
+                          >
+                            <Trash2 size={16} className="text-red-600" />
+                          </Button>
+                        )}
                       </div>
                     </TableCell>
                   </TableRow>
@@ -171,6 +204,8 @@ export default function AdminServicesPage() {
           </Table>
         </CardContent>
       </Card>
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

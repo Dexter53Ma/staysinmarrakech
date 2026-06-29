@@ -1,11 +1,12 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { requireApiAuth } from "@/lib/auth";
+import { requireAdminApi } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
   try {
     const { id } = await params;
@@ -30,6 +31,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       },
     });
 
+    await logAudit(auth.dbUser?.id || null, "update", "testimonial", id, { guestName: testimonial.guestName });
+
     return NextResponse.json(testimonial);
   } catch {
     return NextResponse.json({ error: "Erreur lors de la mise à jour" }, { status: 500 });
@@ -37,10 +40,11 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
   try {
     const { id } = await params;
+    await logAudit(auth.dbUser?.id || null, "delete", "testimonial", id);
     await prisma.testimonial.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch {

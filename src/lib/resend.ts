@@ -1,4 +1,5 @@
 import { Resend } from "resend";
+import { escapeHtml } from "./sanitize";
 
 let _resend: Resend | null = null;
 
@@ -88,13 +89,13 @@ export async function sendBookingNotification(booking: {
     <h2 style="margin:0 0 4px;font-size:20px;color:#111;">Nouvelle demande de réservation</h2>
     <p style="margin:0 0 24px;font-size:14px;color:#999;">Un client souhaite réserver une propriété.</p>
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
-      ${infoRow("Propriété", booking.propertyTitle)}
-      ${infoRow("Client", booking.guestName)}
-      ${infoRow("Email", booking.guestEmail)}
-      ${infoRow("Arrivée", booking.checkIn)}
-      ${infoRow("Départ", booking.checkOut)}
+      ${infoRow("Propriété", escapeHtml(booking.propertyTitle))}
+      ${infoRow("Client", escapeHtml(booking.guestName))}
+      ${infoRow("Email", escapeHtml(booking.guestEmail))}
+      ${infoRow("Arrivée", escapeHtml(booking.checkIn))}
+      ${infoRow("Départ", escapeHtml(booking.checkOut))}
       ${infoRow("Voyageurs", String(booking.guestsCount))}
-      ${booking.message ? infoRow("Message", booking.message) : ""}
+      ${booking.message ? infoRow("Message", escapeHtml(booking.message)) : ""}
     </table>
     <div style="text-align:center;">
       ${button(`${SITE_URL()}/admin/bookings`, "Gérer la réservation")}
@@ -103,7 +104,7 @@ export async function sendBookingNotification(booking: {
   await getResend().emails.send({
     from: FROM_ADDRESS,
     to: ADMIN_EMAIL,
-    subject: `Nouvelle demande de réservation — ${booking.propertyTitle}`,
+    subject: `Nouvelle demande de réservation — ${escapeHtml(booking.propertyTitle)}`,
     html: emailWrapper(content),
   });
 }
@@ -111,9 +112,9 @@ export async function sendBookingNotification(booking: {
 export async function sendBookingConfirmation(guestEmail: string, guestName: string, propertyTitle: string, status: string) {
   const isConfirmed = status === "CONFIRMED";
   const content = `
-    <h2 style="margin:0 0 4px;font-size:20px;color:#111;">Bonjour ${guestName},</h2>
+    <h2 style="margin:0 0 4px;font-size:20px;color:#111;">Bonjour ${escapeHtml(guestName)},</h2>
     <p style="margin:0 0 20px;font-size:15px;color:#555;line-height:1.6;">
-      Votre demande pour <strong>${propertyTitle}</strong> a été
+      Votre demande pour <strong>${escapeHtml(propertyTitle)}</strong> a été
       <strong style="color:${isConfirmed ? "#16a34a" : "#dc2626"};">${isConfirmed ? "confirmée" : "refusée"}</strong>.
     </p>
     ${isConfirmed
@@ -128,15 +129,15 @@ export async function sendBookingConfirmation(guestEmail: string, guestName: str
     from: FROM_ADDRESS,
     to: guestEmail,
     subject: isConfirmed
-      ? `Réservation confirmée — ${propertyTitle}`
-      : `Mise à jour de votre demande — ${propertyTitle}`,
+      ? `Réservation confirmée — ${escapeHtml(propertyTitle)}`
+      : `Mise à jour de votre demande — ${escapeHtml(propertyTitle)}`,
     html: emailWrapper(content),
   });
 }
 
 export async function sendContactConfirmation(guestEmail: string, guestName: string) {
   const content = `
-    <h2 style="margin:0 0 4px;font-size:20px;color:#111;">Bonjour ${guestName},</h2>
+    <h2 style="margin:0 0 4px;font-size:20px;color:#111;">Bonjour ${escapeHtml(guestName)},</h2>
     <p style="margin:0 0 20px;font-size:15px;color:#555;line-height:1.6;">
       Nous avons bien reçu votre message. Notre équipe vous répondra dans les plus brefs délais.
     </p>
@@ -163,13 +164,13 @@ export async function sendContactNotification(name: string, email: string, subje
     <h2 style="margin:0 0 4px;font-size:20px;color:#111;">Nouveau message de contact</h2>
     <p style="margin:0 0 24px;font-size:14px;color:#999;">Un visiteur vous a envoyé un message.</p>
     <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:24px;">
-      ${infoRow("Nom", name)}
-      ${infoRow("Email", email)}
-      ${infoRow("Sujet", subject)}
+      ${infoRow("Nom", escapeHtml(name))}
+      ${infoRow("Email", escapeHtml(email))}
+      ${infoRow("Sujet", escapeHtml(subject))}
     </table>
     <div style="background-color:#f8f9fa;border-radius:10px;padding:20px;margin-bottom:24px;">
       <p style="margin:0 0 6px;font-size:12px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.5px;">Message</p>
-      <p style="margin:0;font-size:14px;color:#555;line-height:1.6;">${message}</p>
+      <p style="margin:0;font-size:14px;color:#555;line-height:1.6;">${escapeHtml(message)}</p>
     </div>
     <div style="text-align:center;">
       ${button(`${SITE_URL()}/admin/contacts`, "Voir le message")}
@@ -178,7 +179,7 @@ export async function sendContactNotification(name: string, email: string, subje
   await getResend().emails.send({
     from: FROM_ADDRESS,
     to: ADMIN_EMAIL,
-    subject: `Nouveau message de contact — ${subject}`,
+    subject: `Nouveau message de contact — ${escapeHtml(subject)}`,
     html: emailWrapper(content),
   });
 }

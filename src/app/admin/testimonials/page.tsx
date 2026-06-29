@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -16,6 +16,7 @@ import { Star, Trash2, MessageSquare } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin";
 import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
+import { Pagination } from "@/components/admin/Pagination";
 
 interface Testimonial {
   id: string;
@@ -29,21 +30,28 @@ interface Testimonial {
 export default function AdminTestimonialsPage() {
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+
+  const fetchTestimonials = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/testimonials?page=${page}&limit=20`);
+      const data = await res.json();
+      setTestimonials(data.data || []);
+      setTotalPages(data.pagination?.totalPages || 1);
+      setTotal(data.pagination?.total || 0);
+    } catch {
+      console.error("Erreur lors du chargement des témoignages");
+    } finally {
+      setLoading(false);
+    }
+  }, [page]);
 
   useEffect(() => {
-    const fetchTestimonials = async () => {
-      try {
-        const res = await fetch("/api/testimonials");
-        const data = await res.json();
-        setTestimonials(data);
-      } catch {
-        console.error("Erreur lors du chargement des témoignages");
-      } finally {
-        setLoading(false);
-      }
-    };
     fetchTestimonials();
-  }, []);
+  }, [fetchTestimonials]);
 
   const toggleApprove = async (id: string, current: boolean) => {
     try {
@@ -52,9 +60,7 @@ export default function AdminTestimonialsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isApproved: !current }),
       });
-      setTestimonials((prev) =>
-        prev.map((t) => (t.id === id ? { ...t, isApproved: !current } : t))
-      );
+      fetchTestimonials();
     } catch {
       console.error("Erreur lors de la mise à jour");
     }
@@ -64,7 +70,7 @@ export default function AdminTestimonialsPage() {
     if (!confirm("Supprimer ce témoignage ?")) return;
     try {
       await fetch(`/api/testimonials/${id}`, { method: "DELETE" });
-      setTestimonials((prev) => prev.filter((t) => t.id !== id));
+      fetchTestimonials();
     } catch {
       console.error("Erreur lors de la suppression");
     }
@@ -74,7 +80,7 @@ export default function AdminTestimonialsPage() {
     <div className="space-y-6">
       <AdminPageHeader
         title="Témoignages"
-        description={`${testimonials.length} témoignage${testimonials.length > 1 ? "s" : ""}`}
+        description={`${total} témoignage${total > 1 ? "s" : ""}`}
         breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Témoignages" }]}
       />
 
@@ -142,6 +148,8 @@ export default function AdminTestimonialsPage() {
           </Table>
         </div>
       )}
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

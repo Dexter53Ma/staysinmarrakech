@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { requireApiAuth } from "@/lib/auth";
+import { requireAdminApi } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 export const dynamic = "force-dynamic";
 
@@ -18,7 +19,7 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 }
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
 
   try {
@@ -42,6 +43,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       },
     });
 
+    await logAudit(auth.dbUser?.id || null, "update", "location", id, { name: location.name });
+
     return NextResponse.json(location);
   } catch {
     return NextResponse.json({ error: "Erreur lors de la mise à jour" }, { status: 500 });
@@ -49,11 +52,12 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 }
 
 export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
 
   try {
     const { id } = await params;
+    await logAudit(auth.dbUser?.id || null, "delete", "location", id);
     await prisma.location.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch {

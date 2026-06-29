@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -15,6 +15,7 @@ import { Eye, Trash2, CheckCircle, Mail } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin";
 import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
+import { Pagination } from "@/components/admin/Pagination";
 import {
   Dialog,
   DialogContent,
@@ -39,21 +40,28 @@ export default function AdminContactsPage() {
   const [contacts, setContacts] = useState<Contact[]>([]);
   const [loading, setLoading] = useState(true);
   const [selected, setSelected] = useState<Contact | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+
+  const fetchContacts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/contacts?page=${page}&limit=20`);
+      const data = await res.json();
+      setContacts(data.data || []);
+      setTotalPages(data.pagination?.totalPages || 1);
+      setTotal(data.pagination?.total || 0);
+    } catch {
+      console.error("Erreur lors du chargement des messages");
+    } finally {
+      setLoading(false);
+    }
+  }, [page]);
 
   useEffect(() => {
-    async function fetchContacts() {
-      try {
-        const res = await fetch("/api/contacts");
-        const data = await res.json();
-        setContacts(data);
-      } catch {
-        console.error("Erreur lors du chargement des messages");
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchContacts();
-  }, []);
+  }, [fetchContacts]);
 
   const markAsRead = async (id: string) => {
     try {
@@ -62,9 +70,7 @@ export default function AdminContactsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "READ" }),
       });
-      setContacts((prev) =>
-        prev.map((c) => (c.id === id ? { ...c, status: "READ" } : c))
-      );
+      fetchContacts();
     } catch {
       console.error("Erreur lors de la mise à jour");
     }
@@ -77,9 +83,7 @@ export default function AdminContactsPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ status: "REPLIED" }),
       });
-      setContacts((prev) =>
-        prev.map((c) => (c.id === id ? { ...c, status: "REPLIED" } : c))
-      );
+      fetchContacts();
     } catch {
       console.error("Erreur lors de la mise à jour");
     }
@@ -89,7 +93,7 @@ export default function AdminContactsPage() {
     if (!confirm("Supprimer ce message ?")) return;
     try {
       await fetch(`/api/contacts/${id}`, { method: "DELETE" });
-      setContacts((prev) => prev.filter((c) => c.id !== id));
+      fetchContacts();
       if (selected?.id === id) setSelected(null);
     } catch {
       console.error("Erreur lors de la suppression");
@@ -113,7 +117,7 @@ export default function AdminContactsPage() {
     <div className="space-y-6">
       <AdminPageHeader
         title="Messages de contact"
-        description={`${contacts.length} message${contacts.length > 1 ? "s" : ""}`}
+        description={`${total} message${total > 1 ? "s" : ""}`}
         breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Contacts" }]}
       />
 
@@ -187,6 +191,8 @@ export default function AdminContactsPage() {
           </Table>
         </div>
       )}
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
 
       <Dialog open={!!selected} onOpenChange={(open) => !open && setSelected(null)}>
         <DialogContent className="sm:max-w-md">

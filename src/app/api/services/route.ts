@@ -1,15 +1,30 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireApiAuth } from "@/lib/auth";
+import { requireAdminApi } from "@/lib/auth";
 import { generateSlug, ensureUniqueSlug, validateFields, apiError } from "@/lib/api-helpers";
+import { logAudit } from "@/lib/audit";
+import { parsePagination, paginatedResponse } from "@/lib/pagination";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
-    const services = await prisma.service.findMany({
-      orderBy: { sortOrder: "asc" },
-    });
+    const { searchParams } = new URL(request.url);
+    const { page, limit, skip, hasPagination } = parsePagination(searchParams);
+
+    const where = {};
+    const [services, total] = await Promise.all([
+      prisma.service.findMany({
+        where,
+        orderBy: { sortOrder: "asc" },
+        skip: hasPagination ? skip : undefined,
+        take: hasPagination ? limit : undefined,
+      }),
+      prisma.service.count({ where }),
+    ]);
+    if (hasPagination) {
+      return NextResponse.json(paginatedResponse(services, total, page, limit));
+    }
     return NextResponse.json(services);
   } catch {
     return apiError("Erreur lors du chargement");
@@ -17,7 +32,7 @@ export async function GET() {
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
   try {
     const body = await request.json();
@@ -48,6 +63,8 @@ export async function POST(request: NextRequest) {
         sortOrder: sortOrder ? parseInt(sortOrder) : 0,
       },
     });
+
+    await logAudit(auth.dbUser?.id || null, "create", "service", service.id, { title: service.title });
 
     return NextResponse.json(service, { status: 201 });
   } catch {

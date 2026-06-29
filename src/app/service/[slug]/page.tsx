@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
 import { Icon, faArrowRight, faPhone } from "@/components/icons";
+import { sanitizeHTML } from "@/lib/sanitize";
 
 export const dynamic = "force-dynamic";
 
@@ -157,7 +158,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                   [&_p]:text-base [&_p]:mb-5 [&_p]:leading-7
                   [&_ul]:mb-5 [&_ul]:pl-5 [&_li]:mb-2
                   [&_strong]:text-[#34495e]"
-                dangerouslySetInnerHTML={{ __html: content }}
+                dangerouslySetInnerHTML={{ __html: sanitizeHTML(content) }}
               />
 
               {/* Features */}

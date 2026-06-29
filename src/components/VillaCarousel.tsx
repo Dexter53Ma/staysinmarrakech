@@ -5,9 +5,6 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   Icon,
-  faPhone,
-  faWhatsapp,
-  faEnvelope,
   faArrowLeft,
   faArrowRight,
   faMapMarkerAlt,
@@ -17,7 +14,6 @@ import {
   farHeart,
   faHeart,
 } from "@/components/icons";
-import { useSettings } from "@/components/SettingsContext";
 
 interface Villa {
   name: string;
@@ -58,7 +54,6 @@ export default function VillaCarousel() {
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [villas, setVillas] = useState<Villa[]>([]);
-  const settings = useSettings();
 
   useEffect(() => {
     fetch("/api/properties?limit=6")
@@ -78,12 +73,8 @@ export default function VillaCarousel() {
         }));
         setVillas(mapped);
       })
-      .catch(() => {});
+      .catch((e) => console.error("[VillaCarousel] fetch error:", e));
   }, []);
-
-  const phone = settings.phone_1 || "+212621189496";
-  const whatsappNumber = phone.replace(/[^0-9]/g, "");
-  const email = settings.email || "info@villapremium.ma";
 
   const toggleWishlist = (name: string) => {
     setWishlist((prev) =>
@@ -114,6 +105,8 @@ export default function VillaCarousel() {
     scrollRef.current.scrollBy({ left: amount, behavior: "smooth" });
   };
 
+  const isLoading = villas.length === 0;
+
   return (
     <section className="py-16 px-4 max-w-[1200px] mx-auto overflow-hidden">
       <div className="text-center mb-10">
@@ -125,6 +118,28 @@ export default function VillaCarousel() {
         </p>
       </div>
 
+      {isLoading ? (
+        <div className="flex gap-6 overflow-hidden">
+          {[1, 2, 3].map((i) => (
+            <div key={i} className="flex-none w-[85vw] sm:w-[calc(50%-12px)] lg:w-[calc(33.333%-16px)] bg-white rounded-[4px] overflow-hidden shadow-[0_2px_10px_rgba(0,0,0,0.1)]">
+              <div className="w-full h-[200px] bg-gray-200 animate-pulse" />
+              <div className="p-[15px] space-y-3">
+                <div className="h-3 bg-gray-200 rounded animate-pulse w-1/3" />
+                <div className="h-4 bg-gray-200 rounded animate-pulse w-1/2" />
+                <div className="h-5 bg-gray-200 rounded animate-pulse w-2/3" />
+                <div className="grid grid-cols-2 gap-2">
+                  {[1, 2, 3, 4].map((j) => (
+                    <div key={j} className="h-4 bg-gray-200 rounded animate-pulse" />
+                  ))}
+                </div>
+              </div>
+              <div className="px-[15px] pb-[15px]">
+                <div className="h-10 bg-gray-200 rounded animate-pulse" />
+              </div>
+            </div>
+          ))}
+        </div>
+      ) : (
       <div className="relative">
         {canScrollLeft && (
           <button
@@ -196,38 +211,13 @@ export default function VillaCarousel() {
                 </div>
               </Link>
 
-              <div className="px-[15px] pb-[15px] flex flex-col gap-2">
+              <div className="px-[15px] pb-[15px]">
                 <Link
                   href={`/properties/${villa.slug}`}
-                  className="flex items-center justify-center gap-2 bg-[#0d47a1] text-white text-[13px] font-medium py-2.5 rounded hover:bg-[#0a3a82] transition-colors"
+                  className="flex items-center justify-center gap-2 w-full bg-[#0d47a1] text-white text-[13px] font-medium py-2.5 rounded hover:bg-[#0a3a82] transition-colors"
                 >
                   Voir détails
                 </Link>
-                <div className="flex gap-2">
-                  <a
-                    href={`tel:${phone}`}
-                    className="flex-1 flex items-center justify-center gap-1.5 bg-[#0d47a1] text-white text-[13px] font-medium py-2 rounded hover:bg-[#0a3a82] transition-colors"
-                  >
-                    <Icon icon={faPhone} className="text-[11px]" />
-                    <span>Téléphoner</span>
-                  </a>
-                  <a
-                    href={`https://wa.me/${whatsappNumber}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="flex-1 flex items-center justify-center gap-1.5 bg-[#25D366] text-white text-[13px] font-medium py-2 rounded hover:bg-[#1ebe57] transition-colors"
-                  >
-                    <Icon icon={faWhatsapp} className="text-[11px]" />
-                    <span>WhatsApp</span>
-                  </a>
-                  <a
-                    href={`mailto:${email}`}
-                    className="flex-1 flex items-center justify-center gap-1.5 bg-[#ea4335] text-white text-[13px] font-medium py-2 rounded hover:bg-[#d33426] transition-colors"
-                  >
-                    <Icon icon={faEnvelope} className="text-[11px]" />
-                    <span>Email</span>
-                  </a>
-                </div>
               </div>
             </div>
           ))}
@@ -243,6 +233,7 @@ export default function VillaCarousel() {
           </button>
         )}
       </div>
+      )}
     </section>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   Table,
   TableBody,
@@ -12,6 +12,7 @@ import {
 import { AdminPageHeader } from "@/components/admin";
 import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
+import { Pagination } from "@/components/admin/Pagination";
 import { Mail, CheckCircle, XCircle } from "lucide-react";
 
 interface Subscriber {
@@ -25,16 +26,28 @@ interface Subscriber {
 export default function NewsletterPage() {
   const [subscribers, setSubscribers] = useState<Subscriber[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+
+  const fetchSubscribers = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/newsletter?page=${page}&limit=20`);
+      const data = await res.json();
+      setSubscribers(data.data || []);
+      setTotalPages(data.pagination?.totalPages || 1);
+      setTotal(data.pagination?.total || 0);
+    } catch {
+      console.error("Erreur lors du chargement");
+    } finally {
+      setLoading(false);
+    }
+  }, [page]);
 
   useEffect(() => {
-    fetch("/api/newsletter")
-      .then((r) => r.json())
-      .then((data) => {
-        setSubscribers(data);
-        setLoading(false);
-      })
-      .catch(() => setLoading(false));
-  }, []);
+    fetchSubscribers();
+  }, [fetchSubscribers]);
 
   const activeCount = subscribers.filter((s) => s.isActive).length;
 
@@ -42,7 +55,7 @@ export default function NewsletterPage() {
     <div className="space-y-6">
       <AdminPageHeader
         title="Newsletter"
-        description={`${subscribers.length} inscrit${subscribers.length > 1 ? "s" : ""} au total`}
+        description={`${total} inscrit${total > 1 ? "s" : ""} au total`}
         breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Newsletter" }]}
       />
 
@@ -126,6 +139,8 @@ export default function NewsletterPage() {
           </div>
         )}
       </div>
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

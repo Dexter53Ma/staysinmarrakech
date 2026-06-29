@@ -6,7 +6,7 @@ export const dynamic = "force-dynamic";
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ slug: string }> }) {
   try {
     const { slug } = await params;
-    const post = await prisma.blogPost.findUnique({
+    const post = await prisma.blogPost.findFirst({
       where: { slug, isPublished: true },
     });
     if (!post) {

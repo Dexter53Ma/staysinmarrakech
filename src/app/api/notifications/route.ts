@@ -1,24 +1,35 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
-import { requireApiAuth } from "@/lib/auth";
+import { requireAdminApi } from "@/lib/auth";
+import { parsePagination, paginatedResponse } from "@/lib/pagination";
 
 export const dynamic = "force-dynamic";
 
-export async function GET() {
-  const auth = await requireApiAuth();
+export async function GET(request: NextRequest) {
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
   try {
-    const notifications = await prisma.notification.findMany({
-      orderBy: { createdAt: "desc" },
-    });
-    return NextResponse.json(notifications);
+    const { searchParams } = new URL(request.url);
+    const { page, limit, skip } = parsePagination(searchParams);
+
+    const where = {};
+    const [notifications, total] = await Promise.all([
+      prisma.notification.findMany({
+        where,
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+      prisma.notification.count({ where }),
+    ]);
+    return NextResponse.json(paginatedResponse(notifications, total, page, limit));
   } catch {
     return NextResponse.json({ error: "Erreur lors de la récupération des notifications" }, { status: 500 });
   }
 }
 
 export async function POST(request: NextRequest) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
 
   try {
@@ -45,7 +56,7 @@ export async function POST(request: NextRequest) {
 }
 
 export async function PUT(request: NextRequest) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
 
   try {

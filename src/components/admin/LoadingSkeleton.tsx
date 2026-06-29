@@ -1,3 +1,5 @@
+const skeletonWidths = [52, 65, 38, 57, 43, 61, 48, 55, 41, 63, 47, 59, 35, 68, 44, 56, 39, 62, 51, 46];
+
 export function TableSkeleton({ rows = 5, cols = 6 }: { rows?: number; cols?: number }) {
   return (
     <div className="space-y-3">
@@ -7,7 +9,7 @@ export function TableSkeleton({ rows = 5, cols = 6 }: { rows?: number; cols?: nu
             <div
               key={j}
               className="h-4 bg-gray-100 rounded animate-pulse"
-              style={{ width: j === 0 ? 64 : `${Math.random() * 40 + 30}%`, animationDelay: `${(i * cols + j) * 50}ms` }}
+              style={{ width: j === 0 ? 64 : `${skeletonWidths[(i * cols + j) % skeletonWidths.length]}%`, animationDelay: `${(i * cols + j) * 50}ms` }}
             />
           ))}
         </div>

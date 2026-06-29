@@ -15,6 +15,7 @@ import { History, RefreshCw } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin";
 import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
+import { Pagination } from "@/components/admin/Pagination";
 
 interface AuditLog {
   id: string;
@@ -34,37 +35,30 @@ export default function AdminAuditLogPage() {
   const [logs, setLogs] = useState<AuditLog[]>([]);
   const [loading, setLoading] = useState(true);
   const [entityFilter, setEntityFilter] = useState("");
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
 
   const fetchLogs = useCallback(async () => {
     setLoading(true);
     try {
-      const url = entityFilter ? `/api/audit?entity=${entityFilter}` : "/api/audit";
-      const res = await fetch(url);
+      const params = new URLSearchParams({ page: page.toString(), limit: "20" });
+      if (entityFilter) params.set("entity", entityFilter);
+      const res = await fetch(`/api/audit?${params}`);
       const data = await res.json();
-      setLogs(Array.isArray(data) ? data : []);
+      setLogs(data.data || []);
+      setTotalPages(data.pagination?.totalPages || 1);
+      setTotal(data.pagination?.total || 0);
     } catch {
       setLogs([]);
     } finally {
       setLoading(false);
     }
-  }, [entityFilter]);
+  }, [entityFilter, page]);
 
   useEffect(() => {
-    async function fetchLogs() {
-      setLoading(true);
-      try {
-        const url = entityFilter ? `/api/audit?entity=${entityFilter}` : "/api/audit";
-        const res = await fetch(url);
-        const data = await res.json();
-        setLogs(Array.isArray(data) ? data : []);
-      } catch {
-        setLogs([]);
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchLogs();
-  }, [entityFilter]);
+  }, [fetchLogs]);
 
   const actionBadge = (action: string) => {
     switch (action) {
@@ -83,14 +77,14 @@ export default function AdminAuditLogPage() {
     <div className="space-y-6">
       <AdminPageHeader
         title="Journal d'audit"
-        description={`${logs.length} entrée${logs.length > 1 ? "s" : ""}`}
+        description={`${total} entrée${total > 1 ? "s" : ""}`}
         breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Journal" }]}
       />
 
       <div className="flex gap-2 items-center mb-6">
         <select
           value={entityFilter}
-          onChange={(e) => setEntityFilter(e.target.value)}
+          onChange={(e) => { setEntityFilter(e.target.value); setPage(1); }}
           className="h-10 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm outline-none focus:border-gray-400 transition-colors duration-150"
         >
           <option value="">Toutes les entités</option>
@@ -162,6 +156,8 @@ export default function AdminAuditLogPage() {
             </TableBody>
           </Table>
       </div>
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

@@ -2,9 +2,12 @@ import Link from "next/link";
 
 export default function HomepageContent() {
   return (
-    <section className="bg-white py-16 md:py-20">
+    <section className="bg-white py-16 md:py-24">
       <div className="max-w-[1140px] mx-auto px-4">
-        <div className="max-w-3xl mx-auto text-center mb-12">
+        <div className="max-w-3xl mx-auto text-center mb-16">
+          <div className="inline-flex items-center gap-2 bg-[#0d47a1]/10 rounded-full px-4 py-1.5 mb-6">
+            <span className="text-[#0d47a1] text-sm font-semibold">Notre expertise</span>
+          </div>
           <h2 className="text-2xl md:text-3xl font-bold text-[#34495e] mb-4">
             StaysInMarrakech — Votre expert en villas de luxe à Marrakech
           </h2>
@@ -14,25 +17,25 @@ export default function HomepageContent() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
-          <div className="text-center p-6">
-            <div className="text-4xl font-bold text-[#ffb000] mb-2">1000+</div>
-            <div className="text-sm font-semibold text-[#34495e] uppercase tracking-wide">Clients satisfaits</div>
-            <p className="text-gray-500 text-sm mt-2">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16">
+          <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-[#0d47a1]/5 to-transparent border border-[#0d47a1]/10 hover:border-[#ffb000]/30 transition-colors duration-300">
+            <div className="text-5xl font-bold text-[#ffb000] mb-3">1000+</div>
+            <div className="text-sm font-semibold text-[#34495e] uppercase tracking-wide mb-3">Clients satisfaits</div>
+            <p className="text-gray-500 text-sm leading-relaxed">
               Plus de mille familles et voyageurs nous font confiance chaque année pour leurs séjours à Marrakech.
             </p>
           </div>
-          <div className="text-center p-6">
-            <div className="text-4xl font-bold text-[#ffb000] mb-2">50+</div>
-            <div className="text-sm font-semibold text-[#34495e] uppercase tracking-wide">Villas de prestige</div>
-            <p className="text-gray-500 text-sm mt-2">
+          <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-[#0d47a1]/5 to-transparent border border-[#0d47a1]/10 hover:border-[#ffb000]/30 transition-colors duration-300">
+            <div className="text-5xl font-bold text-[#ffb000] mb-3">50+</div>
+            <div className="text-sm font-semibold text-[#34495e] uppercase tracking-wide mb-3">Villas de prestige</div>
+            <p className="text-gray-500 text-sm leading-relaxed">
               Une sélection exclusive de villas avec piscine privée, jardin et services de conciergerie haut de gamme.
             </p>
           </div>
-          <div className="text-center p-6">
-            <div className="text-4xl font-bold text-[#ffb000] mb-2">10+</div>
-            <div className="text-sm font-semibold text-[#34495e] uppercase tracking-wide">Années d&apos;expérience</div>
-            <p className="text-gray-500 text-sm mt-2">
+          <div className="text-center p-8 rounded-2xl bg-gradient-to-br from-[#0d47a1]/5 to-transparent border border-[#0d47a1]/10 hover:border-[#ffb000]/30 transition-colors duration-300">
+            <div className="text-5xl font-bold text-[#ffb000] mb-3">10+</div>
+            <div className="text-sm font-semibold text-[#34495e] uppercase tracking-wide mb-3">Années d&apos;expérience</div>
+            <p className="text-gray-500 text-sm leading-relaxed">
               Une décennie d&apos;expertise dans l&apos;immobilier de luxe à Marrakech, au service de votre satisfaction.
             </p>
           </div>

@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { requireApiAuth } from "@/lib/auth";
+import { requireAdminApi } from "@/lib/auth";
+import { logAudit } from "@/lib/audit";
 
 export async function GET(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   try {
@@ -17,18 +18,28 @@ export async function GET(_request: NextRequest, { params }: { params: Promise<{
 }
 
 export async function PUT(request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
   try {
     const { id } = await params;
     const body = await request.json();
-    const { images, ...data } = body;
+    const { images, title, slug, description, price, bedrooms, bathrooms, maxGuests, propertyType, status, locationId, address, features } = body;
 
     const property = await prisma.property.update({
       where: { id },
       data: {
-        ...data,
-        features: data.features || undefined,
+        ...(title !== undefined && { title }),
+        ...(slug !== undefined && { slug }),
+        ...(description !== undefined && { description }),
+        ...(price !== undefined && { price }),
+        ...(bedrooms !== undefined && { bedrooms }),
+        ...(bathrooms !== undefined && { bathrooms }),
+        ...(maxGuests !== undefined && { maxGuests }),
+        ...(propertyType !== undefined && { propertyType }),
+        ...(status !== undefined && { status }),
+        ...(locationId !== undefined && { locationId }),
+        ...(address !== undefined && { address }),
+        features: features || undefined,
         images: images
           ? {
               deleteMany: {},
@@ -44,18 +55,21 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       include: { images: { orderBy: { sortOrder: "asc" } } },
     });
 
+    await logAudit(auth.dbUser?.id || null, "update", "property", id, { title: property.title });
+
     return NextResponse.json(property);
   } catch (e: unknown) {
-    const message = e instanceof Error ? e.message : "Erreur serveur";
-    return NextResponse.json({ error: message }, { status: 500 });
+    console.error("PUT /api/properties/[id] error:", e);
+    return NextResponse.json({ error: "Erreur serveur" }, { status: 500 });
   }
 }
 
 export async function DELETE(_request: NextRequest, { params }: { params: Promise<{ id: string }> }) {
-  const auth = await requireApiAuth();
+  const auth = await requireAdminApi();
   if (auth.error) return auth.error;
   try {
     const { id } = await params;
+    await logAudit(auth.dbUser?.id || null, "delete", "property", id);
     await prisma.property.delete({ where: { id } });
     return NextResponse.json({ success: true });
   } catch {

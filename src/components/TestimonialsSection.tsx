@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { Icon, faStar } from "@/components/icons";
+import { Icon, faStar, faQuoteLeft } from "@/components/icons";
 
 interface Testimonial {
   id: string;
@@ -26,15 +26,18 @@ export default function TestimonialsSection() {
           data.filter((t: Testimonial) => t.isApproved).slice(0, 6)
         )
       )
-      .catch(() => {});
+      .catch((e) => console.error("[TestimonialsSection] fetch error:", e));
   }, []);
 
-  if (testimonials.length === 0) return null;
+  const isLoading = testimonials.length === 0;
 
   return (
-    <section className="py-16 bg-gray-50">
+    <section className="py-16 bg-gradient-to-b from-gray-50 to-white">
       <div className="max-w-[1140px] mx-auto px-4">
-        <div className="text-center mb-10">
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center gap-2 bg-[#0d47a1]/10 rounded-full px-4 py-1.5 mb-5">
+            <span className="text-[#0d47a1] text-sm font-semibold">Avis clients</span>
+          </div>
           <h2 className="text-2xl md:text-3xl font-bold text-[#34495e] mb-3">
             Témoignages de nos clients
           </h2>
@@ -44,10 +47,30 @@ export default function TestimonialsSection() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {testimonials.map((t) => (
+          {isLoading ? (
+            [1, 2, 3].map((i) => (
+              <div key={i} className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100">
+                <div className="flex items-center gap-1 mb-3">
+                  {[1, 2, 3, 4, 5].map((j) => (
+                    <div key={j} className="w-4 h-4 bg-gray-200 rounded animate-pulse" />
+                  ))}
+                </div>
+                <div className="space-y-2 mb-4">
+                  <div className="h-3 bg-gray-200 rounded animate-pulse" />
+                  <div className="h-3 bg-gray-200 rounded animate-pulse w-5/6" />
+                  <div className="h-3 bg-gray-200 rounded animate-pulse w-2/3" />
+                </div>
+                <div className="border-t border-gray-100 pt-4 space-y-2">
+                  <div className="h-4 bg-gray-200 rounded animate-pulse w-1/3" />
+                  <div className="h-3 bg-gray-200 rounded animate-pulse w-1/2" />
+                </div>
+              </div>
+            ))
+          ) : (
+            testimonials.map((t) => (
             <div
               key={t.id}
-              className="bg-white rounded-xl p-6 shadow-sm border border-gray-100"
+              className="bg-white rounded-2xl p-6 shadow-sm border border-gray-100 hover:shadow-md transition-shadow duration-300"
             >
               <div className="flex items-center gap-1 mb-3">
                 {Array.from({ length: 5 }).map((_, i) => (
@@ -60,10 +83,13 @@ export default function TestimonialsSection() {
                   />
                 ))}
               </div>
-              <p className="text-gray-600 text-sm leading-relaxed mb-4 line-clamp-4">
-                {t.reviewText}
-              </p>
-              <div className="border-t border-gray-100 pt-3">
+              <div className="relative mb-4">
+                <Icon icon={faQuoteLeft} className="text-[#0d47a1]/10 text-3xl absolute -top-1 -left-1" />
+                <p className="text-gray-600 text-sm leading-relaxed line-clamp-4 relative z-10 pl-4">
+                  {t.reviewText}
+                </p>
+              </div>
+              <div className="border-t border-gray-100 pt-4">
                 <p className="font-semibold text-[#34495e] text-sm">
                   {t.guestName}
                 </p>
@@ -74,7 +100,8 @@ export default function TestimonialsSection() {
                 </p>
               </div>
             </div>
-          ))}
+          ))
+        )}
         </div>
       </div>
     </section>

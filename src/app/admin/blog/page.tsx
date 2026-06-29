@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import {
@@ -18,6 +18,7 @@ import { Plus, Pencil, Trash2, FileText } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin";
 import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
+import { Pagination } from "@/components/admin/Pagination";
 
 interface BlogPost {
   id: string;
@@ -32,21 +33,29 @@ interface BlogPost {
 export default function AdminBlogPage() {
   const [posts, setPosts] = useState<BlogPost[]>([]);
   const [loading, setLoading] = useState(true);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
+  const [total, setTotal] = useState(0);
+
+  const fetchPosts = useCallback(async () => {
+    setLoading(true);
+    try {
+      const res = await fetch(`/api/blog?page=${page}&limit=20`);
+      const data = await res.json();
+      setPosts(data.data || []);
+      setTotalPages(data.pagination?.totalPages || 1);
+      setTotal(data.pagination?.total || 0);
+    } catch {
+      console.error("Erreur lors du chargement des articles");
+    } finally {
+      setLoading(false);
+    }
+  }, [page]);
 
   useEffect(() => {
-    async function fetchPosts() {
-      try {
-        const res = await fetch("/api/blog");
-        const data = await res.json();
-        setPosts(data);
-      } catch {
-        console.error("Erreur lors du chargement des articles");
-      } finally {
-        setLoading(false);
-      }
-    }
     fetchPosts();
-  }, []);
+  }, [fetchPosts]);
 
   const togglePublish = async (id: string, current: boolean) => {
     try {
@@ -55,9 +64,7 @@ export default function AdminBlogPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ isPublished: !current }),
       });
-      setPosts((prev) =>
-        prev.map((p) => (p.id === id ? { ...p, isPublished: !current } : p))
-      );
+      fetchPosts();
     } catch {
       console.error("Erreur lors de la mise à jour");
     }
@@ -65,11 +72,14 @@ export default function AdminBlogPage() {
 
   const deletePost = async (id: string) => {
     if (!confirm("Supprimer cet article ?")) return;
+    setDeletingId(id);
     try {
       await fetch(`/api/blog/${id}`, { method: "DELETE" });
-      setPosts((prev) => prev.filter((p) => p.id !== id));
+      fetchPosts();
     } catch {
       console.error("Erreur lors de la suppression");
+    } finally {
+      setDeletingId(null);
     }
   };
 
@@ -77,7 +87,7 @@ export default function AdminBlogPage() {
     <div className="space-y-6">
       <AdminPageHeader
         title="Articles de blog"
-        description={`${posts.length} article${posts.length > 1 ? "s" : ""}`}
+        description={`${total} article${total > 1 ? "s" : ""}`}
         breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Blog" }]}
         action={{ label: "Nouvel article", href: "/admin/blog/new", icon: Plus }}
       />
@@ -149,9 +159,14 @@ export default function AdminBlogPage() {
                       <Button
                         variant="ghost"
                         size="icon-sm"
+                        disabled={deletingId === post.id}
                         onClick={() => deletePost(post.id)}
                       >
-                        <Trash2 size={14} className="text-destructive" />
+                        {deletingId === post.id ? (
+                          <span className="w-3.5 h-3.5 border-2 border-red-300 border-t-red-600 rounded-full animate-spin" />
+                        ) : (
+                          <Trash2 size={14} className="text-destructive" />
+                        )}
                       </Button>
                     </div>
                   </TableCell>
@@ -161,6 +176,8 @@ export default function AdminBlogPage() {
           </Table>
         </div>
       )}
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

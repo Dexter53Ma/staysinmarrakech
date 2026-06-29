@@ -29,7 +29,6 @@ export async function middleware(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser();
 
-  // Admin page protection
   if (request.nextUrl.pathname.startsWith("/admin")) {
     if (request.nextUrl.pathname === "/admin/login") {
       if (user) {

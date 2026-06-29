@@ -15,6 +15,7 @@ import { CheckCheck, Bell } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin";
 import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
+import { Pagination } from "@/components/admin/Pagination";
 
 interface Notification {
   id: string;
@@ -29,35 +30,26 @@ interface Notification {
 export default function AdminNotificationsPage() {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [loading, setLoading] = useState(true);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(1);
 
   const fetchNotifications = useCallback(async () => {
     setLoading(true);
     try {
-      const res = await fetch("/api/notifications");
+      const res = await fetch(`/api/notifications?page=${page}&limit=20`);
       const data = await res.json();
-      setNotifications(Array.isArray(data) ? data : []);
+      setNotifications(data.data || []);
+      setTotalPages(data.pagination?.totalPages || 1);
     } catch {
       setNotifications([]);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [page]);
 
   useEffect(() => {
-    async function loadNotifications() {
-      setLoading(true);
-      try {
-        const res = await fetch("/api/notifications");
-        const data = await res.json();
-        setNotifications(Array.isArray(data) ? data : []);
-      } catch {
-        setNotifications([]);
-      } finally {
-        setLoading(false);
-      }
-    }
-    loadNotifications();
-  }, []);
+    fetchNotifications();
+  }, [fetchNotifications]);
 
   const markAsRead = async (id: string) => {
     try {
@@ -167,6 +159,8 @@ export default function AdminNotificationsPage() {
             </TableBody>
           </Table>
       </div>
+
+      <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
     </div>
   );
 }

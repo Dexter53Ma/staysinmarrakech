@@ -1,13 +1,13 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
-import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save } from "lucide-react";
+import { Save, Lock, Mail, CheckCircle, AlertCircle } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin";
+import { createSupabaseBrowser } from "@/lib/supabase-browser";
 
 const fields = [
   { key: "site_name", label: "Nom du site", type: "input" },
@@ -49,19 +49,17 @@ export default function AdminSettingsPage() {
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [saveMsg, setSaveMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
-  const fetchSettings = useCallback(async () => {
-    setLoading(true);
-    try {
-      const res = await fetch("/api/settings");
-      const data = await res.json();
-      setSettings(data);
-    } catch {
-      console.error("Erreur lors du chargement des parametres");
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+  // Account state
+  const [currentEmail, setCurrentEmail] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [emailLoading, setEmailLoading] = useState(false);
+  const [passwordLoading, setPasswordLoading] = useState(false);
+  const [emailMsg, setEmailMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [passwordMsg, setPasswordMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   useEffect(() => {
     const load = async () => {
@@ -79,23 +77,90 @@ export default function AdminSettingsPage() {
     load();
   }, []);
 
+  // Fetch current user email
+  useEffect(() => {
+    const supabase = createSupabaseBrowser();
+    supabase.auth.getUser().then(({ data }) => {
+      if (data.user?.email) {
+        setCurrentEmail(data.user.email);
+        setNewEmail(data.user.email);
+      }
+    });
+  }, []);
+
   const handleChange = (key: string, value: string) => {
     setSettings((prev) => ({ ...prev, [key]: value }));
   };
 
   const handleSave = async () => {
     setSaving(true);
+    setSaveMsg(null);
     try {
-      await fetch("/api/settings", {
+      const res = await fetch("/api/settings", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(settings),
       });
-      // Saved successfully
+      if (!res.ok) throw new Error("Failed");
+      setSaveMsg({ type: "success", text: "Paramètres sauvegardés avec succès." });
     } catch {
-      console.error("Erreur lors de la sauvegarde");
+      setSaveMsg({ type: "error", text: "Erreur lors de la sauvegarde." });
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleEmailChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setEmailLoading(true);
+    setEmailMsg(null);
+    try {
+      const supabase = createSupabaseBrowser();
+      const { error } = await supabase.auth.updateUser({ email: newEmail });
+      if (error) {
+        setEmailMsg({ type: "error", text: error.message });
+      } else {
+        setEmailMsg({ type: "success", text: "Un email de confirmation a été envoyé. Vérifiez votre boîte de réception." });
+        setCurrentEmail(newEmail);
+      }
+    } catch {
+      setEmailMsg({ type: "error", text: "Une erreur est survenue." });
+    } finally {
+      setEmailLoading(false);
+    }
+  };
+
+  const handlePasswordChange = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setPasswordLoading(true);
+    setPasswordMsg(null);
+
+    if (newPassword !== confirmPassword) {
+      setPasswordMsg({ type: "error", text: "Les mots de passe ne correspondent pas." });
+      setPasswordLoading(false);
+      return;
+    }
+
+    if (newPassword.length < 6) {
+      setPasswordMsg({ type: "error", text: "Le mot de passe doit contenir au moins 6 caractères." });
+      setPasswordLoading(false);
+      return;
+    }
+
+    try {
+      const supabase = createSupabaseBrowser();
+      const { error } = await supabase.auth.updateUser({ password: newPassword });
+      if (error) {
+        setPasswordMsg({ type: "error", text: error.message });
+      } else {
+        setPasswordMsg({ type: "success", text: "Mot de passe modifié avec succès." });
+        setNewPassword("");
+        setConfirmPassword("");
+      }
+    } catch {
+      setPasswordMsg({ type: "error", text: "Une erreur est survenue." });
+    } finally {
+      setPasswordLoading(false);
     }
   };
 
@@ -127,6 +192,17 @@ export default function AdminSettingsPage() {
         breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Paramètres" }]}
         action={{ label: saving ? "Sauvegarde..." : "Sauvegarder", onClick: handleSave, icon: Save }}
       />
+
+      {saveMsg && (
+        <div className={`flex items-center gap-2 text-sm px-3 py-2.5 rounded-xl ${
+          saveMsg.type === "success"
+            ? "text-green-700 bg-green-50 border border-green-100"
+            : "text-red-600 bg-red-50 border border-red-100"
+        }`}>
+          {saveMsg.type === "success" ? <CheckCircle className="size-4 shrink-0" /> : <AlertCircle className="size-4 shrink-0" />}
+          {saveMsg.text}
+        </div>
+      )}
 
       <Card>
         <CardHeader>
@@ -179,6 +255,119 @@ export default function AdminSettingsPage() {
               )}
             </div>
           ))}
+        </CardContent>
+      </Card>
+
+      {/* Account Settings */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Mail className="size-5" />
+            Modifier l&apos;email
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handleEmailChange} className="space-y-4">
+            <div>
+              <Label htmlFor="current_email">Email actuel</Label>
+              <Input id="current_email" value={currentEmail} disabled className="mt-1.5 bg-gray-50" />
+            </div>
+            <div>
+              <Label htmlFor="new_email">Nouvel email</Label>
+              <Input
+                id="new_email"
+                type="email"
+                value={newEmail}
+                onChange={(e) => setNewEmail(e.target.value)}
+                placeholder="nouveau@email.com"
+                required
+                className="mt-1.5"
+              />
+            </div>
+            {emailMsg && (
+              <div className={`flex items-center gap-2 text-sm px-3 py-2.5 rounded-xl ${
+                emailMsg.type === "success"
+                  ? "text-green-700 bg-green-50 border border-green-100"
+                  : "text-red-600 bg-red-50 border border-red-100"
+              }`}>
+                {emailMsg.type === "success" ? <CheckCircle className="size-4 shrink-0" /> : <AlertCircle className="size-4 shrink-0" />}
+                {emailMsg.text}
+              </div>
+            )}
+            <button
+              type="submit"
+              disabled={emailLoading || newEmail === currentEmail}
+              className="h-10 px-5 bg-[#0d47a1] hover:bg-[#0a3a82] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center gap-2"
+            >
+              {emailLoading ? (
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <Mail className="size-4" />
+              )}
+              Modifier l&apos;email
+            </button>
+          </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Lock className="size-5" />
+            Modifier le mot de passe
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <form onSubmit={handlePasswordChange} className="space-y-4">
+            <div>
+              <Label htmlFor="new_password">Nouveau mot de passe</Label>
+              <Input
+                id="new_password"
+                type="password"
+                value={newPassword}
+                onChange={(e) => setNewPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                minLength={6}
+                className="mt-1.5"
+              />
+            </div>
+            <div>
+              <Label htmlFor="confirm_password">Confirmer le mot de passe</Label>
+              <Input
+                id="confirm_password"
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="••••••••"
+                required
+                minLength={6}
+                className="mt-1.5"
+              />
+            </div>
+            {passwordMsg && (
+              <div className={`flex items-center gap-2 text-sm px-3 py-2.5 rounded-xl ${
+                passwordMsg.type === "success"
+                  ? "text-green-700 bg-green-50 border border-green-100"
+                  : "text-red-600 bg-red-50 border border-red-100"
+              }`}>
+                {passwordMsg.type === "success" ? <CheckCircle className="size-4 shrink-0" /> : <AlertCircle className="size-4 shrink-0" />}
+                {passwordMsg.text}
+              </div>
+            )}
+            <button
+              type="submit"
+              disabled={passwordLoading || !newPassword || !confirmPassword}
+              className="h-10 px-5 bg-[#0d47a1] hover:bg-[#0a3a82] disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center gap-2"
+            >
+              {passwordLoading ? (
+                <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+              ) : (
+                <Lock className="size-4" />
+              )}
+              Modifier le mot de passe
+            </button>
+          </form>
         </CardContent>
       </Card>
     </div>

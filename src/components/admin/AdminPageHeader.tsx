@@ -1,66 +1,73 @@
-"use client";
-
-import { LucideIcon } from "lucide-react";
 import Link from "next/link";
+import { ChevronRight, Plus } from "lucide-react";
 
 interface AdminPageHeaderProps {
   title: string;
   description?: string;
+  breadcrumbs?: { label: string; href?: string }[];
   action?: {
     label: string;
     href?: string;
     onClick?: () => void;
-    icon?: LucideIcon;
+    icon?: React.ComponentType<{ className?: string }>;
   };
-  breadcrumbs?: { label: string; href?: string }[];
 }
 
-export function AdminPageHeader({ title, description, action, breadcrumbs }: AdminPageHeaderProps) {
+export function AdminPageHeader({ title, description, breadcrumbs, action }: AdminPageHeaderProps) {
+  const ActionIcon = action?.icon || Plus;
+
   return (
-    <div className="mb-8">
-      {breadcrumbs && breadcrumbs.length > 0 && (
-        <nav className="flex items-center gap-1.5 text-sm text-gray-500 mb-3">
+    <div className="mb-6">
+      {/* Breadcrumbs */}
+      {breadcrumbs && (
+        <nav className="flex items-center gap-1.5 text-xs text-gray-400 mb-2">
           {breadcrumbs.map((crumb, i) => (
             <span key={i} className="flex items-center gap-1.5">
-              {i > 0 && <span className="text-gray-300">/</span>}
+              {i > 0 && <ChevronRight className="size-3" />}
               {crumb.href ? (
-                <Link href={crumb.href} className="hover:text-gray-700 transition-colors duration-150">
+                <Link href={crumb.href} className="hover:text-gray-600 transition-colors">
                   {crumb.label}
                 </Link>
               ) : (
-                <span className="text-gray-700 font-medium">{crumb.label}</span>
+                <span className="text-gray-600">{crumb.label}</span>
               )}
             </span>
           ))}
         </nav>
       )}
-      <div className="flex items-start justify-between gap-4">
+
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900 tracking-tight">{title}</h1>
-          {description && <p className="text-sm text-gray-500 mt-1">{description}</p>}
+          <div className="flex items-center gap-2">
+            <div className="w-1 h-7 rounded-full bg-gradient-to-b from-[#0d47a1] to-[#1565c0]" />
+            <h1 className="text-xl font-bold text-gray-900">{title}</h1>
+          </div>
+          {description && (
+            <p className="text-sm text-gray-500 mt-1 ml-3">{description}</p>
+          )}
         </div>
         {action && (
-          <div className="shrink-0">
-            {action.href ? (
-              <Link
-                href={action.href}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 active:bg-gray-950 active:scale-[0.98] transition-all duration-150 shadow-sm"
-              >
-                {action.icon && <action.icon className="size-4" />}
-                {action.label}
-              </Link>
-            ) : (
-              <button
-                onClick={action.onClick}
-                className="inline-flex items-center gap-2 px-4 py-2.5 bg-gray-900 text-white text-sm font-medium rounded-xl hover:bg-gray-800 active:bg-gray-950 active:scale-[0.98] transition-all duration-150 shadow-sm"
-              >
-                {action.icon && <action.icon className="size-4" />}
-                {action.label}
-              </button>
-            )}
-          </div>
+          action.href ? (
+            <Link
+              href={action.href}
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0d47a1] text-white text-sm font-medium rounded-xl hover:bg-[#0a3a82] active:bg-[#082d66] active:scale-[0.98] transition-all duration-150"
+            >
+              <ActionIcon className="size-4" />
+              {action.label}
+            </Link>
+          ) : (
+            <button
+              onClick={action.onClick}
+              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#0d47a1] text-white text-sm font-medium rounded-xl hover:bg-[#0a3a82] active:bg-[#082d66] active:scale-[0.98] transition-all duration-150"
+            >
+              <ActionIcon className="size-4" />
+              {action.label}
+            </button>
+          )
         )}
       </div>
+      {/* Gradient divider */}
+      <div className="mt-6 h-px bg-gradient-to-r from-[#0d47a1]/20 via-gray-200/80 to-transparent" />
     </div>
   );
 }

@@ -1,8 +1,18 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
+import { validateCsrfToken } from "@/lib/csrf";
 
 export async function POST(request: NextRequest) {
   try {
+    const { allowed, response } = await rateLimit(request, { limit: 10, windowMs: 60_000 });
+    if (!allowed) {
+      return response;
+    }
+
+    const csrfError = await validateCsrfToken(request);
+    if (csrfError) return csrfError;
+
     const { propertyId } = await request.json();
 
     if (!propertyId) {

@@ -4,6 +4,7 @@ import { SettingsProvider } from "@/components/SettingsContext";
 import { ServicesProvider } from "@/components/ServicesContext";
 import FloatingContact from "@/components/FloatingContact";
 import BackToTop from "@/components/BackToTop";
+import ErrorBoundary from "@/components/ErrorBoundary";
 import "./globals.css";
 
 export const viewport: Viewport = {
@@ -94,7 +95,7 @@ export default function RootLayout({
         <SettingsProvider>
           <ServicesProvider>
             <div id="main-content" className="flex-1 flex flex-col">
-              {children}
+              <ErrorBoundary>{children}</ErrorBoundary>
             </div>
             <FloatingContact />
             <BackToTop />

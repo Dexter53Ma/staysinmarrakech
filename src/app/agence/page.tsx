@@ -40,54 +40,25 @@ export default function Agence() {
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1">
-        <section
-          style={{
-            maxWidth: 1200,
-            margin: "0 auto",
-            padding: "60px 20px",
-          }}
-        >
-          <h1
-            style={{
-              fontSize: 32,
-              fontWeight: 700,
-              color: "#22313d",
-              marginBottom: 40,
-              textAlign: "center",
-            }}
-          >
+        <section className="max-w-6xl mx-auto py-[60px] px-5">
+          <h1 className="text-[32px] font-bold text-[#22313d] mb-10 text-center">
             {title}
           </h1>
-          <div
-            style={{
-              display: "flex",
-              gap: 30,
-              alignItems: "center",
-            }}
-          >
-            <div style={{ flex: 1, minWidth: 0 }}>
+          <div className="flex flex-col md:flex-row gap-[30px] items-center">
+            <div className="flex-1 min-w-0">
               <Image
                 src="/images/owner.webp"
                 alt="Cyrille - StaysInMarrakech"
                 width={600}
                 height={400}
-                style={{
-                  width: "100%",
-                  height: "auto",
-                  borderRadius: 4,
-                }}
+                className="w-full h-auto rounded"
               />
             </div>
-            <div style={{ flex: 1, minWidth: 0 }}>
+            <div className="flex-1 min-w-0">
               {paragraphs.map((text, i) => (
                 <p
                   key={i}
-                  style={{
-                    fontSize: 16,
-                    lineHeight: "24px",
-                    color: "#22313d",
-                    marginBottom: 16,
-                  }}
+                  className="text-base leading-6 text-[#22313d] mb-4"
                 >
                   {text}
                 </p>
