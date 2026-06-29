@@ -9,11 +9,11 @@ const ALLOWED_KEYS = new Set([
   "site_name", "site_description", "logo_url", "phone_1", "phone_2", "email", "address",
   "facebook", "twitter", "instagram", "linkedin",
   "hero_title", "hero_subtitle",
-  "stat_experience", "stat_clients", "stat_quality", "stat_services", "stat_presence",
-  "section_location_title", "section_location_description", "section_location_image", "section_location_button",
-  "section_short_title", "section_short_description", "section_short_image",
-  "section_events_title", "section_events_description", "section_events_image",
-  "section_vacations_title", "section_vacations_description", "section_vacations_image",
+  "stats_experience", "stats_clients", "stats_quality", "stats_services", "stats_presence",
+  "location_title", "location_description", "location_image", "location_link_text",
+  "shortrental_title", "shortrental_description", "shortrental_image",
+  "events_title", "events_description", "events_image",
+  "vacations_title", "vacations_description", "vacations_image",
 ]);
 
 export async function GET() {

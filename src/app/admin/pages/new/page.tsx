@@ -13,6 +13,7 @@ import Link from "next/link";
 export default function AdminNewPage() {
   const router = useRouter();
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [form, setForm] = useState({
     title: "",
     content: "",
@@ -21,10 +22,11 @@ export default function AdminNewPage() {
 
   const handleSave = async () => {
     if (!form.title || !form.content) {
-      alert("Le titre et le contenu sont requis");
+      setError("Le titre et le contenu sont requis");
       return;
     }
     setSaving(true);
+    setError(null);
     try {
       const res = await fetch("/api/pages", {
         method: "POST",
@@ -35,10 +37,10 @@ export default function AdminNewPage() {
         const data = await res.json();
         router.push(`/admin/pages/${data.slug}`);
       } else {
-        alert("Erreur lors de la création");
+        setError("Erreur lors de la création");
       }
     } catch {
-      alert("Erreur lors de la création");
+      setError("Erreur lors de la création");
     } finally {
       setSaving(false);
     }
@@ -60,6 +62,11 @@ export default function AdminNewPage() {
           <CardTitle>Créer une page</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {error && (
+            <div className="flex items-center gap-2 text-sm px-3 py-2.5 rounded-xl text-red-600 bg-red-50 border border-red-100">
+              {error}
+            </div>
+          )}
           <div>
             <Label htmlFor="title">Titre</Label>
             <Input

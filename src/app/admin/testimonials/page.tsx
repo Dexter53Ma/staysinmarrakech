@@ -33,6 +33,8 @@ export default function AdminTestimonialsPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
 
   const fetchTestimonials = useCallback(async () => {
     setLoading(true);
@@ -67,12 +69,15 @@ export default function AdminTestimonialsPage() {
   };
 
   const deleteTestimonial = async (id: string) => {
-    if (!confirm("Supprimer ce témoignage ?")) return;
+    setDeletingId(id);
     try {
       await fetch(`/api/testimonials/${id}`, { method: "DELETE" });
       fetchTestimonials();
     } catch {
       console.error("Erreur lors de la suppression");
+    } finally {
+      setDeletingId(null);
+      setConfirmDeleteId(null);
     }
   };
 
@@ -134,13 +139,35 @@ export default function AdminTestimonialsPage() {
                     </div>
                   </TableCell>
                   <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="icon-sm"
-                      onClick={() => deleteTestimonial(t.id)}
-                    >
-                      <Trash2 size={14} className="text-destructive" />
-                    </Button>
+                    {confirmDeleteId === t.id ? (
+                      <div className="flex items-center gap-1 justify-end">
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          disabled={deletingId === t.id}
+                          onClick={() => deleteTestimonial(t.id)}
+                        >
+                          {deletingId === t.id ? (
+                            <span className="w-3.5 h-3.5 border-2 border-red-300 border-t-red-600 rounded-full animate-spin" />
+                          ) : <span className="text-destructive text-xs">Oui</span>}
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon-sm"
+                          onClick={() => setConfirmDeleteId(null)}
+                        >
+                          <span className="text-xs">Non</span>
+                        </Button>
+                      </div>
+                    ) : (
+                      <Button
+                        variant="ghost"
+                        size="icon-sm"
+                        onClick={() => setConfirmDeleteId(t.id)}
+                      >
+                        <Trash2 size={14} className="text-destructive" />
+                      </Button>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}

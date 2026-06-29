@@ -26,6 +26,8 @@ export default function AdminEditPage() {
   const [page, setPage] = useState<PageData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
   const [form, setForm] = useState({
     title: "",
     content: "",
@@ -58,19 +60,22 @@ export default function AdminEditPage() {
 
   const handleSave = async () => {
     if (!form.title || !form.content) {
-      alert("Le titre et le contenu sont requis");
+      setError("Le titre et le contenu sont requis");
+      setSuccess(null);
       return;
     }
     setSaving(true);
+    setError(null);
+    setSuccess(null);
     try {
       await fetch(`/api/pages/${slug}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(form),
       });
-      alert("Page sauvegardée !");
+      setSuccess("Page sauvegardée !");
     } catch {
-      alert("Erreur lors de la sauvegarde");
+      setError("Erreur lors de la sauvegarde");
     } finally {
       setSaving(false);
     }
@@ -96,6 +101,16 @@ export default function AdminEditPage() {
           <CardTitle>{page?.slug}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
+          {error && (
+            <div className="flex items-center gap-2 text-sm px-3 py-2.5 rounded-xl text-red-600 bg-red-50 border border-red-100">
+              {error}
+            </div>
+          )}
+          {success && (
+            <div className="flex items-center gap-2 text-sm px-3 py-2.5 rounded-xl text-green-700 bg-green-50 border border-green-100">
+              {success}
+            </div>
+          )}
           <div>
             <Label htmlFor="title">Titre</Label>
             <Input

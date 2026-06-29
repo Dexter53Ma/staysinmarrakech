@@ -61,6 +61,7 @@ export default function NewPropertyPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [submitting, setSubmitting] = useState(false);
   const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
@@ -138,6 +139,7 @@ export default function NewPropertyPage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
+    setError(null);
 
     const selectedFeatures = Object.entries(features)
       .filter(([, v]) => v)
@@ -183,7 +185,7 @@ export default function NewPropertyPage() {
     if (res.ok) {
       router.push("/admin/properties");
     } else {
-      alert("Erreur lors de la création");
+      setError("Erreur lors de la création");
       setSubmitting(false);
     }
   };
@@ -200,6 +202,11 @@ export default function NewPropertyPage() {
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">
+        {error && (
+          <div className="flex items-center gap-2 text-sm px-3 py-2.5 rounded-xl text-red-600 bg-red-50 border border-red-100">
+            {error}
+          </div>
+        )}
         {/* Section 1 - Infos générales */}
         <Card>
           <CardHeader>
