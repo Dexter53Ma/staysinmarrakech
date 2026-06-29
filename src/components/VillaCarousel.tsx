@@ -59,7 +59,7 @@ export default function VillaCarousel() {
     fetch("/api/properties?limit=6")
       .then((r) => r.json())
       .then((data) => {
-        const mapped: Villa[] = (data.properties || []).map((p: RawProperty) => ({
+        const mapped: Villa[] = (data.data || []).map((p: RawProperty) => ({
           name: p.title,
           image: p.images?.[0]?.url || "/images/villas/default.webp",
           quartier: p.quarter || "",

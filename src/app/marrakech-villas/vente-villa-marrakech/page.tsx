@@ -71,9 +71,9 @@ export default function VenteVillaMarrakech() {
   useEffect(() => {
     fetch("/api/properties?status=AVAILABLE&limit=50")
       .then((r) => r.json())
-      .then((data: { properties?: ApiProperty[] }) => {
+      .then((data: { data?: ApiProperty[] }) => {
         setVillas(
-          (data.properties || []).map((p) => ({
+          (data.data || []).map((p) => ({
             slug: p.slug,
             name: p.title,
             image: p.images?.[0]?.url || "/images/villas/default.jpg",
