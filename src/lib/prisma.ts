@@ -2,10 +2,17 @@ import { PrismaClient } from "@prisma/client";
 
 const globalForPrisma = globalThis as unknown as { prisma: PrismaClient };
 
+const databaseUrl = process.env.DATABASE_URL || "";
+
 export const prisma =
   globalForPrisma.prisma ||
   new PrismaClient({
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
+    datasources: {
+      db: {
+        url: databaseUrl + (databaseUrl.includes("?") ? "&" : "?") + "connection_limit=2&pool_timeout=10",
+      },
+    },
   });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
