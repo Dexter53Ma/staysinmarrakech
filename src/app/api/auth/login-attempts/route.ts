@@ -1,13 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { recordFailedAttempt, isBlocked, recordSuccessfulLogin } from "@/lib/brute-force";
-import { rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
-  const rl = await rateLimit(request, { limit: 10, windowMs: 60_000 });
-  if (!rl.allowed) return rl.response!;
-
   try {
     const { email, action } = await request.json();
     if (!email || typeof email !== "string") {
