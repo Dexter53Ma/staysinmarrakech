@@ -35,13 +35,31 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     if (rawData.title !== undefined) updateData.title = rawData.title;
     if (rawData.slug !== undefined) updateData.slug = rawData.slug || undefined;
     if (rawData.description !== undefined) updateData.description = rawData.description || undefined;
-    if (rawData.price !== undefined) updateData.price = rawData.price;
-    if (rawData.bedrooms !== undefined) updateData.bedrooms = rawData.bedrooms;
-    if (rawData.bathrooms !== undefined) updateData.bathrooms = rawData.bathrooms;
-    if (rawData.maxGuests !== undefined) updateData.maxGuests = rawData.maxGuests;
     if (rawData.type !== undefined) updateData.type = rawData.type;
     if (rawData.status !== undefined) updateData.status = rawData.status;
+    if (rawData.price !== undefined) updateData.price = rawData.price;
+    if (rawData.currency !== undefined) updateData.currency = rawData.currency || undefined;
+    if (rawData.pricePeriod !== undefined) updateData.pricePeriod = rawData.pricePeriod || undefined;
+    if (rawData.cleaningFee !== undefined) updateData.cleaningFee = rawData.cleaningFee;
+    if (rawData.serviceFee !== undefined) updateData.serviceFee = rawData.serviceFee;
     if (rawData.address !== undefined) updateData.address = rawData.address || undefined;
+    if (rawData.city !== undefined) updateData.city = rawData.city || undefined;
+    if (rawData.quarter !== undefined) updateData.quarter = rawData.quarter || undefined;
+    if (rawData.latitude !== undefined) updateData.latitude = rawData.latitude;
+    if (rawData.longitude !== undefined) updateData.longitude = rawData.longitude;
+    if (rawData.bedrooms !== undefined) updateData.bedrooms = rawData.bedrooms;
+    if (rawData.bathrooms !== undefined) updateData.bathrooms = rawData.bathrooms;
+    if (rawData.garages !== undefined) updateData.garages = rawData.garages;
+    if (rawData.maxGuests !== undefined) updateData.maxGuests = rawData.maxGuests;
+    if (rawData.plotArea !== undefined) updateData.plotArea = rawData.plotArea;
+    if (rawData.builtArea !== undefined) updateData.builtArea = rawData.builtArea;
+    if (rawData.yearBuilt !== undefined) updateData.yearBuilt = rawData.yearBuilt;
+    if (rawData.minStay !== undefined) updateData.minStay = rawData.minStay;
+    if (rawData.maxStay !== undefined) updateData.maxStay = rawData.maxStay;
+    if (rawData.checkInTime !== undefined) updateData.checkInTime = rawData.checkInTime || undefined;
+    if (rawData.checkOutTime !== undefined) updateData.checkOutTime = rawData.checkOutTime || undefined;
+    if (rawData.features !== undefined) updateData.features = rawData.features;
+    if (rawData.isFeatured !== undefined) updateData.isFeatured = rawData.isFeatured;
     if (images) {
       updateData.images = {
         deleteMany: {},
