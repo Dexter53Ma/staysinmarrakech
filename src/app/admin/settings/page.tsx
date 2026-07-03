@@ -5,9 +5,11 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
-import { Save, Lock, Mail, CheckCircle, AlertCircle } from "lucide-react";
+import { Save, Lock, Mail, CheckCircle, AlertCircle, Trash2 } from "lucide-react";
 import { AdminPageHeader } from "@/components/admin";
 import { createSupabaseBrowser } from "@/lib/supabase-browser";
+
+import { useRouter } from "next/navigation";
 
 const fields = [
   { key: "site_name", label: "Nom du site", type: "input" },
@@ -46,10 +48,13 @@ const sectionFields = [
 ];
 
 export default function AdminSettingsPage() {
+  const router = useRouter();
   const [settings, setSettings] = useState<Record<string, string>>({});
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [saveMsg, setSaveMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [clearingCache, setClearingCache] = useState(false);
+  const [cacheMsg, setCacheMsg] = useState<{ type: "success" | "error"; text: string } | null>(null);
 
   // Account state
   const [currentEmail, setCurrentEmail] = useState("");
@@ -161,6 +166,21 @@ export default function AdminSettingsPage() {
       setPasswordMsg({ type: "error", text: "Une erreur est survenue." });
     } finally {
       setPasswordLoading(false);
+    }
+  };
+
+  const handleClearCache = async () => {
+    setClearingCache(true);
+    setCacheMsg(null);
+    try {
+      const res = await fetch("/api/revalidate", { method: "POST" });
+      if (!res.ok) throw new Error("Failed");
+      router.refresh();
+      setCacheMsg({ type: "success", text: "Cache vidé avec succès. Toutes les pages ont été revalidées." });
+    } catch {
+      setCacheMsg({ type: "error", text: "Erreur lors du vidage du cache." });
+    } finally {
+      setClearingCache(false);
     }
   };
 
@@ -368,6 +388,42 @@ export default function AdminSettingsPage() {
               Modifier le mot de passe
             </button>
           </form>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Trash2 className="size-5" />
+            Cache
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <p className="text-sm text-gray-500 mb-4">
+            Vide le cache du site pour forcer le rechargement de toutes les pages. Utile après des modifications de contenu.
+          </p>
+          {cacheMsg && (
+            <div className={`flex items-center gap-2 text-sm px-3 py-2.5 rounded-xl mb-4 ${
+              cacheMsg.type === "success"
+                ? "text-green-700 bg-green-50 border border-green-100"
+                : "text-red-600 bg-red-50 border border-red-100"
+            }`}>
+              {cacheMsg.type === "success" ? <CheckCircle className="size-4 shrink-0" /> : <AlertCircle className="size-4 shrink-0" />}
+              {cacheMsg.text}
+            </div>
+          )}
+          <button
+            onClick={handleClearCache}
+            disabled={clearingCache}
+            className="h-10 px-5 bg-gray-800 hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-medium rounded-xl transition-all duration-200 active:scale-[0.98] flex items-center gap-2"
+          >
+            {clearingCache ? (
+              <span className="w-4 h-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+            ) : (
+              <Trash2 className="size-4" />
+            )}
+            Vider le cache
+          </button>
         </CardContent>
       </Card>
     </div>
