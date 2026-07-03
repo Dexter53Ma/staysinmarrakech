@@ -50,6 +50,7 @@ export default function PropertyGrid({
                   src={property.images[0].url}
                   alt={property.images[0].alt || property.title}
                   fill
+                  unoptimized={property.images[0].url.startsWith("http")}
                   className="object-cover group-hover:scale-105 transition-transform duration-500"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />

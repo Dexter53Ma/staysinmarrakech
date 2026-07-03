@@ -26,6 +26,7 @@ export default function SimilarPropertiesGrid({ properties }: SimilarPropertiesG
                   src={sp.image}
                   alt={sp.title}
                   fill
+                  unoptimized={sp.image.startsWith("http")}
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                   sizes="(max-width: 640px) 100vw, 33vw"
                 />

@@ -111,12 +111,13 @@ export default async function TargaPage() {
                 >
                   {p.images[0] ? (
                     <div className="relative h-48">
-                      <Image
-                        src={p.images[0].url}
-                        alt={p.images[0].alt || p.title}
-                        fill
-                        className="object-cover"
-                        sizes="(max-width: 640px) 100vw, 50vw"
+                       <Image
+                         src={p.images[0].url}
+                         alt={p.images[0].alt || p.title}
+                         fill
+                         unoptimized={p.images[0].url.startsWith("http")}
+                         className="object-cover"
+                         sizes="(max-width: 640px) 100vw, 50vw"
                       />
                     </div>
                   ) : (

@@ -19,6 +19,7 @@ export default function ImageGallery({ images, selectedIndex, onSelect, title }:
             src={images[selectedIndex].url}
             alt={images[selectedIndex].alt || title}
             fill
+            unoptimized={images[selectedIndex].url.startsWith("http")}
             className="object-cover"
             sizes="(max-width: 1024px) 100vw, 60vw"
             priority
@@ -44,6 +45,7 @@ export default function ImageGallery({ images, selectedIndex, onSelect, title }:
                 src={img.url}
                 alt={img.alt || `${title} ${i + 1}`}
                 fill
+                unoptimized={img.url.startsWith("http")}
                 className="object-cover"
                 sizes="80px"
               />
