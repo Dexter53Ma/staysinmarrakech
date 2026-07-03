@@ -39,9 +39,22 @@ export async function requireApiAuth() {
     return { user: null, dbUser: null, error: NextResponse.json({ error: "Non autorisé" }, { status: 401 }) };
   }
 
-  const dbUser = await prisma.user.findUnique({
+  let dbUser = await prisma.user.findUnique({
     where: { email: user.email! },
   });
+
+  if (!dbUser) {
+    const displayName = (user.user_metadata as Record<string, string>)?.name
+      || user.email!.split("@")[0];
+    dbUser = await prisma.user.create({
+      data: {
+        email: user.email!,
+        name: displayName,
+        role: "ADMIN",
+        passwordHash: "supabase-managed",
+      },
+    });
+  }
 
   return { user, dbUser, error: null };
 }
