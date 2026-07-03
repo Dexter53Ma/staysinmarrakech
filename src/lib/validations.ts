@@ -110,7 +110,7 @@ export const propertySchema = z.object({
   checkOutTime: z.string().max(10).optional().nullable(),
   features: z.array(z.string()).optional(),
   isFeatured: z.boolean().optional(),
-  images: z.array(z.object({ url: z.string(), alt: z.string().optional() })).optional(),
+  images: z.array(z.object({ url: z.string(), alt: z.string().optional() })).max(20, "Maximum 20 images par propriété").optional(),
 });
 
 // Location (admin create/update)

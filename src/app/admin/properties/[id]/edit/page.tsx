@@ -153,18 +153,34 @@ export default function EditPropertyPage() {
     setFeatures((prev) => ({ ...prev, [key]: !prev[key] }));
   };
 
+  const MAX_IMAGES = 20;
+
   const handleImageUpload = async (files: FileList | null) => {
     if (!files) return;
-    setUploading(true);
-    for (const file of Array.from(files)) {
-      const formData = new FormData();
-      formData.append("file", file);
-      const res = await fetch("/api/upload", { method: "POST", body: formData });
-      if (res.ok) {
-        const data = await res.json();
-        setImages((prev) => [...prev, { url: data.url, alt: "" }]);
-      }
+    const remaining = MAX_IMAGES - images.length;
+    if (remaining <= 0) {
+      setError(`Maximum de ${MAX_IMAGES} images atteint`);
+      return;
     }
+    const filesToUpload = Array.from(files).slice(0, remaining);
+    if (filesToUpload.length < files.length) {
+      setError(`Seulement ${remaining} image(s) de plus autorisée(s) (max ${MAX_IMAGES})`);
+    }
+    setUploading(true);
+    const results = await Promise.all(
+      filesToUpload.map(async (file) => {
+        const formData = new FormData();
+        formData.append("file", file);
+        const res = await fetch("/api/upload", { method: "POST", body: formData });
+        if (res.ok) {
+          const data = await res.json();
+          return { url: data.url, alt: "" };
+        }
+        return null;
+      })
+    );
+    const successful = results.filter(Boolean) as { url: string; alt: string }[];
+    setImages((prev) => [...prev, ...successful]);
     setUploading(false);
   };
 
@@ -469,24 +485,28 @@ export default function EditPropertyPage() {
         {/* Section 6 - Images */}
         <Card>
           <CardHeader>
-            <CardTitle className="text-lg">Images</CardTitle>
+            <CardTitle className="text-lg">Images ({images.length}/{MAX_IMAGES})</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div
-              onClick={() => fileInputRef.current?.click()}
+              onClick={() => images.length < MAX_IMAGES && !uploading && fileInputRef.current?.click()}
               onDragOver={(e) => { e.preventDefault(); e.stopPropagation(); }}
               onDrop={(e) => {
                 e.preventDefault();
                 e.stopPropagation();
                 handleImageUpload(e.dataTransfer.files);
               }}
-              className="border-2 border-dashed border-border rounded-lg p-8 text-center cursor-pointer hover:border-primary/50 transition-colors"
+              className={`border-2 border-dashed rounded-lg p-8 text-center transition-colors ${
+                images.length >= MAX_IMAGES
+                  ? "border-gray-200 bg-gray-50 cursor-not-allowed"
+                  : "border-border cursor-pointer hover:border-primary/50"
+              }`}
             >
               <Upload className="mx-auto size-8 text-muted-foreground mb-2" />
               <p className="text-sm text-muted-foreground">
-                {uploading ? "Upload en cours..." : "Glissez vos images ici ou cliquez pour parcourir"}
+                {uploading ? "Upload en cours..." : images.length >= MAX_IMAGES ? "Maximum atteint" : "Glissez vos images ici ou cliquez pour parcourir"}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">JPG, PNG, WebP — Max 10 Mo</p>
+              <p className="text-xs text-muted-foreground mt-1">JPG, PNG, WebP — Max 10 Mo — {images.length}/{MAX_IMAGES} images</p>
             </div>
             <input
               ref={fileInputRef}
