@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/auth";
 import { createClient } from "@supabase/supabase-js";
+import sharp from "sharp";
 
 const ALLOWED_TYPES = [
   "image/jpeg",
@@ -11,7 +12,12 @@ const ALLOWED_TYPES = [
   "application/pdf",
 ];
 
+const COMPRESSIBLE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+
 const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_WIDTH = 2000;
+const MAX_HEIGHT = 2000;
+const QUALITY = 80;
 const BUCKET = "uploads";
 
 export async function POST(request: NextRequest) {
@@ -45,15 +51,28 @@ export async function POST(request: NextRequest) {
       process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
     );
 
-    const ext = file.name.split(".").pop() || "jpg";
-    const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
-
     const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
+    let buffer = Buffer.from(bytes);
+    let contentType = file.type;
+    let ext = file.name.split(".").pop() || "jpg";
+
+    if (COMPRESSIBLE_TYPES.includes(file.type)) {
+      const originalSize = buffer.length;
+      const compressed = await sharp(buffer)
+        .resize({ width: MAX_WIDTH, height: MAX_HEIGHT, fit: "inside", withoutEnlargement: true })
+        .webp({ quality: QUALITY })
+        .toBuffer();
+      buffer = Buffer.from(compressed);
+      contentType = "image/webp";
+      ext = "webp";
+      console.log(`Compressed: ${file.name} ${(originalSize / 1024).toFixed(0)}KB → ${(buffer.length / 1024).toFixed(0)}KB`);
+    }
+
+    const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
 
     const { error: uploadError } = await supabase.storage
       .from(BUCKET)
-      .upload(filename, buffer, { contentType: file.type, upsert: false });
+      .upload(filename, buffer, { contentType, upsert: false });
 
     if (uploadError) {
       console.error("Upload error:", uploadError);
