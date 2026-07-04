@@ -18,6 +18,7 @@ import { Calendar as DatePicker } from "@/components/ui/calendar";
 import { fr } from "date-fns/locale";
 import type { PropertyData, Booking, Testimonial, SimilarProperty } from "@/types";
 import { TYPE_LABELS, TYPE_COLORS, STATUS_LABELS, STATUS_COLORS, formatPrice } from "@/types";
+import { getFeatureLabel } from "@/lib/features";
 import ImageGallery from "./components/ImageGallery";
 import PropertyFeatures from "./components/PropertyFeatures";
 import PropertyMap from "./components/PropertyMap";
@@ -212,7 +213,7 @@ export default function PropertyDetailClient({
                 <h2 className="text-xl font-bold text-gray-900 mb-4">Équipements</h2>
                 <div className="flex flex-wrap gap-2">
                   {features.map((f) => (
-                    <span key={f} className="bg-blue-50 text-blue-800 text-sm px-3 py-1.5 rounded-full">{f}</span>
+                    <span key={f} className="bg-blue-50 text-blue-800 text-sm px-3 py-1.5 rounded-full">{getFeatureLabel(f)}</span>
                   ))}
                 </div>
               </div>
