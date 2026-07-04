@@ -2,6 +2,8 @@
 
 import { useState, useCallback } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
+import { getFeaturesByCategory } from "@/lib/features";
+import { Icon, faChevronDown } from "@/components/icons";
 
 export interface FilterState {
   type: string;
@@ -28,20 +30,60 @@ const PROPERTY_TYPES = [
   { value: "COMMERCIAL", label: "Commercial" },
 ];
 
-const FEATURE_OPTIONS = [
-  { value: "pool", label: "Piscine" },
-  { value: "garden", label: "Jardin" },
-  { value: "wifi", label: "WiFi" },
-  { value: "ac", label: "Climatisation" },
-  { value: "gym", label: "Salle de sport" },
-];
-
 const SORT_OPTIONS = [
   { value: "newest", label: "Plus récent" },
   { value: "price-asc", label: "Prix croissant" },
   { value: "price-desc", label: "Prix décroissant" },
   { value: "views", label: "Plus vues" },
 ];
+
+function FeatureCategoryGroup({
+  category,
+  items,
+  selected,
+  onToggle,
+}: {
+  category: string;
+  items: { key: string; label: string }[];
+  selected: string[];
+  onToggle: (key: string) => void;
+}) {
+  const [open, setOpen] = useState(false);
+  const activeCount = items.filter((i) => selected.includes(i.key)).length;
+
+  return (
+    <div className="border border-gray-200 rounded-lg overflow-hidden">
+      <button
+        type="button"
+        onClick={() => setOpen(!open)}
+        className="w-full flex items-center justify-between px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+      >
+        <span>{category}</span>
+        <span className="flex items-center gap-2">
+          {activeCount > 0 && (
+            <span className="bg-blue-100 text-blue-700 text-xs px-1.5 py-0.5 rounded-full">{activeCount}</span>
+          )}
+          <Icon icon={faChevronDown} className={`text-[10px] transition-transform ${open ? "rotate-180" : ""}`} />
+        </span>
+      </button>
+      {open && (
+        <div className="px-3 pb-3 space-y-1.5 border-t border-gray-100">
+          {items.map(({ key, label }) => (
+            <label key={key} className="flex items-center gap-2 cursor-pointer py-1">
+              <input
+                type="checkbox"
+                checked={selected.includes(key)}
+                onChange={() => onToggle(key)}
+                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
+              />
+              <span className="text-sm text-gray-600">{label}</span>
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
 
 export default function PropertyFilters({ filters, onFiltersChange }: PropertyFiltersProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
@@ -171,17 +213,15 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
 
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">Équipements</label>
-        <div className="space-y-2">
-          {FEATURE_OPTIONS.map((f) => (
-            <label key={f.value} className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={filters.features.includes(f.value)}
-                onChange={() => toggleFeature(f.value)}
-                className="rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="text-sm text-gray-700">{f.label}</span>
-            </label>
+        <div className="space-y-3">
+          {Object.entries(getFeaturesByCategory()).map(([category, items]) => (
+            <FeatureCategoryGroup
+              key={category}
+              category={category}
+              items={items}
+              selected={filters.features}
+              onToggle={toggleFeature}
+            />
           ))}
         </div>
       </div>
