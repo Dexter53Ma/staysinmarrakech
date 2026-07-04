@@ -281,11 +281,22 @@ export default function Header() {
 
         {/* Mobile Menu */}
         {mobileOpen && (
-          <div className="lg:hidden bg-[#111] border-t border-white/10 max-h-[80vh] overflow-y-auto">
+          <div className="lg:hidden bg-[#111] border-t border-white/10 max-h-[80vh] overflow-y-auto shadow-2xl shadow-black/50 animate-in fade-in slide-in-from-top-2 duration-300">
             <div className="max-w-[1200px] mx-auto px-4 py-4 flex flex-col gap-1">
+              {/* Mobile Logo */}
+              <div className="flex justify-center py-3 border-b border-white/10">
+                <Image
+                  src={settings.logo_url || "/images/logo.png"}
+                  alt="StaysInMarrakech"
+                  width={120}
+                  height={40}
+                  priority
+                />
+              </div>
+
               {/* Villas */}
               <div>
-                <button onClick={() => setVillasOpen(!villasOpen)} className="flex items-center justify-between w-full text-white text-sm font-semibold uppercase py-3 border-b border-white/10">
+                <button onClick={() => setVillasOpen(!villasOpen)} className="flex items-center justify-between w-full text-white text-sm font-semibold uppercase py-3 border-b border-white/10 active:scale-[0.98]">
                   <span className="flex items-center gap-2">
                     <Icon icon={faHome} className="text-[#ffb000] text-xs" />
                     Villas
@@ -306,7 +317,7 @@ export default function Header() {
 
               {/* Services */}
               <div>
-                <button onClick={() => setServicesOpen(!servicesOpen)} className="flex items-center justify-between w-full text-white text-sm font-semibold uppercase py-3 border-b border-white/10">
+                <button onClick={() => setServicesOpen(!servicesOpen)} className="flex items-center justify-between w-full text-white text-sm font-semibold uppercase py-3 border-b border-white/10 active:scale-[0.98]">
                   <span className="flex items-center gap-2">
                     <Icon icon={faConciergeBell} className="text-[#ffb000] text-xs" />
                     Services
@@ -329,24 +340,34 @@ export default function Header() {
 
               {/* Links */}
               {extraNavLinks.map((link) => (
-                <Link key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="text-white text-sm font-semibold uppercase py-3 border-b border-white/10 hover:text-[#ffb000] transition-colors min-h-[44px] flex items-center">
+                <Link key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="text-white text-sm font-semibold uppercase py-3 border-b border-white/10 hover:text-[#ffb000] transition-colors min-h-[44px] flex items-center active:scale-[0.98]">
                   {link.label}
                 </Link>
               ))}
+
+              {/* Wishlist */}
+              <Link
+                href="/villas/wishlist"
+                onClick={() => setMobileOpen(false)}
+                className="flex items-center gap-2 text-white text-sm font-semibold uppercase py-3 border-b border-white/10 hover:text-[#ffb000] transition-colors min-h-[44px] active:scale-[0.98]"
+              >
+                <Icon icon={faHeart} className="text-[#ffb000] text-xs" />
+                Sélection
+              </Link>
 
               {/* Language Switcher */}
               <div className="py-3 border-b border-white/10">
                 <p className="text-white/40 text-xs uppercase tracking-wider mb-2">Langue</p>
                 <div className="flex gap-2">
                   {languages.map((l) => (
-                    <button key={l} onClick={() => setMobileOpen(false)} className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] ${l === "Français" ? "bg-[#ffb000] text-black" : "bg-white/10 text-white/70 hover:bg-white/20"}`}>
+                    <button key={l} onClick={() => setMobileOpen(false)} className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] active:scale-[0.98] ${l === "Français" ? "bg-[#ffb000] text-black" : "bg-white/10 text-white/70 hover:bg-white/20"}`}>
                       {l}
                     </button>
                   ))}
                 </div>
               </div>
 
-              <Link href="/contactez-nous" onClick={() => setMobileOpen(false)} className="mt-2 bg-[#ffb000] text-black text-sm font-bold py-3.5 rounded-lg text-center block min-h-[44px] flex items-center justify-center">
+              <Link href="/contactez-nous" onClick={() => setMobileOpen(false)} className="mt-2 bg-[#ffb000] text-black text-sm font-bold py-3.5 rounded-lg text-center block min-h-[44px] flex items-center justify-center active:scale-[0.98]">
                 Réserver maintenant
               </Link>
 
@@ -359,6 +380,25 @@ export default function Header() {
                 {settings.email && (
                   <a href={`mailto:${settings.email}`} className="flex items-center gap-2 hover:text-[#ffb000]">
                     <Icon icon={faEnvelope} className="text-[9px]" /> {settings.email}
+                  </a>
+                )}
+              </div>
+
+              {/* Social Icons */}
+              <div className="flex items-center gap-3 mt-2">
+                {settings.facebook && (
+                  <a href={settings.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
+                    <Icon icon={faFacebookF} className="text-sm" />
+                  </a>
+                )}
+                {settings.instagram && (
+                  <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
+                    <Icon icon={faInstagram} className="text-sm" />
+                  </a>
+                )}
+                {settings.linkedin && (
+                  <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
+                    <Icon icon={faLinkedinIn} className="text-sm" />
                   </a>
                 )}
               </div>
