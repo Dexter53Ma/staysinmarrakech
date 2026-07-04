@@ -1,6 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Image from "next/image";
+import ImageLightbox from "@/components/ImageLightbox";
 import type { PropertyImage } from "@/types";
 
 interface ImageGalleryProps {
@@ -11,9 +13,20 @@ interface ImageGalleryProps {
 }
 
 export default function ImageGallery({ images, selectedIndex, onSelect, title }: ImageGalleryProps) {
+  const [lightboxOpen, setLightboxOpen] = useState(false);
+  const [lightboxIndex, setLightboxIndex] = useState(0);
+
+  const openLightbox = (index: number) => {
+    setLightboxIndex(index);
+    setLightboxOpen(true);
+  };
+
   return (
     <div>
-      <div className="relative h-[300px] md:h-[450px] rounded-xl overflow-hidden">
+      <div
+        className="relative h-[300px] md:h-[450px] rounded-xl overflow-hidden cursor-pointer"
+        onClick={() => openLightbox(selectedIndex)}
+      >
         {images[selectedIndex] ? (
           <Image
             src={images[selectedIndex].url}
@@ -52,6 +65,15 @@ export default function ImageGallery({ images, selectedIndex, onSelect, title }:
             </button>
           ))}
         </div>
+      )}
+
+      {lightboxOpen && (
+        <ImageLightbox
+          images={images}
+          selectedIndex={lightboxIndex}
+          onClose={() => setLightboxOpen(false)}
+          onNavigate={setLightboxIndex}
+        />
       )}
     </div>
   );
