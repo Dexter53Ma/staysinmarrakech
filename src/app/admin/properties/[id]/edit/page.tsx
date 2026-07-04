@@ -11,6 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, Upload, X, GripVertical } from "lucide-react";
+import { FEATURES, FEATURE_KEYS, getFeaturesByCategory } from "@/lib/features";
 
 const PROPERTY_TYPES = [
   { value: "VILLA", label: "Villa" },
@@ -41,20 +42,6 @@ const PRICE_PERIODS = [
   { value: "yearly", label: "Par an" },
   { value: "sale", label: "Vente" },
 ];
-
-const FEATURES = [
-  "Pool", "Garden", "WiFi", "AC", "Gym", "Fireplace", "BBQ", "Cinema",
-  "Tennis", "Parking", "Jacuzzi", "Hammam", "Terrace", "Balcony",
-  "Washer", "Dryer", "Kitchen", "Security",
-];
-
-const FEATURE_LABELS: Record<string, string> = {
-  Pool: "Piscine", Garden: "Jardin", WiFi: "WiFi", AC: "Climatisation",
-  Gym: "Salle de sport", Fireplace: "Cheminée", BBQ: "BBQ", Cinema: "Cinéma",
-  Tennis: "Tennis", Parking: "Parking", Jacuzzi: "Jacuzzi", Hammam: "Hammam",
-  Terrace: "Terrasse", Balcony: "Balcon", Washer: "Lave-linge",
-  Dryer: "Sèche-linge", Kitchen: "Cuisine", Security: "Sécurité",
-};
 
 export default function EditPropertyPage() {
   const router = useRouter();
@@ -97,7 +84,7 @@ export default function EditPropertyPage() {
   const [checkOutTime, setCheckOutTime] = useState("");
 
   const [features, setFeatures] = useState<Record<string, boolean>>(
-    Object.fromEntries(FEATURES.map((f) => [f, false]))
+    Object.fromEntries(FEATURE_KEYS.map((f) => [f, false]))
   );
 
   const [images, setImages] = useState<{ id?: string; url: string; alt: string }[]>([]);
@@ -138,7 +125,7 @@ export default function EditPropertyPage() {
         setCheckOutTime(data.checkOutTime || "");
 
         const featureArray: string[] = Array.isArray(data.features) ? data.features : [];
-        setFeatures(Object.fromEntries(FEATURES.map((f) => [f, featureArray.includes(f)])));
+        setFeatures(Object.fromEntries(FEATURE_KEYS.map((f) => [f, featureArray.includes(f)])));
 
         if (data.images?.length) {
           setImages(data.images.map((img: { id: string; url: string; alt?: string }) => ({ id: img.id, url: img.url, alt: img.alt || "" })));
@@ -459,24 +446,31 @@ export default function EditPropertyPage() {
             <CardTitle className="text-lg">Équipements</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-              {FEATURES.map((feature) => (
-                <label
-                  key={feature}
-                  className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-colors ${
-                    features[feature]
-                      ? "border-primary bg-primary/5 text-primary"
-                      : "border-border hover:border-primary/30"
-                  }`}
-                >
-                  <input
-                    type="checkbox"
-                    checked={features[feature]}
-                    onChange={() => toggleFeature(feature)}
-                    className="rounded border-gray-300 text-primary focus:ring-primary"
-                  />
-                  <span className="text-sm">{FEATURE_LABELS[feature]}</span>
-                </label>
+            <div className="space-y-4">
+              {Object.entries(getFeaturesByCategory()).map(([category, items]) => (
+                <div key={category}>
+                  <h4 className="text-sm font-semibold text-gray-500 uppercase tracking-wider mb-2">{category}</h4>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {items.map(({ key, label }) => (
+                      <label
+                        key={key}
+                        className={`flex items-center gap-2 p-2.5 rounded-lg border cursor-pointer transition-colors ${
+                          features[key]
+                            ? "border-primary bg-primary/5 text-primary"
+                            : "border-border hover:border-primary/30"
+                        }`}
+                      >
+                        <input
+                          type="checkbox"
+                          checked={features[key]}
+                          onChange={() => toggleFeature(key)}
+                          className="rounded border-gray-300 text-primary focus:ring-primary"
+                        />
+                        <span className="text-sm">{label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
               ))}
             </div>
           </CardContent>
