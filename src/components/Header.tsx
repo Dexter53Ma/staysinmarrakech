@@ -306,7 +306,7 @@ export default function Header() {
                 {villasOpen && (
                   <div className="pl-6 py-2 space-y-1">
                     {villaLinks.map((link) => (
-                      <Link key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="flex items-center gap-2 text-white/70 text-sm py-2 hover:text-[#ffb000] transition-colors">
+                      <Link key={link.label} href={link.href} className="flex items-center gap-2 text-white/70 text-sm py-2 hover:text-[#ffb000] transition-colors">
                         <Icon icon={link.icon} className="text-[10px] text-[#ffb000]/60" />
                         {link.label}
                       </Link>
@@ -327,11 +327,11 @@ export default function Header() {
                 {servicesOpen && (
                   <div className="pl-6 py-2 space-y-1">
                     {services.slice(0, 10).map((s) => (
-                      <Link key={s.slug} href={`/service/${s.slug}`} onClick={() => setMobileOpen(false)} className="text-white/70 text-sm py-1.5 hover:text-[#ffb000] transition-colors block">
+                      <Link key={s.slug} href={`/service/${s.slug}`} className="text-white/70 text-sm py-1.5 hover:text-[#ffb000] transition-colors block">
                         {s.title}
                       </Link>
                     ))}
-                    <Link href="/service" onClick={() => setMobileOpen(false)} className="text-[#ffb000] text-sm font-semibold py-1.5 block">
+                    <Link href="/service" className="text-[#ffb000] text-sm font-semibold py-1.5 block">
                       Voir tout →
                     </Link>
                   </div>
