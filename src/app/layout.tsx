@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from "next";
 import { Raleway } from "next/font/google";
 import { SettingsProvider } from "@/components/SettingsContext";
 import { ServicesProvider } from "@/components/ServicesContext";
+import { CurrencyProvider } from "@/components/CurrencyContext";
 import FloatingContact from "@/components/FloatingContact";
 import BackToTop from "@/components/BackToTop";
 import ErrorBoundary from "@/components/ErrorBoundary";
@@ -94,11 +95,13 @@ export default function RootLayout({
         </a>
         <SettingsProvider>
           <ServicesProvider>
-            <div id="main-content" className="flex-1 flex flex-col">
-              <ErrorBoundary>{children}</ErrorBoundary>
-            </div>
-            <FloatingContact />
-            <BackToTop />
+            <CurrencyProvider>
+              <div id="main-content" className="flex-1 flex flex-col">
+                <ErrorBoundary>{children}</ErrorBoundary>
+              </div>
+              <FloatingContact />
+              <BackToTop />
+            </CurrencyProvider>
           </ServicesProvider>
         </SettingsProvider>
       </body>

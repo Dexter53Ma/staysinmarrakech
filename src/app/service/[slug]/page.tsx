@@ -3,6 +3,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PriceDisplay from "@/components/PriceDisplay";
 import { prisma } from "@/lib/prisma";
 import { Icon, faArrowRight, faPhone } from "@/components/icons";
 import { sanitizeHTML } from "@/lib/sanitize";
@@ -135,7 +136,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               <h1 className="text-white text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">{service.title}</h1>
               {service.price && (
                 <p className="text-white/80 text-lg mt-3">
-                  À partir de <span className="text-[#ffb000] font-bold">{service.price} €</span> {service.priceUnit || ""}
+                  À partir de <span className="text-[#ffb000] font-bold"><PriceDisplay price={service.price} currency="EUR" /></span> {service.priceUnit || ""}
                 </p>
               )}
             </div>
@@ -212,7 +213,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                     {service.price && (
                       <div className="flex items-center gap-3 text-sm">
                         <span className="w-8 h-8 rounded-lg bg-[#0d47a1]/10 flex items-center justify-center text-xs shrink-0">💰</span>
-                        <span className="text-gray-600">À partir de {service.price} € {service.priceUnit || ""}</span>
+                        <span className="text-gray-600">À partir de <PriceDisplay price={service.price} currency="EUR" suffix={` ${service.priceUnit || ""}`} /></span>
                       </div>
                     )}
                     <div className="flex items-center gap-3 text-sm">

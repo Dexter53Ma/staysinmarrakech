@@ -1,13 +1,16 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import type { SimilarProperty } from "@/types";
-import { formatPrice } from "@/types";
+import { useCurrency } from "@/components/CurrencyContext";
 
 interface SimilarPropertiesGridProps {
   properties: SimilarProperty[];
 }
 
 export default function SimilarPropertiesGrid({ properties }: SimilarPropertiesGridProps) {
+  const { convert, symbol } = useCurrency();
   if (properties.length === 0) return null;
 
   return (
@@ -42,7 +45,7 @@ export default function SimilarPropertiesGrid({ properties }: SimilarPropertiesG
                 {sp.bedrooms} ch. · {sp.bathrooms} sdb
               </p>
               <p className="text-sm font-bold text-[#0d47a1] mt-1">
-                {formatPrice(sp.price, sp.currency)}
+                {convert(sp.price, sp.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}
               </p>
             </div>
           </Link>

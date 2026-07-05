@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
+import { useCurrency } from "@/components/CurrencyContext";
 import {
   Icon,
   faBed,
@@ -22,6 +23,7 @@ interface ListingVilla {
   slug: string;
   name: string;
   image: string;
+  type: string;
   quartier: string;
   chambres: number;
   bathrooms: number;
@@ -29,6 +31,8 @@ interface ListingVilla {
   terrain: number;
   surface: number;
   price: number;
+  currency: string;
+  pricePeriod: string;
   features: string[];
   isFeatured: boolean;
 }
@@ -42,6 +46,13 @@ const chambresOptions = [
   { label: "8+", value: 8 },
 ];
 
+const typeOptions = [
+  { value: "ALL", label: "Tous" },
+  { value: "VILLA", label: "Villa" },
+  { value: "RIAD", label: "Riad" },
+  { value: "APARTMENT", label: "Appartement" },
+];
+
 const quartierOptions = [
   "Palmeraie", "Hivernage", "Gueliz", "Médina", "Route de l'Ourika",
   "Route de Ouarzazate", "Golf d'Amelkis", "Golf de Samanah",
@@ -53,6 +64,7 @@ type SortKey = "newest" | "price-asc" | "price-desc" | "bedrooms";
 interface ApiProperty {
   slug: string;
   title: string;
+  type: string;
   images: { url: string }[];
   quarter?: string;
   city?: string;
@@ -62,20 +74,29 @@ interface ApiProperty {
   plotArea?: number;
   builtArea?: number;
   price: number;
+  currency: string;
+  pricePeriod?: string;
   features?: string[];
   isFeatured?: boolean;
 }
 
 export default function LocationVillaMarrakech() {
+  const { convert, symbol } = useCurrency();
   const [villas, setVillas] = useState<ListingVilla[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedType, setSelectedType] = useState("ALL");
+  const [selectedPricePeriod, setSelectedPricePeriod] = useState("nightly");
   const [selectedChambres, setSelectedChambres] = useState<number[]>([]);
   const [selectedQuartiers, setSelectedQuartiers] = useState<string[]>([]);
   const [sortBy, setSortBy] = useState<SortKey>("newest");
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
-    fetch("/api/properties?status=AVAILABLE&limit=50")
+    const params = new URLSearchParams({ status: "AVAILABLE", limit: "50" });
+    if (selectedType !== "ALL") params.set("type", selectedType);
+    params.set("pricePeriod", selectedPricePeriod);
+    
+    fetch(`/api/properties?${params.toString()}`)
       .then((r) => r.json())
       .then((data: { data?: ApiProperty[] }) => {
         setVillas(
@@ -83,6 +104,7 @@ export default function LocationVillaMarrakech() {
             slug: p.slug,
             name: p.title,
             image: p.images?.[0]?.url || "/images/villas/default.jpg",
+            type: p.type,
             quartier: p.quarter || p.city || "Marrakech",
             chambres: p.bedrooms,
             bathrooms: p.bathrooms,
@@ -90,6 +112,8 @@ export default function LocationVillaMarrakech() {
             terrain: p.plotArea || 0,
             surface: p.builtArea || 0,
             price: p.price,
+            currency: p.currency || "EUR",
+            pricePeriod: p.pricePeriod || "LOCATION",
             features: p.features || [],
             isFeatured: p.isFeatured ?? false,
           }))
@@ -97,7 +121,7 @@ export default function LocationVillaMarrakech() {
         setLoading(false);
       })
       .catch(() => setLoading(false));
-  }, []);
+  }, [selectedType, selectedPricePeriod]);
 
   const toggleChambres = (val: number) =>
     setSelectedChambres((p) => p.includes(val) ? p.filter((c) => c !== val) : [...p, val]);
@@ -117,7 +141,7 @@ export default function LocationVillaMarrakech() {
     return result;
   })();
 
-  const hasFilters = selectedChambres.length > 0 || selectedQuartiers.length > 0;
+  const hasFilters = selectedType !== "ALL" || selectedPricePeriod !== "nightly" || selectedChambres.length > 0 || selectedQuartiers.length > 0;
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -175,7 +199,7 @@ export default function LocationVillaMarrakech() {
             </button>
             {hasFilters && (
               <button
-                onClick={() => { setSelectedChambres([]); setSelectedQuartiers([]); }}
+                onClick={() => { setSelectedType("ALL"); setSelectedPricePeriod("nightly"); setSelectedChambres([]); setSelectedQuartiers([]); }}
                 className="text-xs text-red-500 hover:text-red-600 font-medium"
               >
                 Tout effacer
@@ -206,7 +230,7 @@ export default function LocationVillaMarrakech() {
               <h3 className="font-bold text-[#0d47a1]">Filtres avancés</h3>
               {hasFilters && (
                 <button
-                  onClick={() => { setSelectedChambres([]); setSelectedQuartiers([]); }}
+                  onClick={() => { setSelectedType("ALL"); setSelectedPricePeriod("nightly"); setSelectedChambres([]); setSelectedQuartiers([]); }}
                   className="text-sm text-red-500 hover:text-red-600 font-medium"
                 >
                   Tout effacer
@@ -215,6 +239,55 @@ export default function LocationVillaMarrakech() {
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 block">
+                  Type de bien
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  {typeOptions.map((opt) => (
+                    <button
+                      key={opt.value}
+                      onClick={() => setSelectedType(opt.value)}
+                      className={`px-4 py-2 rounded-lg text-sm font-medium border-2 transition-all ${
+                        selectedType === opt.value
+                          ? "bg-[#0d47a1] text-white border-[#0d47a1] shadow-md"
+                          : "bg-white text-gray-600 border-gray-200 hover:border-[#0d47a1] hover:text-[#0d47a1]"
+                      }`}
+                    >
+                      {opt.label}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <div>
+                <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 block">
+                  Location / Vente
+                </label>
+                <div className="flex flex-wrap gap-2">
+                  <button
+                    onClick={() => setSelectedPricePeriod("nightly")}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium border-2 transition-all ${
+                      selectedPricePeriod === "nightly"
+                        ? "bg-[#0d47a1] text-white border-[#0d47a1] shadow-md"
+                        : "bg-white text-gray-600 border-gray-200 hover:border-[#0d47a1] hover:text-[#0d47a1]"
+                    }`}
+                  >
+                    Location
+                  </button>
+                  <button
+                    onClick={() => setSelectedPricePeriod("sale")}
+                    className={`px-4 py-2 rounded-lg text-sm font-medium border-2 transition-all ${
+                      selectedPricePeriod === "sale"
+                        ? "bg-[#0d47a1] text-white border-[#0d47a1] shadow-md"
+                        : "bg-white text-gray-600 border-gray-200 hover:border-[#0d47a1] hover:text-[#0d47a1]"
+                    }`}
+                  >
+                    Vente
+                  </button>
+                </div>
+              </div>
+
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 block">
                   Chambres
@@ -266,6 +339,22 @@ export default function LocationVillaMarrakech() {
         {/* Active Filters */}
         {hasFilters && (
           <div className="flex flex-wrap gap-2 mb-6">
+            {selectedType !== "ALL" && (
+              <span className="inline-flex items-center gap-1 bg-[#0d47a1]/10 text-[#0d47a1] text-xs font-medium px-3 py-1.5 rounded-full">
+                {typeOptions.find(t => t.value === selectedType)?.label}
+                <button onClick={() => setSelectedType("ALL")} className="hover:text-red-500">
+                  <Icon icon={faTimes} className="text-[10px]" />
+                </button>
+              </span>
+            )}
+            {selectedPricePeriod !== "nightly" && (
+              <span className="inline-flex items-center gap-1 bg-[#0d47a1]/10 text-[#0d47a1] text-xs font-medium px-3 py-1.5 rounded-full">
+                {selectedPricePeriod === "sale" ? "Vente" : "Location"}
+                <button onClick={() => setSelectedPricePeriod("nightly")} className="hover:text-red-500">
+                  <Icon icon={faTimes} className="text-[10px]" />
+                </button>
+              </span>
+            )}
             {selectedChambres.map((c) => (
               <span key={`c-${c}`} className="inline-flex items-center gap-1 bg-[#0d47a1]/10 text-[#0d47a1] text-xs font-medium px-3 py-1.5 rounded-full">
                 {c}+ chambres
@@ -307,7 +396,7 @@ export default function LocationVillaMarrakech() {
             <h3 className="text-xl font-bold text-gray-700 mb-2">Aucune villa trouvée</h3>
             <p className="text-gray-400 mb-6">Essayez de modifier vos critères de recherche</p>
             <button
-              onClick={() => { setSelectedChambres([]); setSelectedQuartiers([]); }}
+              onClick={() => { setSelectedType("ALL"); setSelectedPricePeriod("nightly"); setSelectedChambres([]); setSelectedQuartiers([]); }}
               className="bg-[#0d47a1] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#0a3a82] transition-colors"
             >
               Réinitialiser les filtres
@@ -335,7 +424,7 @@ export default function LocationVillaMarrakech() {
                   {/* Price Badge */}
                   <div className="absolute bottom-4 left-4">
                     <div className="bg-white/95 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg">
-                      <span className="text-[#0d47a1] font-bold text-lg">{villa.price.toLocaleString("fr-FR")} €</span>
+                      <span className="text-[#0d47a1] font-bold text-lg">{convert(villa.price, villa.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}</span>
                       <span className="text-gray-400 text-xs ml-1">/ nuit</span>
                     </div>
                   </div>

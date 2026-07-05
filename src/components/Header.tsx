@@ -5,6 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useSettings } from "@/components/SettingsContext";
 import { useServices, ServiceItem } from "@/components/ServicesContext";
+import { useCurrency, type Currency } from "@/components/CurrencyContext";
 import {
   Icon,
   faPhone,
@@ -50,10 +51,12 @@ const languages = ["Français", "English"];
 export default function Header() {
   const settings = useSettings();
   const { services } = useServices();
+  const { currency, setCurrency } = useCurrency();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [villasOpen, setVillasOpen] = useState(false);
   const [langOpen, setLangOpen] = useState(false);
+  const [currencyOpen, setCurrencyOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const servicesRef = useRef<HTMLDivElement>(null);
   const villasRef = useRef<HTMLDivElement>(null);
@@ -153,6 +156,22 @@ export default function Header() {
                   {languages.map((l) => (
                     <button key={l} onClick={() => setLangOpen(false)} className={`block w-full text-left px-4 py-2 text-sm hover:bg-blue-50 transition-colors $                      {l === "Français" ? "font-semibold text-black" : ""}`}>
                       {l}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <div className="relative" data-dropdown>
+              <button onClick={() => { setCurrencyOpen(!currencyOpen); }} className="flex items-center gap-1 hover:text-[#ffb000] transition-colors">
+                <span className="text-[9px] font-bold">{currency === "EUR" ? "€" : currency === "MAD" ? "DH" : "$"}</span>
+                <span>{currency}</span>
+                <Icon icon={faChevronDown} className="text-[7px]" />
+              </button>
+              {currencyOpen && (
+                <div className="absolute right-0 top-full mt-1 bg-white text-gray-800 rounded-lg shadow-xl border border-gray-100 min-w-[120px] z-50 overflow-hidden">
+                  {(["EUR", "MAD", "USD"] as Currency[]).map((c) => (
+                    <button key={c} onClick={() => { setCurrency(c); setCurrencyOpen(false); }} className={`block w-full text-left px-4 py-2 text-sm hover:bg-blue-50 transition-colors ${c === currency ? "font-semibold text-black bg-blue-50" : ""}`}>
+                      {c === "EUR" ? "€ EUR" : c === "MAD" ? "DH MAD" : "$ USD"}
                     </button>
                   ))}
                 </div>
@@ -362,6 +381,18 @@ export default function Header() {
                   {languages.map((l) => (
                     <button key={l} onClick={() => setMobileOpen(false)} className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] active:scale-[0.98] ${l === "Français" ? "bg-[#ffb000] text-black" : "bg-white/10 text-white/70 hover:bg-white/20"}`}>
                       {l}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              {/* Currency Switcher */}
+              <div className="py-3 border-b border-white/10">
+                <p className="text-white/40 text-xs uppercase tracking-wider mb-2">Devise</p>
+                <div className="flex gap-2">
+                  {(["EUR", "MAD", "USD"] as Currency[]).map((c) => (
+                    <button key={c} onClick={() => { setCurrency(c); setMobileOpen(false); }} className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] active:scale-[0.98] ${c === currency ? "bg-[#ffb000] text-black" : "bg-white/10 text-white/70 hover:bg-white/20"}`}>
+                      {c === "EUR" ? "€ EUR" : c === "MAD" ? "DH MAD" : "$ USD"}
                     </button>
                   ))}
                 </div>

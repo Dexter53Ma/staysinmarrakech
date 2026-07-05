@@ -58,6 +58,7 @@ export default function PropertiesPageClient({
       const params = new URLSearchParams();
       if (p > 1) params.set("page", p.toString());
       if (newFilters.type !== "ALL") params.set("type", newFilters.type);
+      params.set("pricePeriod", newFilters.pricePeriod);
       if (newFilters.minPrice) params.set("minPrice", newFilters.minPrice);
       if (newFilters.maxPrice) params.set("maxPrice", newFilters.maxPrice);
       if (newFilters.bedrooms) params.set("bedrooms", newFilters.bedrooms);

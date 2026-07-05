@@ -7,6 +7,7 @@ import { Icon, faChevronDown } from "@/components/icons";
 
 export interface FilterState {
   type: string;
+  pricePeriod: string;
   minPrice: string;
   maxPrice: string;
   bedrooms: string;
@@ -109,6 +110,7 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
   const resetFilters = useCallback(() => {
     onFiltersChange({
       type: "ALL",
+      pricePeriod: "nightly",
       minPrice: "",
       maxPrice: "",
       bedrooms: "",
@@ -120,6 +122,7 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
 
   const hasActiveFilters =
     filters.type !== "ALL" ||
+    filters.pricePeriod !== "nightly" ||
     filters.minPrice !== "" ||
     filters.maxPrice !== "" ||
     filters.bedrooms !== "" ||
@@ -160,6 +163,32 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
               {t.label}
             </button>
           ))}
+        </div>
+      </div>
+
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-2">Location / Vente</label>
+        <div className="flex gap-2">
+          <button
+            onClick={() => updateFilter("pricePeriod", "nightly")}
+            className={`flex-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              filters.pricePeriod === "nightly"
+                ? "bg-[#0d47a1] text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            Location
+          </button>
+          <button
+            onClick={() => updateFilter("pricePeriod", "sale")}
+            className={`flex-1 px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
+              filters.pricePeriod === "sale"
+                ? "bg-[#0d47a1] text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+          >
+            Vente
+          </button>
         </div>
       </div>
 

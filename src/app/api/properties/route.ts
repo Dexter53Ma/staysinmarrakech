@@ -13,12 +13,14 @@ export async function GET(request: NextRequest) {
     const { searchParams } = new URL(request.url);
     const type = searchParams.get("type");
     const status = searchParams.get("status");
+    const pricePeriod = searchParams.get("pricePeriod");
     const search = searchParams.get("search");
     const { page, limit, skip } = parsePagination(searchParams);
 
     const where: Record<string, unknown> = {};
     if (type && type !== "ALL") where.type = type;
     if (status && status !== "ALL") where.status = status;
+    if (pricePeriod && pricePeriod !== "ALL") where.pricePeriod = pricePeriod;
     if (search) where.title = { contains: search, mode: "insensitive" };
 
     const [properties, total] = await Promise.all([

@@ -18,6 +18,7 @@ export default async function PropertiesPage({
   const params = await searchParams;
   const page = parseInt(params.page || "1");
   const type = params.type || "ALL";
+  const pricePeriod = params.pricePeriod || "nightly";
   const minPrice = params.minPrice ? parseFloat(params.minPrice) : undefined;
   const maxPrice = params.maxPrice ? parseFloat(params.maxPrice) : undefined;
   const bedrooms = params.bedrooms ? parseInt(params.bedrooms) : undefined;
@@ -29,6 +30,7 @@ export default async function PropertiesPage({
   const where: Record<string, any> = {};
 
   if (type && type !== "ALL") where.type = type;
+  if (pricePeriod) where.pricePeriod = pricePeriod;
   if (minPrice !== undefined) where.price = { ...where.price, gte: minPrice };
   if (maxPrice !== undefined) where.price = { ...where.price, lte: maxPrice };
   if (bedrooms !== undefined) where.bedrooms = { gte: bedrooms };
@@ -76,6 +78,7 @@ export default async function PropertiesPage({
       totalPages={totalPages}
       initialFilters={{
         type,
+        pricePeriod,
         minPrice: params.minPrice || "",
         maxPrice: params.maxPrice || "",
         bedrooms: params.bedrooms || "",

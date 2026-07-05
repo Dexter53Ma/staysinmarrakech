@@ -10,6 +10,7 @@ import {
   faMapMarkerAlt,
   faUsers,
   faChevronDown,
+  faHome,
 } from "@/components/icons";
 import DateCalendarPicker from "@/components/DateCalendarPicker";
 
@@ -22,7 +23,8 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
   const settings = useSettings();
   const router = useRouter();
   const [currentSlide, setCurrentSlide] = useState(0);
-  const [destination, setDestination] = useState("");
+  const [propertyType, setPropertyType] = useState("ALL");
+  const [pricePeriod, setPricePeriod] = useState("nightly");
   const [checkIn, setCheckIn] = useState("");
   const [checkOut, setCheckOut] = useState("");
   const [guests, setGuests] = useState(2);
@@ -51,13 +53,14 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
     (e: React.FormEvent) => {
       e.preventDefault();
       const params = new URLSearchParams();
-      if (destination) params.set("search", destination);
+      if (propertyType && propertyType !== "ALL") params.set("type", propertyType);
+      if (pricePeriod) params.set("pricePeriod", pricePeriod);
       if (checkIn) params.set("checkIn", checkIn);
       if (checkOut) params.set("checkOut", checkOut);
       if (guests) params.set("guests", guests.toString());
       router.push(`/marrakech-villas/location-villa-marrakech?${params.toString()}`);
     },
-    [destination, checkIn, checkOut, guests, router]
+    [propertyType, pricePeriod, checkIn, checkOut, guests, router]
   );
 
   const today = new Date();
@@ -101,19 +104,50 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
         {/* ═══════════════════ DESKTOP SEARCH BAR ═══════════════════ */}
         <form onSubmit={handleSearch} className="hidden md:block max-w-[1000px] mx-auto">
           <div className="bg-white rounded-full shadow-[0_8px_40px_rgba(0,0,0,0.25)] p-2 flex items-center">
-            {/* Destination */}
-            <div className="flex-1 flex items-center gap-3 px-5 py-3 rounded-full hover:bg-gray-50 transition-colors">
-              <Icon icon={faMapMarkerAlt} className="text-[#0d47a1] text-sm shrink-0" />
+            {/* Property Type */}
+            <div className="flex items-center gap-3 px-5 py-3 rounded-full hover:bg-gray-50 transition-colors min-w-[160px]">
+              <Icon icon={faHome} className="text-[#0d47a1] text-sm shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Destination</p>
-                <input
-                  type="text"
-                  placeholder="Rechercher une destination"
-                  value={destination}
-                  onChange={(e) => setDestination(e.target.value)}
-                  className="w-full text-sm text-gray-800 placeholder:text-gray-400 outline-none bg-transparent font-medium mt-0.5"
-                />
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Type</p>
+                <select
+                  value={propertyType}
+                  onChange={(e) => setPropertyType(e.target.value)}
+                  className="w-full text-sm text-gray-800 outline-none bg-transparent font-medium mt-0.5 cursor-pointer"
+                >
+                  <option value="ALL">Tous</option>
+                  <option value="VILLA">Villa</option>
+                  <option value="RIAD">Riad</option>
+                  <option value="APARTMENT">Appartement</option>
+                </select>
               </div>
+            </div>
+
+            <span className="w-px h-8 bg-gray-200 shrink-0" />
+
+            {/* Vente / Location Toggle */}
+            <div className="flex items-center gap-1 px-4 py-3 rounded-full">
+              <button
+                type="button"
+                onClick={() => setPricePeriod("nightly")}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  pricePeriod === "nightly"
+                    ? "bg-[#0d47a1] text-white"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+              >
+                Location
+              </button>
+              <button
+                type="button"
+                onClick={() => setPricePeriod("sale")}
+                className={`px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
+                  pricePeriod === "sale"
+                    ? "bg-[#0d47a1] text-white"
+                    : "text-gray-600 hover:bg-gray-100"
+                }`}
+              >
+                Vente
+              </button>
             </div>
 
             <span className="w-px h-8 bg-gray-200 shrink-0" />
@@ -172,19 +206,48 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
         {/* ═══════════════════ MOBILE SEARCH BAR ═══════════════════ */}
         <form onSubmit={handleSearch} className="md:hidden max-w-[500px] mx-auto">
           <div className="bg-white rounded-3xl shadow-[0_8px_40px_rgba(0,0,0,0.25)] p-4 space-y-2">
-            {/* Destination */}
+            {/* Property Type */}
             <div className="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-3.5">
-              <Icon icon={faMapMarkerAlt} className="text-[#0d47a1] shrink-0" />
+              <Icon icon={faHome} className="text-[#0d47a1] shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Destination</p>
-                <input
-                  type="text"
-                  placeholder="Où allez-vous ?"
-                  value={destination}
-                  onChange={(e) => setDestination(e.target.value)}
-                  className="w-full text-sm text-gray-800 placeholder:text-gray-400 outline-none bg-transparent font-medium mt-0.5"
-                />
+                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">Type</p>
+                <select
+                  value={propertyType}
+                  onChange={(e) => setPropertyType(e.target.value)}
+                  className="w-full text-sm text-gray-800 outline-none bg-transparent font-medium mt-0.5 cursor-pointer"
+                >
+                  <option value="ALL">Tous</option>
+                  <option value="VILLA">Villa</option>
+                  <option value="RIAD">Riad</option>
+                  <option value="APARTMENT">Appartement</option>
+                </select>
               </div>
+            </div>
+
+            {/* Vente / Location Toggle */}
+            <div className="flex items-center gap-2 bg-gray-50 rounded-2xl px-4 py-3.5">
+              <button
+                type="button"
+                onClick={() => setPricePeriod("nightly")}
+                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
+                  pricePeriod === "nightly"
+                    ? "bg-[#0d47a1] text-white"
+                    : "text-gray-600 bg-white border border-gray-200 hover:bg-gray-100"
+                }`}
+              >
+                Location
+              </button>
+              <button
+                type="button"
+                onClick={() => setPricePeriod("sale")}
+                className={`flex-1 py-2 rounded-xl text-sm font-medium transition-colors ${
+                  pricePeriod === "sale"
+                    ? "bg-[#0d47a1] text-white"
+                    : "text-gray-600 bg-white border border-gray-200 hover:bg-gray-100"
+                }`}
+              >
+                Vente
+              </button>
             </div>
 
             <DateCalendarPicker value={checkIn} onChange={setCheckIn} minDate={todayStr} label="Arrivée" placeholder="Choisir" variant="mobile" />

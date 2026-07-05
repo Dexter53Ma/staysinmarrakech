@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PriceDisplay from "@/components/PriceDisplay";
 import { prisma } from "@/lib/prisma";
 import { Icon, faArrowRight } from "@/components/icons";
 
@@ -93,7 +94,7 @@ export default async function ServicesPage() {
                     </h2>
                     {service.price && (
                       <p className="text-sm text-gray-500 mt-1">
-                        À partir de {service.price} € {service.priceUnit || ""}
+                        À partir de <PriceDisplay price={service.price} currency="EUR" suffix={` ${service.priceUnit || ""}`} />
                       </p>
                     )}
                   </div>

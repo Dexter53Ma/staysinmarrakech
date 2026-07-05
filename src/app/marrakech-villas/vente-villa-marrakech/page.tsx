@@ -5,6 +5,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Image from "next/image";
 import Link from "next/link";
+import { useCurrency } from "@/components/CurrencyContext";
 import {
   Icon,
   faBed,
@@ -62,6 +63,7 @@ const quartierOptions = [
 type SortKey = "newest" | "price-asc" | "price-desc" | "surface";
 
 export default function VenteVillaMarrakech() {
+  const { convert, symbol } = useCurrency();
   const [villas, setVillas] = useState<Villa[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedQuartiers, setSelectedQuartiers] = useState<string[]>([]);
@@ -69,7 +71,7 @@ export default function VenteVillaMarrakech() {
   const [filtersOpen, setFiltersOpen] = useState(false);
 
   useEffect(() => {
-    fetch("/api/properties?status=AVAILABLE&limit=50")
+    fetch("/api/properties?status=AVAILABLE&pricePeriod=sale&limit=50")
       .then((r) => r.json())
       .then((data: { data?: ApiProperty[] }) => {
         setVillas(
@@ -295,7 +297,7 @@ export default function VenteVillaMarrakech() {
                   {/* Price Badge */}
                   <div className="absolute bottom-4 left-4">
                     <div className="bg-white/95 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg">
-                      <span className="text-[#1a3c5e] font-bold text-lg">{villa.price.toLocaleString("fr-FR")} €</span>
+                      <span className="text-[#1a3c5e] font-bold text-lg">{convert(villa.price, "EUR").toLocaleString("fr-FR")} {symbol}</span>
                     </div>
                   </div>
 

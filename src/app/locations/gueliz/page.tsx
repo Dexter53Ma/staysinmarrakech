@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import PriceDisplay from "@/components/PriceDisplay";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
@@ -128,7 +129,7 @@ export default async function GuelizPage() {
                   <div className="p-6">
                     <h3 className="font-bold text-[#34495e]">{p.title}</h3>
                     <p className="text-[#ffb000] font-semibold mt-2">
-                      À partir de {p.price.toLocaleString("fr-FR")} {p.currency === "MAD" ? "DH" : p.currency} / nuit
+                      À partir de <PriceDisplay price={p.price} currency={p.currency} suffix=" / nuit" />
                     </p>
                     <span className="text-[#0d47a1] text-sm mt-2 inline-block">
                       Voir la villa →

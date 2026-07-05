@@ -17,7 +17,8 @@ import Footer from "@/components/Footer";
 import { Calendar as DatePicker } from "@/components/ui/calendar";
 import { fr } from "date-fns/locale";
 import type { PropertyData, Booking, Testimonial, SimilarProperty } from "@/types";
-import { TYPE_LABELS, TYPE_COLORS, STATUS_LABELS, STATUS_COLORS, formatPrice } from "@/types";
+import { TYPE_LABELS, TYPE_COLORS, STATUS_LABELS, STATUS_COLORS } from "@/types";
+import { useCurrency } from "@/components/CurrencyContext";
 import { getFeatureLabel } from "@/lib/features";
 import ImageGallery from "./components/ImageGallery";
 import PropertyFeatures from "./components/PropertyFeatures";
@@ -57,6 +58,7 @@ export default function PropertyDetailClient({
 }: PropertyDetailClientProps) {
   const router = useRouter();
   const { csrfFetch } = useCsrf();
+  const { convert, currency: userCurrency, symbol } = useCurrency();
   const [selectedImage, setSelectedImage] = useState(0);
   const [checkIn, setCheckIn] = useState<Date | undefined>(undefined);
   const [checkOut, setCheckOut] = useState<Date | undefined>(undefined);
@@ -219,7 +221,9 @@ export default function PropertyDetailClient({
               </div>
             )}
 
-            <AvailabilityCalendar bookedDates={bookedDates} isDateBooked={isDateBooked} />
+            {property.pricePeriod !== "sale" && (
+              <AvailabilityCalendar bookedDates={bookedDates} isDateBooked={isDateBooked} />
+            )}
 
             {property.latitude && property.longitude && (
               <PropertyMap latitude={property.latitude} longitude={property.longitude} />
@@ -233,18 +237,36 @@ export default function PropertyDetailClient({
       <Footer />
 
       {/* Sticky Booking Bar */}
-      {property.status === "AVAILABLE" && (
+      {property.status === "AVAILABLE" && property.pricePeriod === "sale" && (
         <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-gray-200 pb-[env(safe-area-inset-bottom)]">
           <div className="max-w-[1200px] mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <div className="flex-1 min-w-0">
               <p className="text-lg font-bold text-gray-900 truncate">
-                {formatPrice(property.price, property.currency)}
+                {convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}
+              </p>
+              <p className="text-xs text-gray-500">Prix de vente</p>
+            </div>
+            <a
+              href={`/contactez-nous?property=${property.slug}`}
+              className="bg-[#0d47a1] text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-[#0a3a82] active:scale-[0.98] transition-all shadow-lg shadow-[#0d47a1]/25 shrink-0"
+            >
+              Contacter
+            </a>
+          </div>
+        </div>
+      )}
+      {property.status === "AVAILABLE" && property.pricePeriod !== "sale" && (
+        <div className="fixed bottom-0 left-0 right-0 z-50 bg-white/95 backdrop-blur-lg border-t border-gray-200 pb-[env(safe-area-inset-bottom)]">
+          <div className="max-w-[1200px] mx-auto px-4 py-3 flex items-center justify-between gap-3">
+            <div className="flex-1 min-w-0">
+              <p className="text-lg font-bold text-gray-900 truncate">
+                {convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}
                 {property.pricePeriod && (
                   <span className="text-sm font-normal text-gray-500">/{property.pricePeriod === "nightly" ? "nuit" : property.pricePeriod === "weekly" ? "semaine" : property.pricePeriod === "monthly" ? "mois" : property.pricePeriod}</span>
                 )}
               </p>
               {nights > 0 ? (
-                <p className="text-xs text-gray-500">{nights} nuit{nights > 1 ? "s" : ""} · Total {formatPrice(pricing.total, property.currency)}</p>
+                <p className="text-xs text-gray-500">{nights} nuit{nights > 1 ? "s" : ""} · Total {convert(pricing.total, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}</p>
               ) : checkIn ? (
                 <p className="text-xs text-gray-500">{checkIn.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })} → {checkOut?.toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) || "?"}</p>
               ) : (
@@ -266,14 +288,14 @@ export default function PropertyDetailClient({
       )}
 
       {/* Booking Slide-Up Panel */}
-      {showBookingPanel && (
+      {showBookingPanel && property.pricePeriod !== "sale" && (
         <div className="fixed inset-0 z-[60] flex items-end sm:items-center justify-center">
           <div className="absolute inset-0 bg-black/50" onClick={() => setShowBookingPanel(false)} />
           <div className="relative w-full sm:max-w-lg sm:mx-4 max-h-[90vh] bg-white sm:rounded-2xl rounded-t-3xl overflow-hidden animate-fadeIn flex flex-col">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
               <div>
                 <h3 className="font-bold text-gray-900">Réserver {property.title}</h3>
-                <p className="text-sm text-gray-500">{formatPrice(property.price, property.currency)}{property.pricePeriod && `/${property.pricePeriod === "nightly" ? "nuit" : property.pricePeriod}`}</p>
+                <p className="text-sm text-gray-500">{convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}{property.pricePeriod && `/${property.pricePeriod === "nightly" ? "nuit" : property.pricePeriod}`}</p>
               </div>
               <button onClick={() => setShowBookingPanel(false)} className="size-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
                 <span className="text-xl leading-none">×</span>
@@ -398,11 +420,11 @@ export default function PropertyDetailClient({
                       </div>
                     </div>
                     <div className="space-y-2.5 text-sm">
-                      <div className="flex justify-between text-gray-600"><span>{formatPrice(pricing.nightlyRate, property.currency)} × {nights}{nights > 1 ? ` nuits` : ` nuit`}</span><span className="font-medium text-gray-900">{formatPrice(pricing.subtotal, property.currency)}</span></div>
-                      {pricing.cleaning > 0 && <div className="flex justify-between text-gray-600"><span>Frais de ménage</span><span className="font-medium text-gray-900">{formatPrice(pricing.cleaning, property.currency)}</span></div>}
-                      {pricing.service > 0 && <div className="flex justify-between text-gray-600"><span>Frais de service</span><span className="font-medium text-gray-900">{formatPrice(pricing.service, property.currency)}</span></div>}
+                      <div className="flex justify-between text-gray-600"><span>{convert(pricing.nightlyRate, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol} × {nights}{nights > 1 ? ` nuits` : ` nuit`}</span><span className="font-medium text-gray-900">{convert(pricing.subtotal, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}</span></div>
+                      {pricing.cleaning > 0 && <div className="flex justify-between text-gray-600"><span>Frais de ménage</span><span className="font-medium text-gray-900">{convert(pricing.cleaning, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}</span></div>}
+                      {pricing.service > 0 && <div className="flex justify-between text-gray-600"><span>Frais de service</span><span className="font-medium text-gray-900">{convert(pricing.service, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}</span></div>}
                       <div className="h-px bg-gray-200" />
-                      <div className="flex justify-between font-bold text-gray-900 text-base pt-0.5"><span>Total</span><span>{formatPrice(pricing.total, property.currency)}</span></div>
+                      <div className="flex justify-between font-bold text-gray-900 text-base pt-0.5"><span>Total</span><span>{convert(pricing.total, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}</span></div>
                     </div>
                     <div className="flex gap-2">
                       <button type="button" onClick={() => setBookingStep(2)} className="px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">Retour</button>

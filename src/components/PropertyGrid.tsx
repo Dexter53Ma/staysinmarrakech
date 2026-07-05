@@ -3,7 +3,8 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, BedDouble, Bath, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
-import { PropertyListItem, TYPE_LABELS, TYPE_COLORS, STATUS_LABELS, formatPrice } from "@/types";
+import { PropertyListItem, TYPE_LABELS, TYPE_COLORS, STATUS_LABELS } from "@/types";
+import { useCurrency } from "@/components/CurrencyContext";
 
 interface PropertyGridProps {
   properties: PropertyListItem[];
@@ -20,6 +21,7 @@ export default function PropertyGrid({
   totalPages,
   onPageChange,
 }: PropertyGridProps) {
+  const { convert, currency, symbol } = useCurrency();
   if (properties.length === 0) {
     return (
       <div className="text-center py-20">
@@ -103,7 +105,7 @@ export default function PropertyGrid({
 
               <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
                 <span className="text-lg font-bold text-[#0d47a1]">
-                  {formatPrice(property.price, property.currency)}
+                  {convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}
                 </span>
                 {property.pricePeriod && (
                   <span className="text-xs text-gray-400">
