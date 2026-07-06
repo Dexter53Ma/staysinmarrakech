@@ -1,5 +1,6 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useSettings } from "@/components/SettingsContext";
 import { useServices } from "@/components/ServicesContext";
 import {
@@ -10,27 +11,29 @@ import {
   faLinkedinIn,
 } from "@/components/icons";
 
-const villaLinks = [
-  { label: "Location villa Marrakech", href: "/marrakech-villas/location-villa-marrakech" },
-  { label: "Vente villa Marrakech", href: "/marrakech-villas/vente-villa-marrakech" },
-  { label: "Villas de luxe", href: "/marrakech-villas/villa-de-luxe" },
-  { label: "Villas d'exception", href: "/marrakech-villas/villa-exception" },
-  { label: "Location courte durée", href: "/marrakech-villas/location-villa-marrakech" },
-  { label: "Location longue durée", href: "/marrakech-villas/location-villa-marrakech" },
-];
-
-const usefulLinks = [
-  { label: "Mentions légales", href: "/mentions-legales" },
-  { label: "Politique de confidentialité", href: "/politique-de-confidentialite" },
-  { label: "Location villa luxe Gueliz", href: "/marrakech-villas/location-villa-marrakech" },
-  { label: "Location villa luxe Palmeraie", href: "/marrakech-villas/location-villa-marrakech" },
-  { label: "Location villa luxe Route de l'Ourika", href: "/marrakech-villas/location-villa-marrakech" },
-  { label: "Location villa luxe Amelkis", href: "/marrakech-villas/location-villa-marrakech" },
-];
-
 export default function Footer() {
+  const t = useTranslations("navigation");
+  const tCommon = useTranslations("common");
   const settings = useSettings();
   const { services } = useServices();
+
+  const villaLinks = [
+    { label: t("location") + " villa Marrakech", href: "/marrakech-villas/location-villa-marrakech" },
+    { label: t("vente") + " villa Marrakech", href: "/marrakech-villas/vente-villa-marrakech" },
+    { label: "Villas de luxe", href: "/marrakech-villas/villa-de-luxe" },
+    { label: "Villas d'exception", href: "/marrakech-villas/villa-exception" },
+    { label: t("location") + " courte durée", href: "/marrakech-villas/location-villa-marrakech" },
+    { label: t("location") + " longue durée", href: "/marrakech-villas/location-villa-marrakech" },
+  ];
+
+  const usefulLinks = [
+    { label: tCommon("legal") || "Mentions légales", href: "/mentions-legales" },
+    { label: tCommon("legal") || "Politique de confidentialité", href: "/politique-de-confidentialite" },
+    { label: "Location villa luxe Gueliz", href: "/marrakech-villas/location-villa-marrakech" },
+    { label: "Location villa luxe Palmeraie", href: "/marrakech-villas/location-villa-marrakech" },
+    { label: "Location villa luxe Route de l'Ourika", href: "/marrakech-villas/location-villa-marrakech" },
+    { label: "Location villa luxe Amelkis", href: "/marrakech-villas/location-villa-marrakech" },
+  ];
 
   const contactLinks = [
     { label: settings.address || "Residence Farah, Camp Mangin, Gueliz, 40000 Marrakech", href: "" },
@@ -52,11 +55,11 @@ export default function Footer() {
   ];
 
   const columns = [
-    { title: "Location & vente villas", links: villaLinks },
-    { title: "Liens utiles", links: usefulLinks },
-    { title: "Services & activités", links: serviceLinks },
-    { title: "À propos", links: [], description: settings.site_description || "StaysInMarrakech est une société spécialisée dans la location de villas de luxe et de prestige à Marrakech." },
-    { title: "Contact", links: contactLinks },
+    { title: t("location") + " & " + t("vente") + " villas", links: villaLinks },
+    { title: t("usefulLinks"), links: usefulLinks },
+    { title: t("services") + " & activités", links: serviceLinks },
+    { title: t("about"), links: [], description: settings.site_description || "StaysInMarrakech est une société spécialisée dans la location de villas de luxe et de prestige à Marrakech." },
+    { title: t("contact"), links: contactLinks },
   ];
 
   return (
@@ -100,7 +103,7 @@ export default function Footer() {
       </div>
 
       <h4 className="text-base font-semibold text-gray-300 mt-5 mb-2 max-w-[1140px] mx-auto">
-        Suivez-nous
+        {t("followUs")}
       </h4>
       <div className="flex gap-3.5 mt-2 max-w-[1140px] mx-auto">
         {socialLinks.map((social) => (
@@ -118,7 +121,7 @@ export default function Footer() {
       </div>
 
       <div className="text-center mt-7 pt-5 border-t border-white/20 max-w-[1140px] mx-auto text-sm text-gray-300">
-        &copy; {new Date().getFullYear()} StaysInMarrakech. Tous droits réservés.
+        &copy; {new Date().getFullYear()} StaysInMarrakech. {t("allRightsReserved")}.
       </div>
     </footer>
   );
