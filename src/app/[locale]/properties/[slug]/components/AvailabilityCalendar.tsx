@@ -2,6 +2,8 @@
 
 import { useMemo, useState } from "react";
 import { Calendar as DatePicker } from "@/components/ui/calendar";
+import { useTranslations, useLocale } from "next-intl";
+import { enUS } from "date-fns/locale";
 import { fr } from "date-fns/locale";
 import { CalendarDays, Lock, CheckCircle2 } from "lucide-react";
 
@@ -17,6 +19,9 @@ interface AvailabilityCalendarProps {
 
 export default function AvailabilityCalendar({ bookedDates, isDateBooked }: AvailabilityCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
+  const t = useTranslations("properties");
+  const locale = useLocale();
+  const dateFnsLocale = locale === "en" ? enUS : fr;
 
   const selectedDates = useMemo(() => {
     return bookedDates.flatMap((b) => {
@@ -51,14 +56,14 @@ export default function AvailabilityCalendar({ bookedDates, isDateBooked }: Avai
               <CalendarDays className="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 className="text-lg font-bold text-gray-900">Disponibilité</h2>
-              <p className="text-xs text-gray-400 mt-0.5">Calendrier en temps réel</p>
+              <h2 className="text-lg font-bold text-gray-900">{t("availability")}</h2>
+              <p className="text-xs text-gray-400 mt-0.5">{t("liveCalendar")}</p>
             </div>
           </div>
           {bookedCount > 0 && (
             <div className="flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-amber-50 border border-amber-200/60 text-amber-700 text-xs font-medium">
               <Lock className="w-3 h-3" />
-              {bookedCount} jour{bookedCount > 1 ? "s" : ""} réservé{bookedCount > 1 ? "s" : ""}
+              {bookedCount} {t("daysReserved")}
             </div>
           )}
         </div>
@@ -71,7 +76,7 @@ export default function AvailabilityCalendar({ bookedDates, isDateBooked }: Avai
                   mode="multiple"
                   selected={selectedDates}
                   disabled={(date) => isDateBooked(date)}
-                  locale={fr}
+                  locale={dateFnsLocale}
                   onMonthChange={(month) => setCurrentMonth(month)}
                   classNames={{
                     root: "w-full",
@@ -135,10 +140,10 @@ export default function AvailabilityCalendar({ bookedDates, isDateBooked }: Avai
                 <div className="w-7 h-7 rounded-lg bg-green-500/10 flex items-center justify-center">
                   <CheckCircle2 className="w-4 h-4 text-green-600" />
                 </div>
-                <span className="text-xs font-medium text-green-700">Disponible</span>
+                <span className="text-xs font-medium text-green-700">{t("available")}</span>
               </div>
               <p className="text-2xl font-bold text-green-800">{availableCount}</p>
-              <p className="text-[0.65rem] text-green-500 mt-0.5">jours ce mois</p>
+              <p className="text-[0.65rem] text-green-500 mt-0.5">{t("daysThisMonth")}</p>
             </div>
             {bookedCount > 0 && (
               <div className="flex-1 sm:flex-none bg-gradient-to-br from-red-50 to-rose-50/50 rounded-xl p-4 border border-red-200/40 transition-all duration-300 hover:shadow-sm">
@@ -146,27 +151,27 @@ export default function AvailabilityCalendar({ bookedDates, isDateBooked }: Avai
                   <div className="w-7 h-7 rounded-lg bg-red-500/10 flex items-center justify-center">
                     <Lock className="w-4 h-4 text-red-500" />
                   </div>
-                  <span className="text-xs font-medium text-red-600">Réservé</span>
+                  <span className="text-xs font-medium text-red-600">{t("reserved")}</span>
                 </div>
                 <p className="text-2xl font-bold text-red-700">{bookedCount}</p>
-                <p className="text-[0.65rem] text-red-400 mt-0.5">jours bloqués</p>
+                <p className="text-[0.65rem] text-red-400 mt-0.5">{t("daysBlocked")}</p>
               </div>
             )}
 
             <div className="flex-1 sm:flex-none bg-gray-50 rounded-xl p-4 border border-gray-100">
-              <p className="text-[0.65rem] font-medium text-gray-400 uppercase tracking-wider mb-2">Légende</p>
+              <p className="text-[0.65rem] font-medium text-gray-400 uppercase tracking-wider mb-2">{t("legend")}</p>
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-md bg-[#0d47a1] shadow-sm shadow-[#0d47a1]/20" />
-                  <span className="text-xs text-gray-600">Aujourd&apos;hui</span>
+                  <span className="text-xs text-gray-600">{t("today")}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-md bg-gradient-to-br from-red-50 to-red-100 border border-red-200/50" />
-                  <span className="text-xs text-gray-600">Réservé</span>
+                  <span className="text-xs text-gray-600">{t("reserved")}</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="w-3 h-3 rounded-md bg-white border border-gray-200" />
-                  <span className="text-xs text-gray-600">Disponible</span>
+                  <span className="text-xs text-gray-600">{t("available")}</span>
                 </div>
               </div>
             </div>

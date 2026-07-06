@@ -1,6 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { notFound } from "next/navigation";
 import type { Metadata } from "next";
+import { getTranslations } from "next-intl/server";
 import PropertyDetailClient from "./PropertyDetailClient";
 
 export const dynamic = "force-dynamic";
@@ -10,14 +11,15 @@ const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://staysinmarrakech.n
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ slug: string; locale: string }>;
 }): Promise<Metadata> {
-  const { slug } = await params;
+  const { slug, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "properties" });
   const property = await prisma.property.findUnique({ where: { slug } });
   if (!property) return {};
   return {
-    title: `${property.title} — Location de villa à Marrakech`,
-    description: property.description?.slice(0, 160) || `Découvrez ${property.title}, une villa de luxe à Marrakech avec ${property.bedrooms} chambres.`,
+    title: `${property.title} — ${t("title")}`,
+    description: property.description?.slice(0, 160) || `${t("subtitle")} ${property.title}`,
     openGraph: {
       title: `${property.title} | StaysInMarrakech`,
       description: property.description?.slice(0, 200) || "",

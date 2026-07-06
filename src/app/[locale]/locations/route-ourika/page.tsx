@@ -3,22 +3,28 @@ import Link from "next/link";
 import Image from "next/image";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: "Location villa Route de l'Ourika Marrakech | StaysInMarrakech",
-  description:
-    "Louez une villa de luxe sur la route de l'Ourika. Panoramas sur l'Atlas, calme absolu et nature préservée à 20 minutes de Marrakech.",
-  openGraph: {
-    title: "Location villa Route de l'Ourika Marrakech | StaysInMarrakech",
-    description:
-      "Villas de luxe avec vue Atlas sur la route de l'Ourika. Nature, calme et panoramas exceptionnels.",
-  },
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "locations.routeOurika" });
+  return {
+    title: t("title"),
+    description: t("subtitle"),
+    openGraph: {
+      title: t("title"),
+      description: t("subtitle"),
+    },
+  };
+}
 
-export default async function RouteOurikaPage() {
+export default async function RouteOurikaPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "locations.routeOurika" });
+
   const properties = await prisma.property.findMany({
     where: {
       OR: [
@@ -36,108 +42,59 @@ export default async function RouteOurikaPage() {
       <main className="flex-1">
         <section className="bg-[#0d47a1] text-white py-16 px-4">
           <div className="max-w-[1140px] mx-auto">
-            <h1 className="text-3xl md:text-4xl font-bold mb-4">
-              Location de villa sur la Route de l&apos;Ourika
-            </h1>
-            <p className="text-lg text-white/90 max-w-2xl">
-              La route de l&apos;Ourika est l&apos;une des routes les plus pittoresques du Maroc. Panoramas sur le Haut Atlas, villages berbères et nature préservée à 20 minutes de Marrakech.
-            </p>
+            <h1 className="text-3xl md:text-4xl font-bold mb-4">{t("title")}</h1>
+            <p className="text-lg text-white/90 max-w-2xl">{t("subtitle")}</p>
           </div>
         </section>
 
         <section className="max-w-[1140px] mx-auto px-4 py-12">
-          <h2 className="text-2xl font-bold text-[#34495e] mb-6">
-            Pourquoi choisir la Route de l&apos;Ourika ?
-          </h2>
+          <h2 className="text-2xl font-bold text-[#34495e] mb-6">{t("whyChoose")}</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
             <div className="space-y-4 text-gray-600 leading-relaxed">
-              <p>
-                La route de l&apos;Ourika s&apos;étire sur 30 kilomètres depuis Marrakech jusqu&apos;au cœur du Haut Atlas. C&apos;est une destination prisée pour ses paysages grandioses, ses cascades et ses villages berbères traditionnels.
-              </p>
-              <p>
-                Les villas de cette zone offrent des vues spectaculaires sur les montagnes de l&apos;Atlas, un calme absolu et une connexion directe avec la nature. C&apos;est le choix idéal pour les voyageurs en quête d&apos;authenticité et de sérénité.
-              </p>
+              <p>{t("description1")}</p>
+              <p>{t("description2")}</p>
               <ul className="space-y-2">
-                <li className="flex items-start gap-2">
-                  <span className="text-[#ffb000] mt-1">●</span>
-                  <span>Panoramas exceptionnels sur le Haut Atlas</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#ffb000] mt-1">●</span>
-                  <span>Calme absolu et nature préservée</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#ffb000] mt-1">●</span>
-                  <span>Villages berbères et cascades à découvrir</span>
-                </li>
-                <li className="flex items-start gap-2">
-                  <span className="text-[#ffb000] mt-1">●</span>
-                  <span>20-30 minutes du centre de Marrakech</span>
-                </li>
+                {t.raw("bullets").map((bullet: string, i: number) => (
+                  <li key={i} className="flex items-start gap-2">
+                    <span className="text-[#ffb000] mt-1">●</span>
+                    <span>{bullet}</span>
+                  </li>
+                ))}
               </ul>
             </div>
             <div className="bg-gray-50 rounded-2xl p-8">
-              <h3 className="text-lg font-bold text-[#34495e] mb-4">Activités à proximité</h3>
+              <h3 className="text-lg font-bold text-[#34495e] mb-4">{t("nearbyTitle")}</h3>
               <ul className="space-y-3 text-gray-600 text-sm">
-                <li className="flex items-start gap-3">
-                  <span className="text-[#ffb000] font-bold">🏔️</span>
-                  <span>Randonnées dans le Haut Atlas</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-[#ffb000] font-bold">💧</span>
-                  <span>Cascades d&apos;Ourika (Setti Fatma)</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-[#ffb000] font-bold">🏡</span>
-                  <span>Villages berbères traditionnels</span>
-                </li>
-                <li className="flex items-start gap-3">
-                  <span className="text-[#ffb000] font-bold">🫖</span>
-                  <span>Visite de souk et marchés locaux</span>
-                </li>
+                {t.raw("nearbyItems").map((item: string, i: number) => (
+                  <li key={i} className="flex items-start gap-3">
+                    <span className="text-[#ffb000] font-bold">●</span>
+                    <span>{item}</span>
+                  </li>
+                ))}
               </ul>
             </div>
           </div>
 
-          <h2 className="text-2xl font-bold text-[#34495e] mb-6">
-            Nos villas sur la Route de l&apos;Ourika
-          </h2>
+          <h2 className="text-2xl font-bold text-[#34495e] mb-6">{t("villasTitle")}</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mb-12">
             {properties.length === 0 ? (
-              <p className="text-gray-500 col-span-full text-center py-8">
-                Aucune villa disponible sur la Route de l&apos;Ourika pour le moment.
-              </p>
+              <p className="text-gray-500 col-span-full text-center py-8">{t("noVilla")}</p>
             ) : (
               properties.map((p) => (
-                <Link
-                  key={p.slug}
-                  href={`/properties/${p.slug}`}
-                  className="block bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow"
-                >
+                <Link key={p.slug} href={`/properties/${p.slug}`} className="block bg-white border border-gray-200 rounded-xl overflow-hidden hover:shadow-lg transition-shadow">
                   {p.images[0] ? (
                     <div className="relative h-48">
-                       <Image
-                         src={p.images[0].url}
-                         alt={p.images[0].alt || p.title}
-                         fill
-                         unoptimized={p.images[0].url.startsWith("http")}
-                         className="object-cover"
-                         sizes="(max-width: 640px) 100vw, 50vw"
-                      />
+                      <Image src={p.images[0].url} alt={p.images[0].alt || p.title} fill unoptimized={p.images[0].url.startsWith("http")} className="object-cover" sizes="(max-width: 640px) 100vw, 50vw" />
                     </div>
                   ) : (
-                    <div className="h-48 bg-gray-100 flex items-center justify-center text-gray-400">
-                      Aucune image
-                    </div>
+                    <div className="h-48 bg-gray-100 flex items-center justify-center text-gray-400">No image</div>
                   )}
                   <div className="p-6">
                     <h3 className="font-bold text-[#34495e]">{p.title}</h3>
                     <p className="text-[#ffb000] font-semibold mt-2">
-                      À partir de {p.price.toLocaleString("fr-FR")} {p.currency === "MAD" ? "DH" : p.currency} / nuit
+                      {p.price.toLocaleString()} {p.currency === "MAD" ? "DH" : p.currency} / night
                     </p>
-                    <span className="text-[#0d47a1] text-sm mt-2 inline-block">
-                      Voir la villa →
-                    </span>
+                    <span className="text-[#0d47a1] text-sm mt-2 inline-block">{t("seeVilla")} →</span>
                   </div>
                 </Link>
               ))
@@ -145,23 +102,12 @@ export default async function RouteOurikaPage() {
           </div>
 
           <div className="bg-[#f8f9fa] rounded-2xl p-8">
-            <h2 className="text-2xl font-bold text-[#34495e] mb-4">
-              FAQ — Route de l&apos;Ourika
-            </h2>
+            <h2 className="text-2xl font-bold text-[#34495e] mb-4">{t("faqTitle")}</h2>
             <div className="space-y-4">
               {[
-                {
-                  q: "Faut-il une voiture pour se déplacer ?",
-                  a: "Oui, une voiture est recommandée pour profiter pleinement de la zone. Notre conciergerie peut organiser un véhicule avec chauffeur ou une location.",
-                },
-                {
-                  q: "Les villas ont-elles une vue sur l'Atlas ?",
-                  a: "Oui, la plupart de nos villas de la route de l'Ourika offrent des vues spectaculaires sur les montagnes du Haut Atlas, parfois avec couchers de soleil inoubliables.",
-                },
-                {
-                  q: "Peut-on faire des randonnées depuis la villa ?",
-                  a: "Absolument. La route de l'Ourika est le point de départ de nombreuses randonnées, des balades douces aux treks plus ambitieux dans le Haut Atlas.",
-                },
+                { q: t("faq.q1"), a: t("faq.a1") },
+                { q: t("faq.q2"), a: t("faq.a2") },
+                { q: t("faq.q3"), a: t("faq.a3") },
               ].map((faq) => (
                 <div key={faq.q} className="bg-white rounded-xl p-5">
                   <h3 className="font-semibold text-[#34495e] mb-2">{faq.q}</h3>

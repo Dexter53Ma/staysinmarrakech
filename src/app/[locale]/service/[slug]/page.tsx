@@ -4,6 +4,7 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PriceDisplay from "@/components/PriceDisplay";
+import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { Icon, faArrowRight, faPhone } from "@/components/icons";
 import { sanitizeHTML } from "@/lib/sanitize";
@@ -12,26 +13,26 @@ export const dynamic = "force-dynamic";
 
 const BASE_URL = "https://staysinmarrakech.netlify.app";
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export async function generateMetadata({ params }: { params: Promise<{ slug: string; locale: string }> }) {
+  const { slug, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "services" });
   const service = await prisma.service.findUnique({
     where: { slug, isActive: true },
     select: { title: true, description: true, metaDescription: true, image: true, category: true },
   });
-  if (!service) return { title: "Service introuvable" };
+  if (!service) return { title: t("notFound") };
 
   const metaDesc = service.metaDescription || (service.description.length > 160
     ? service.description.substring(0, 157) + "..."
     : service.description);
 
   return {
-    title: `${service.title} — StaysInMarrakech | ${service.category || "Service à Marrakech"}`,
+    title: `${service.title} — StaysInMarrakech | ${service.category || t("serviceInMarrakech")}`,
     description: metaDesc,
     openGraph: {
       title: `${service.title} | StaysInMarrakech`,
       description: metaDesc,
       type: "website",
-      locale: "fr_MA",
       url: `${BASE_URL}/service/${slug}`,
       images: service.image ? [{ url: `${BASE_URL}${service.image}`, width: 1200, height: 630, alt: service.title }] : [],
     },
@@ -52,8 +53,9 @@ function parseFeatures(features: string | null): string[] {
   try { return JSON.parse(features); } catch { return []; }
 }
 
-export default async function ServiceDetailPage({ params }: { params: Promise<{ slug: string }> }) {
-  const { slug } = await params;
+export default async function ServiceDetailPage({ params }: { params: Promise<{ slug: string; locale: string }> }) {
+  const { slug, locale } = await params;
+  const t = await getTranslations({ locale, namespace: "services" });
 
   const service = await prisma.service.findUnique({
     where: { slug, isActive: true },
@@ -105,7 +107,6 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
       price: service.price,
       priceCurrency: "EUR",
     } : undefined,
-    inLanguage: "fr",
   };
 
   return (
@@ -122,9 +123,9 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
           <div className="absolute inset-0 flex items-end">
             <div className="max-w-[1140px] mx-auto w-full px-4 pb-10 md:pb-14">
               <nav className="flex items-center gap-2 text-sm text-white/60 mb-4">
-                <Link href="/" className="hover:text-white transition-colors">Accueil</Link>
+                <Link href="/" className="hover:text-white transition-colors">{t("location")}</Link>
                 <span>/</span>
-                <Link href="/service" className="hover:text-white transition-colors">Services</Link>
+                <Link href="/service" className="hover:text-white transition-colors">{t("location")}</Link>
                 <span>/</span>
                 <span className="text-white">{service.title}</span>
               </nav>
@@ -136,7 +137,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               <h1 className="text-white text-3xl md:text-4xl lg:text-5xl font-bold leading-tight">{service.title}</h1>
               {service.price && (
                 <p className="text-white/80 text-lg mt-3">
-                  À partir de <span className="text-[#ffb000] font-bold"><PriceDisplay price={service.price} currency="EUR" /></span> {service.priceUnit || ""}
+                  <span className="text-[#ffb000] font-bold"><PriceDisplay price={service.price} currency="EUR" /></span> {service.priceUnit || ""}
                 </p>
               )}
             </div>
@@ -165,7 +166,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
               {/* Features */}
               {featureList.length > 0 && (
                 <div className="mt-10 bg-gray-50 rounded-2xl p-6 md:p-8">
-                  <h2 className="text-xl font-bold text-[#0d47a1] mb-4">Ce qui est inclus</h2>
+                  <h2 className="text-xl font-bold text-[#0d47a1] mb-4">{t("whatsIncluded")}</h2>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                     {featureList.map((f, i) => (
                       <div key={i} className="flex items-start gap-2">
@@ -181,18 +182,18 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
 
               {/* CTA */}
               <div className="bg-[#0d47a1]/5 border border-[#0d47a1]/10 rounded-2xl p-6 md:p-8 mt-10">
-                <h3 className="text-xl font-bold text-[#0d47a1] mb-3">Intéressé par ce service ?</h3>
+                <h3 className="text-xl font-bold text-[#0d47a1] mb-3">{t("interested")}</h3>
                 <p className="text-gray-600 mb-5">
-                  Contactez-nous pour un devis personnalisé ou pour réserver ce service. Notre équipe vous répond dans les plus brefs délais.
+                  {t("contactUs")}
                 </p>
                 <div className="flex flex-wrap gap-3">
                   <Link href="/contactez-nous" className="inline-flex items-center gap-2 bg-[#0d47a1] hover:bg-[#0a3a82] text-white font-bold py-3 px-6 rounded-xl transition-all text-sm">
-                    Demander un devis
+                    {t("requestQuote")}
                     <Icon icon={faArrowRight} className="text-xs" />
                   </Link>
                   <a href="tel:+212621189496" className="inline-flex items-center gap-2 bg-white border border-gray-200 hover:border-[#0d47a1] text-[#0d47a1] font-bold py-3 px-6 rounded-xl transition-all text-sm">
                     <Icon icon={faPhone} className="text-xs" />
-                    Appelez-nous
+                    {t("callUs")}
                   </a>
                 </div>
               </div>
@@ -202,7 +203,7 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
             <aside className="lg:w-[320px] shrink-0">
               <div className="sticky top-24 space-y-6">
                 <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                  <h3 className="text-lg font-bold text-[#0d47a1] mb-4">Résumé</h3>
+                  <h3 className="text-lg font-bold text-[#0d47a1] mb-4">{t("summary")}</h3>
                   <div className="space-y-3">
                     {service.category && (
                       <div className="flex items-center gap-3 text-sm">
@@ -213,19 +214,19 @@ export default async function ServiceDetailPage({ params }: { params: Promise<{ 
                     {service.price && (
                       <div className="flex items-center gap-3 text-sm">
                         <span className="w-8 h-8 rounded-lg bg-[#0d47a1]/10 flex items-center justify-center text-xs shrink-0">💰</span>
-                        <span className="text-gray-600">À partir de <PriceDisplay price={service.price} currency="EUR" suffix={` ${service.priceUnit || ""}`} /></span>
+                        <span className="text-gray-600"><PriceDisplay price={service.price} currency="EUR" suffix={` ${service.priceUnit || ""}`} /></span>
                       </div>
                     )}
                     <div className="flex items-center gap-3 text-sm">
                       <span className="w-8 h-8 rounded-lg bg-[#0d47a1]/10 flex items-center justify-center text-xs shrink-0">📍</span>
-                      <span className="text-gray-600">Marrakech, Maroc</span>
+                      <span className="text-gray-600">{t("location")}</span>
                     </div>
                   </div>
                 </div>
 
                 {relatedServices.length > 0 && (
                   <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-6">
-                    <h3 className="text-lg font-bold text-[#0d47a1] mb-4">Autres services</h3>
+                    <h3 className="text-lg font-bold text-[#0d47a1] mb-4">{t("otherServices")}</h3>
                     <div className="space-y-3">
                       {relatedServices.map((rs) => (
                         <Link key={rs.slug} href={`/service/${rs.slug}`} className="flex items-center gap-3 group">

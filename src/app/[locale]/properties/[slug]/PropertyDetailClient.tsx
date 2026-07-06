@@ -12,10 +12,12 @@ import {
   ArrowLeft,
   Eye,
 } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Calendar as DatePicker } from "@/components/ui/calendar";
 import { fr } from "date-fns/locale";
+import { enUS } from "date-fns/locale";
 import type { PropertyData, Booking, Testimonial, SimilarProperty } from "@/types";
 import { TYPE_LABELS, TYPE_COLORS, STATUS_LABELS, STATUS_COLORS } from "@/types";
 import { useCurrency } from "@/components/CurrencyContext";
@@ -59,6 +61,10 @@ export default function PropertyDetailClient({
   const router = useRouter();
   const { csrfFetch } = useCsrf();
   const { convert, currency: userCurrency, symbol } = useCurrency();
+  const t = useTranslations("properties");
+  const locale = useLocale();
+  const localeStr = locale === "en" ? "en-US" : "fr-FR";
+  const dateFnsLocale = locale === "en" ? enUS : fr;
   const [selectedImage, setSelectedImage] = useState(0);
   const [checkIn, setCheckIn] = useState<Date | undefined>(undefined);
   const [checkOut, setCheckOut] = useState<Date | undefined>(undefined);
@@ -126,7 +132,7 @@ export default function PropertyDetailClient({
   const handleSubmitBooking = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!checkIn || !checkOut) {
-      setSubmitMessage({ type: "error", text: "Veuillez sélectionner vos dates d'arrivée et de départ" });
+      setSubmitMessage({ type: "error", text: t("selectDatesError") });
       return;
     }
     setSubmitting(true);
@@ -147,7 +153,7 @@ export default function PropertyDetailClient({
         }),
       });
       if (res.ok) {
-        setSubmitMessage({ type: "success", text: "Demande envoyée avec succès ! Nous vous contacterons bientôt." });
+        setSubmitMessage({ type: "success", text: t("sendSuccess") });
         setFormData({ guestName: "", guestEmail: "", guestPhone: "", message: "" });
         setCheckIn(undefined);
         setCheckOut(undefined);
@@ -156,10 +162,10 @@ export default function PropertyDetailClient({
         setShowRangeCalendar(true);
       } else {
         const data = await res.json();
-        setSubmitMessage({ type: "error", text: data.error || "Erreur lors de l'envoi" });
+        setSubmitMessage({ type: "error", text: data.error || t("sendError") });
       }
     } catch {
-      setSubmitMessage({ type: "error", text: "Erreur réseau. Veuillez réessayer." });
+      setSubmitMessage({ type: "error", text: t("sendError") });
     } finally {
       setSubmitting(false);
     }
@@ -175,7 +181,7 @@ export default function PropertyDetailClient({
             className="flex items-center gap-2 text-gray-600 hover:text-[#0d47a1] transition-colors mb-6 text-sm"
           >
             <ArrowLeft className="size-4" />
-            Retour
+            {t("back")}
           </button>
 
           <div className="space-y-8">
@@ -196,7 +202,7 @@ export default function PropertyDetailClient({
                 </span>
                 <span className="flex items-center gap-1">
                   <Eye className="size-4" />
-                  {viewCount} vues
+                  {viewCount} {t("views")}
                 </span>
               </div>
             </div>
@@ -204,7 +210,7 @@ export default function PropertyDetailClient({
             <ImageGallery images={property.images} selectedIndex={selectedImage} onSelect={setSelectedImage} title={property.title} />
 
             <div className="prose prose-gray max-w-none">
-              <h2 className="text-xl font-bold text-gray-900 mb-3">Description</h2>
+              <h2 className="text-xl font-bold text-gray-900 mb-3">{t("description")}</h2>
               <p className="text-gray-600 leading-relaxed whitespace-pre-line">{property.description}</p>
             </div>
 
@@ -212,7 +218,7 @@ export default function PropertyDetailClient({
 
             {features.length > 0 && (
               <div>
-                <h2 className="text-xl font-bold text-gray-900 mb-4">Équipements</h2>
+                <h2 className="text-xl font-bold text-gray-900 mb-4">{t("amenitiesTitle")}</h2>
                 <div className="flex flex-wrap gap-2">
                   {features.map((f) => (
                     <span key={f} className="bg-blue-50 text-blue-800 text-sm px-3 py-1.5 rounded-full">{getFeatureLabel(f)}</span>
@@ -242,15 +248,15 @@ export default function PropertyDetailClient({
           <div className="max-w-[1200px] mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <div className="flex-1 min-w-0">
               <p className="text-lg font-bold text-gray-900 truncate">
-                {convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}
+                {convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}
               </p>
-              <p className="text-xs text-gray-500">Prix de vente</p>
+              <p className="text-xs text-gray-500">{t("salePrice")}</p>
             </div>
             <a
               href={`/contactez-nous?property=${property.slug}`}
               className="bg-[#0d47a1] text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-[#0a3a82] active:scale-[0.98] transition-all shadow-lg shadow-[#0d47a1]/25 shrink-0"
             >
-              Contacter
+              {t("contact")}
             </a>
           </div>
         </div>
@@ -260,17 +266,17 @@ export default function PropertyDetailClient({
           <div className="max-w-[1200px] mx-auto px-4 py-3 flex items-center justify-between gap-3">
             <div className="flex-1 min-w-0">
               <p className="text-lg font-bold text-gray-900 truncate">
-                {convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}
+                {convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}
                 {property.pricePeriod && (
-                  <span className="text-sm font-normal text-gray-500">/{property.pricePeriod === "nightly" ? "nuit" : property.pricePeriod === "weekly" ? "semaine" : property.pricePeriod === "monthly" ? "mois" : property.pricePeriod}</span>
+                  <span className="text-sm font-normal text-gray-500">/{property.pricePeriod === "nightly" ? t("nights") : property.pricePeriod === "weekly" ? "semaine" : property.pricePeriod === "monthly" ? "mois" : property.pricePeriod}</span>
                 )}
               </p>
               {nights > 0 ? (
-                <p className="text-xs text-gray-500">{nights} nuit{nights > 1 ? "s" : ""} · Total {convert(pricing.total, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}</p>
+                <p className="text-xs text-gray-500">{nights} {t("nights")} · {t("total")} {convert(pricing.total, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</p>
               ) : checkIn ? (
-                <p className="text-xs text-gray-500">{checkIn.toLocaleDateString("fr-FR", { day: "numeric", month: "short" })} → {checkOut?.toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) || "?"}</p>
+                <p className="text-xs text-gray-500">{checkIn.toLocaleDateString(localeStr, { day: "numeric", month: "short" })} → {checkOut?.toLocaleDateString(localeStr, { day: "numeric", month: "short" }) || "?"}</p>
               ) : (
-                <p className="text-xs text-gray-400">Sélectionnez vos dates</p>
+                <p className="text-xs text-gray-400">{t("selectDates")}</p>
               )}
             </div>
             <button
@@ -281,7 +287,7 @@ export default function PropertyDetailClient({
               }}
               className="bg-[#0d47a1] text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-[#0a3a82] active:scale-[0.98] transition-all shadow-lg shadow-[#0d47a1]/25 shrink-0"
             >
-              Réserver
+              {t("bookingBtn")}
             </button>
           </div>
         </div>
@@ -294,8 +300,8 @@ export default function PropertyDetailClient({
           <div className="relative w-full sm:max-w-lg sm:mx-4 max-h-[90vh] bg-white sm:rounded-2xl rounded-t-3xl overflow-hidden animate-fadeIn flex flex-col">
             <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100 shrink-0">
               <div>
-                <h3 className="font-bold text-gray-900">Réserver {property.title}</h3>
-                <p className="text-sm text-gray-500">{convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}{property.pricePeriod && `/${property.pricePeriod === "nightly" ? "nuit" : property.pricePeriod}`}</p>
+                <h3 className="font-bold text-gray-900">{t("bookingBtn")} {property.title}</h3>
+                <p className="text-sm text-gray-500">{convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}{property.pricePeriod && `/${property.pricePeriod === "nightly" ? t("nights") : property.pricePeriod}`}</p>
               </div>
               <button onClick={() => setShowBookingPanel(false)} className="size-10 rounded-full bg-gray-100 flex items-center justify-center hover:bg-gray-200 transition-colors">
                 <span className="text-xl leading-none">×</span>
@@ -318,9 +324,9 @@ export default function PropertyDetailClient({
                 ))}
               </div>
               <div className="flex justify-between mt-2">
-                <span className={`text-xs font-medium ${bookingStep >= 1 ? "text-[#0d47a1]" : "text-gray-400"}`}>Dates</span>
-                <span className={`text-xs font-medium ${bookingStep >= 2 ? "text-[#0d47a1]" : "text-gray-400"}`}>Infos</span>
-                <span className={`text-xs font-medium ${bookingStep >= 3 ? "text-[#0d47a1]" : "text-gray-400"}`}>Confirm.</span>
+                <span className={`text-xs font-medium ${bookingStep >= 1 ? "text-[#0d47a1]" : "text-gray-400"}`}>{t("dates")}</span>
+                <span className={`text-xs font-medium ${bookingStep >= 2 ? "text-[#0d47a1]" : "text-gray-400"}`}>{t("info")}</span>
+                <span className={`text-xs font-medium ${bookingStep >= 3 ? "text-[#0d47a1]" : "text-gray-400"}`}>{t("confirm")}</span>
               </div>
             </div>
 
@@ -330,15 +336,15 @@ export default function PropertyDetailClient({
                   <div className="space-y-4 animate-fadeIn">
                     <div className="grid grid-cols-2 gap-3">
                       <button type="button" onClick={() => setShowRangeCalendar(true)} className={`text-left p-3 rounded-xl border-2 transition-all duration-200 ${checkIn ? "border-[#0d47a1] bg-[#0d47a1]/5" : "border-gray-200 hover:border-gray-300 bg-gray-50"}`}>
-                        <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Arrivée</span>
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">{t("selectDates")}</span>
                         <p className={`text-sm font-semibold mt-0.5 ${checkIn ? "text-gray-900" : "text-gray-300"}`}>
-                          {checkIn ? checkIn.toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : "Sélectionner"}
+                          {checkIn ? checkIn.toLocaleDateString(localeStr, { day: "numeric", month: "short" }) : t("selectDates")}
                         </p>
                       </button>
                       <button type="button" onClick={() => checkIn && setShowRangeCalendar(true)} className={`text-left p-3 rounded-xl border-2 transition-all duration-200 ${checkOut ? "border-[#0d47a1] bg-[#0d47a1]/5" : "border-gray-200 hover:border-gray-300 bg-gray-50"}`}>
-                        <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">Départ</span>
+                        <span className="text-[10px] font-semibold uppercase tracking-wider text-gray-400">{t("selectDates")}</span>
                         <p className={`text-sm font-semibold mt-0.5 ${checkOut ? "text-gray-900" : "text-gray-300"}`}>
-                          {checkOut ? checkOut.toLocaleDateString("fr-FR", { day: "numeric", month: "short" }) : "Sélectionner"}
+                          {checkOut ? checkOut.toLocaleDateString(localeStr, { day: "numeric", month: "short" }) : t("selectDates")}
                         </p>
                       </button>
                     </div>
@@ -346,23 +352,23 @@ export default function PropertyDetailClient({
                       <div className="border border-gray-100 rounded-xl p-3 bg-gray-50/50">
                         <DatePicker mode="range" selected={checkIn && checkOut ? { from: checkIn, to: checkOut } : undefined}
                           onSelect={(range) => { setCheckIn(range?.from); setCheckOut(range?.to); if (range?.from && range?.to) setShowRangeCalendar(false); }}
-                          disabled={(date) => isDateBooked(date) || date < new Date(new Date().setHours(0, 0, 0, 0))} locale={fr} numberOfMonths={isDesktop ? 2 : 1} className="w-full" />
+                          disabled={(date) => isDateBooked(date) || date < new Date(new Date().setHours(0, 0, 0, 0))} locale={dateFnsLocale} numberOfMonths={isDesktop ? 2 : 1} className="w-full" />
                       </div>
                     )}
                     {!showRangeCalendar && (
                       <button type="button" onClick={() => setShowRangeCalendar(true)} className="w-full py-2.5 text-sm font-medium text-[#0d47a1] bg-[#0d47a1]/5 hover:bg-[#0d47a1]/10 rounded-xl transition-colors">
-                        {checkIn && checkOut ? "Modifier les dates" : "Choisir les dates"}
+                        {checkIn && checkOut ? t("editDates") : t("selectDates")}
                       </button>
                     )}
                     {nights > 0 && (
                       <div className="flex items-center gap-2 bg-[#0d47a1]/5 rounded-xl px-4 py-2.5">
                         <Calendar className="size-4 text-[#0d47a1]" />
-                        <span className="text-sm font-medium text-[#0d47a1]">{nights} nuit{nights > 1 ? "s" : ""}</span>
+                        <span className="text-sm font-medium text-[#0d47a1]">{nights} {t("nights")}</span>
                       </div>
                     )}
                     <button type="button" onClick={() => checkIn && checkOut && setBookingStep(2)} disabled={!checkIn || !checkOut}
                       className="w-full bg-[#0d47a1] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#0a3a82] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">
-                      Continuer
+                      {t("continue")}
                     </button>
                   </div>
                 )}
@@ -370,32 +376,32 @@ export default function PropertyDetailClient({
                 {bookingStep === 2 && (
                   <div className="space-y-3 animate-fadeIn">
                     <div>
-                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Voyageurs</label>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">{t("guestsLabel")}</label>
                       <div className="flex items-center gap-3 bg-gray-50 rounded-xl p-1">
                         <button type="button" onClick={() => setGuestCount(Math.max(1, guestCount - 1))} className="size-9 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors font-medium">−</button>
-                        <span className="flex-1 text-center font-semibold text-gray-900">{guestCount} voyageur{guestCount > 1 ? "s" : ""}</span>
+                        <span className="flex-1 text-center font-semibold text-gray-900">{guestCount} {t("guests")}</span>
                         <button type="button" onClick={() => setGuestCount(Math.min(property.maxGuests || 10, guestCount + 1))} className="size-9 rounded-lg bg-white border border-gray-200 flex items-center justify-center text-gray-600 hover:bg-gray-100 transition-colors font-medium">+</button>
                       </div>
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Nom complet</label>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">{t("fullName")}</label>
                       <input type="text" placeholder="Jean Dupont" required value={formData.guestName} onChange={(e) => setFormData({ ...formData, guestName: e.target.value })} className="w-full h-11 rounded-xl border border-gray-200 px-4 text-sm outline-none focus:border-[#0d47a1] focus:ring-2 focus:ring-[#0d47a1]/10 transition-all bg-gray-50 placeholder:text-gray-300" />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Email</label>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">{t("email")}</label>
                       <input type="email" placeholder="jean@exemple.com" required value={formData.guestEmail} onChange={(e) => setFormData({ ...formData, guestEmail: e.target.value })} className="w-full h-11 rounded-xl border border-gray-200 px-4 text-sm outline-none focus:border-[#0d47a1] focus:ring-2 focus:ring-[#0d47a1]/10 transition-all bg-gray-50 placeholder:text-gray-300" />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Téléphone <span className="text-gray-300 normal-case">(optionnel)</span></label>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">{t("phone")}</label>
                       <input type="tel" placeholder="+212 6 21 18 94 96" value={formData.guestPhone} onChange={(e) => setFormData({ ...formData, guestPhone: e.target.value })} className="w-full h-11 rounded-xl border border-gray-200 px-4 text-sm outline-none focus:border-[#0d47a1] focus:ring-2 focus:ring-[#0d47a1]/10 transition-all bg-gray-50 placeholder:text-gray-300" />
                     </div>
                     <div>
-                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">Message <span className="text-gray-300 normal-case">(optionnel)</span></label>
+                      <label className="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1.5">{t("message")}</label>
                       <textarea placeholder="Demandes spéciales, occasion particulière..." rows={2} value={formData.message} onChange={(e) => setFormData({ ...formData, message: e.target.value })} className="w-full rounded-xl border border-gray-200 px-4 py-3 text-sm outline-none focus:border-[#0d47a1] focus:ring-2 focus:ring-[#0d47a1]/10 transition-all resize-none bg-gray-50 placeholder:text-gray-300" />
                     </div>
                     <div className="flex gap-2 pt-1">
-                      <button type="button" onClick={() => setBookingStep(1)} className="px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">Retour</button>
-                      <button type="button" onClick={() => formData.guestName && formData.guestEmail && setBookingStep(3)} disabled={!formData.guestName || !formData.guestEmail} className="flex-1 bg-[#0d47a1] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#0a3a82] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">Vérifier</button>
+                      <button type="button" onClick={() => setBookingStep(1)} className="px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">{t("back")}</button>
+                      <button type="button" onClick={() => formData.guestName && formData.guestEmail && setBookingStep(3)} disabled={!formData.guestName || !formData.guestEmail} className="flex-1 bg-[#0d47a1] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#0a3a82] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed active:scale-[0.98]">{t("verify")}</button>
                     </div>
                   </div>
                 )}
@@ -406,8 +412,8 @@ export default function PropertyDetailClient({
                       <div className="flex items-center gap-3">
                         <div className="size-10 rounded-lg bg-[#0d47a1]/10 flex items-center justify-center"><Calendar className="size-5 text-[#0d47a1]" /></div>
                         <div>
-                          <p className="text-sm font-semibold text-gray-900">{checkIn?.toLocaleDateString("fr-FR", { day: "numeric", month: "long" })} → {checkOut?.toLocaleDateString("fr-FR", { day: "numeric", month: "long" })}</p>
-                          <p className="text-xs text-gray-500">{nights} nuit{nights > 1 ? "s" : ""} · {guestCount} voyageur{guestCount > 1 ? "s" : ""}</p>
+                          <p className="text-sm font-semibold text-gray-900">{checkIn?.toLocaleDateString(localeStr, { day: "numeric", month: "long" })} → {checkOut?.toLocaleDateString(localeStr, { day: "numeric", month: "long" })}</p>
+                          <p className="text-xs text-gray-500">{nights} {t("nights")} · {guestCount} {t("guests")}</p>
                         </div>
                       </div>
                       <div className="h-px bg-gray-200" />
@@ -420,16 +426,16 @@ export default function PropertyDetailClient({
                       </div>
                     </div>
                     <div className="space-y-2.5 text-sm">
-                      <div className="flex justify-between text-gray-600"><span>{convert(pricing.nightlyRate, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol} × {nights}{nights > 1 ? ` nuits` : ` nuit`}</span><span className="font-medium text-gray-900">{convert(pricing.subtotal, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}</span></div>
-                      {pricing.cleaning > 0 && <div className="flex justify-between text-gray-600"><span>Frais de ménage</span><span className="font-medium text-gray-900">{convert(pricing.cleaning, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}</span></div>}
-                      {pricing.service > 0 && <div className="flex justify-between text-gray-600"><span>Frais de service</span><span className="font-medium text-gray-900">{convert(pricing.service, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}</span></div>}
+                      <div className="flex justify-between text-gray-600"><span>{convert(pricing.nightlyRate, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol} × {nights} {t("nights")}</span><span className="font-medium text-gray-900">{convert(pricing.subtotal, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</span></div>
+                      {pricing.cleaning > 0 && <div className="flex justify-between text-gray-600"><span>{t("cleaningFee")}</span><span className="font-medium text-gray-900">{convert(pricing.cleaning, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</span></div>}
+                      {pricing.service > 0 && <div className="flex justify-between text-gray-600"><span>{t("serviceFee")}</span><span className="font-medium text-gray-900">{convert(pricing.service, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</span></div>}
                       <div className="h-px bg-gray-200" />
-                      <div className="flex justify-between font-bold text-gray-900 text-base pt-0.5"><span>Total</span><span>{convert(pricing.total, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}</span></div>
+                      <div className="flex justify-between font-bold text-gray-900 text-base pt-0.5"><span>{t("total")}</span><span>{convert(pricing.total, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</span></div>
                     </div>
                     <div className="flex gap-2">
-                      <button type="button" onClick={() => setBookingStep(2)} className="px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">Retour</button>
+                      <button type="button" onClick={() => setBookingStep(2)} className="px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">{t("back")}</button>
                       <button type="submit" disabled={submitting} className="flex-1 bg-[#0d47a1] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#0a3a82] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 active:scale-[0.98]">
-                        {submitting ? (<><span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Envoi...</>) : (<><Send className="size-4" />Confirmer la demande</>)}
+                        {submitting ? (<><span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />{t("sending")}</>) : (<><Send className="size-4" />{t("confirmRequest")}</>)}
                       </button>
                     </div>
                     {submitMessage && (

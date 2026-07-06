@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { SlidersHorizontal, X } from "lucide-react";
+import { useTranslations } from "next-intl";
 import { getFeaturesByCategory } from "@/lib/features";
 import { Icon, faChevronDown } from "@/components/icons";
 
@@ -20,23 +21,6 @@ interface PropertyFiltersProps {
   filters: FilterState;
   onFiltersChange: (filters: FilterState) => void;
 }
-
-const PROPERTY_TYPES = [
-  { value: "ALL", label: "Tous" },
-  { value: "VILLA", label: "Villa" },
-  { value: "RIAD", label: "Riad" },
-  { value: "APARTMENT", label: "Appartement" },
-  { value: "HOUSE", label: "Maison" },
-  { value: "LAND", label: "Terrain" },
-  { value: "COMMERCIAL", label: "Commercial" },
-];
-
-const SORT_OPTIONS = [
-  { value: "newest", label: "Plus récent" },
-  { value: "price-asc", label: "Prix croissant" },
-  { value: "price-desc", label: "Prix décroissant" },
-  { value: "views", label: "Plus vues" },
-];
 
 function FeatureCategoryGroup({
   category,
@@ -88,6 +72,24 @@ function FeatureCategoryGroup({
 
 export default function PropertyFilters({ filters, onFiltersChange }: PropertyFiltersProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const t = useTranslations("properties");
+
+  const PROPERTY_TYPES = [
+    { value: "ALL", label: t("all") },
+    { value: "VILLA", label: t("villa") },
+    { value: "RIAD", label: t("riad") },
+    { value: "APARTMENT", label: t("apartment") },
+    { value: "HOUSE", label: t("house") },
+    { value: "LAND", label: t("land") },
+    { value: "COMMERCIAL", label: t("commercial") },
+  ];
+
+  const SORT_OPTIONS = [
+    { value: "newest", label: t("sortRecent") },
+    { value: "price-asc", label: t("sortPriceAsc") },
+    { value: "price-desc", label: t("sortPriceDesc") },
+    { value: "views", label: t("sortViews") },
+  ];
 
   const updateFilter = useCallback(
     (key: keyof FilterState, value: string | string[]) => {
@@ -134,7 +136,7 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
       <div className="flex items-center justify-between">
         <h3 className="font-semibold text-gray-900 flex items-center gap-2">
           <SlidersHorizontal className="size-4" />
-          Filtres
+          {t("filters")}
         </h3>
         {hasActiveFilters && (
           <button
@@ -142,7 +144,7 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
             className="text-sm text-blue-600 hover:text-blue-800 flex items-center gap-1"
           >
             <X className="size-3" />
-            Réinitialiser
+            {t("reset")}
           </button>
         )}
       </div>
@@ -150,24 +152,24 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-2">Type</label>
         <div className="flex flex-wrap gap-2">
-          {PROPERTY_TYPES.map((t) => (
+          {PROPERTY_TYPES.map((pt) => (
             <button
-              key={t.value}
-              onClick={() => updateFilter("type", t.value)}
+              key={pt.value}
+              onClick={() => updateFilter("type", pt.value)}
               className={`px-3 py-1.5 rounded-full text-sm font-medium transition-colors ${
-                filters.type === t.value
+                filters.type === pt.value
                   ? "bg-[#0d47a1] text-white"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
               }`}
             >
-              {t.label}
+              {pt.label}
             </button>
           ))}
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Location / Vente</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t("forRent")} / {t("forSale")}</label>
         <div className="flex gap-2">
           <button
             onClick={() => updateFilter("pricePeriod", "nightly")}
@@ -177,7 +179,7 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            Location
+            {t("forRent")}
           </button>
           <button
             onClick={() => updateFilter("pricePeriod", "sale")}
@@ -187,13 +189,13 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
           >
-            Vente
+            {t("forSale")}
           </button>
         </div>
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Budget (€)</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t("budget")} (€)</label>
         <div className="flex items-center gap-2">
           <input
             type="number"
@@ -214,13 +216,13 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Chambres (min)</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t("bedroomsMin")}</label>
         <select
           value={filters.bedrooms}
           onChange={(e) => updateFilter("bedrooms", e.target.value)}
           className="w-full h-9 rounded-lg border border-gray-300 px-3 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white"
         >
-          <option value="">Toutes</option>
+          <option value="">{t("allBedrooms")}</option>
           {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((n) => (
             <option key={n} value={n}>
               {n}+
@@ -230,7 +232,7 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Quartier</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t("quarter")}</label>
         <input
           type="text"
           placeholder="Ex: Palmeraie, Guéliz..."
@@ -241,7 +243,7 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Équipements</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t("amenities")}</label>
         <div className="space-y-3">
           {Object.entries(getFeaturesByCategory()).map(([category, items]) => (
             <FeatureCategoryGroup
@@ -256,7 +258,7 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
       </div>
 
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-2">Trier par</label>
+        <label className="block text-sm font-medium text-gray-700 mb-2">{t("sortBy")}</label>
         <select
           value={filters.sort}
           onChange={(e) => updateFilter("sort", e.target.value)}
@@ -277,7 +279,7 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
       <button
         onClick={() => setMobileOpen(true)}
         className="lg:hidden fixed bottom-20 right-4 z-40 bg-[#0d47a1] text-white w-14 h-14 rounded-full shadow-lg flex items-center justify-center"
-        aria-label="Ouvrir les filtres"
+        aria-label={t("openFilters")}
       >
         <SlidersHorizontal className="size-5" />
       </button>
@@ -296,7 +298,7 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
           />
           <div className="absolute inset-y-0 left-0 w-80 max-w-[85vw] bg-white shadow-xl p-5 overflow-y-auto">
             <div className="flex items-center justify-between mb-6">
-              <h3 className="font-semibold text-gray-900">Filtres</h3>
+              <h3 className="font-semibold text-gray-900">{t("filters")}</h3>
               <button
                 onClick={() => setMobileOpen(false)}
                 className="p-1 hover:bg-gray-100 rounded"
@@ -309,7 +311,7 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
               onClick={() => setMobileOpen(false)}
               className="w-full mt-6 bg-[#0d47a1] text-white py-2.5 rounded-lg font-medium hover:bg-[#0a3a82] transition-colors"
             >
-              Appliquer
+              {t("apply")}
             </button>
           </div>
         </div>

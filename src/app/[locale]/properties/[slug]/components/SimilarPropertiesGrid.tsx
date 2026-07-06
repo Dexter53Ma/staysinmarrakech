@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useTranslations, useLocale } from "next-intl";
 import type { SimilarProperty } from "@/types";
 import { useCurrency } from "@/components/CurrencyContext";
 
@@ -11,11 +12,14 @@ interface SimilarPropertiesGridProps {
 
 export default function SimilarPropertiesGrid({ properties }: SimilarPropertiesGridProps) {
   const { convert, symbol } = useCurrency();
+  const t = useTranslations("properties");
+  const locale = useLocale();
+  const localeStr = locale === "en" ? "en-US" : "fr-FR";
   if (properties.length === 0) return null;
 
   return (
     <div>
-      <h2 className="text-xl font-bold text-gray-900 mb-4">Propriétés similaires</h2>
+      <h2 className="text-xl font-bold text-gray-900 mb-4">{t("similarTitle")}</h2>
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {properties.map((sp) => (
           <Link
@@ -42,10 +46,10 @@ export default function SimilarPropertiesGrid({ properties }: SimilarPropertiesG
                 {sp.title}
               </h3>
               <p className="text-xs text-gray-500 mt-0.5">
-                {sp.bedrooms} ch. · {sp.bathrooms} sdb
+                {sp.bedrooms} {t("bedroomsAbbrev")} · {sp.bathrooms} {t("bathroomsAbbrev")}
               </p>
               <p className="text-sm font-bold text-[#0d47a1] mt-1">
-                {convert(sp.price, sp.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}
+                {convert(sp.price, sp.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}
               </p>
             </div>
           </Link>

@@ -3,17 +3,25 @@ import Link from "next/link";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PriceDisplay from "@/components/PriceDisplay";
+import { getTranslations } from "next-intl/server";
 import { prisma } from "@/lib/prisma";
 import { Icon, faArrowRight } from "@/components/icons";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Services & Activités à Marrakech",
-  description: "Conciergerie, gastronomie, transport, bien-être, sports, excursions et plus encore. Tous nos services pour un séjour inoubliable à Marrakech.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "services" });
+  return {
+    title: t("title"),
+    description: t("subtitle"),
+  };
+}
 
-export default async function ServicesPage() {
+export default async function ServicesPage({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
+  const t = await getTranslations({ locale, namespace: "services" });
+
   const services = await prisma.service.findMany({
     where: { isActive: true },
     orderBy: { sortOrder: "asc" },
@@ -41,10 +49,10 @@ export default async function ServicesPage() {
               Marrakech
             </span>
             <h1 className="text-white text-3xl md:text-4xl lg:text-5xl font-bold mb-4 leading-tight">
-              Nos Services & Activités
+              {t("title")}
             </h1>
             <p className="text-white/70 text-base md:text-lg max-w-2xl mx-auto">
-              Découvrez notre sélection complète de services de conciergerie et d&apos;activités pour rendre votre séjour à Marrakech inoubliable.
+              {t("subtitle")}
             </p>
           </div>
         </section>
@@ -94,7 +102,7 @@ export default async function ServicesPage() {
                     </h2>
                     {service.price && (
                       <p className="text-sm text-gray-500 mt-1">
-                        À partir de <PriceDisplay price={service.price} currency="EUR" suffix={` ${service.priceUnit || ""}`} />
+                        <PriceDisplay price={service.price} currency="EUR" suffix={` ${service.priceUnit || ""}`} />
                       </p>
                     )}
                   </div>
@@ -109,16 +117,16 @@ export default async function ServicesPage() {
         <section className="bg-gray-50 py-12 md:py-16">
           <div className="max-w-[800px] mx-auto px-4 text-center">
             <h2 className="text-2xl md:text-3xl font-bold text-[#34495e] mb-4">
-              Une demande spécifique ?
+              {t("specificRequest")}
             </h2>
             <p className="text-gray-500 mb-8 max-w-lg mx-auto">
-              Vous ne trouvez pas l&apos;activité que vous recherchez ? Notre équipe est capable d&apos;organiser n&apos;importe quelle expérience sur mesure à Marrakech.
+              {t("contactUs")}
             </p>
             <Link
               href="/contactez-nous"
               className="inline-flex items-center gap-2 bg-[#0d47a1] hover:bg-[#0a3a82] text-white font-bold py-3.5 px-8 rounded-xl transition-all hover:shadow-lg text-sm"
             >
-              Contactez-nous
+              {t("contactUs")}
               <Icon icon={faArrowRight} className="text-xs" />
             </Link>
           </div>

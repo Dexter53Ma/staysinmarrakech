@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useRouter, usePathname } from "next/navigation";
+import { useTranslations } from "next-intl";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PropertyFilters, { type FilterState } from "@/components/PropertyFilters";
@@ -49,6 +50,7 @@ export default function PropertiesPageClient({
 }: PropertiesPageClientProps) {
   const router = useRouter();
   const pathname = usePathname();
+  const t = useTranslations("properties");
   const [filters, setFilters] = useState<FilterState>(initialFilters);
 
   const applyFilters = useCallback(
@@ -93,10 +95,10 @@ export default function PropertiesPageClient({
           <div className="absolute inset-0 bg-black/50" />
           <div className="relative z-10 text-center px-4">
             <h1 className="text-white text-3xl md:text-4xl font-bold uppercase tracking-wide mb-3">
-              Nos propriétés
+              {t("title")}
             </h1>
             <p className="text-white/80 text-lg">
-              Découvrez notre sélection de biens d&apos;exception à Marrakech
+              {t("subtitle")}
             </p>
           </div>
         </section>
@@ -119,17 +121,17 @@ export default function PropertiesPageClient({
         <section className="bg-gray-50 py-12 md:py-16">
           <div className="max-w-[900px] mx-auto px-4">
             <h2 className="text-2xl font-bold text-[#34495e] mb-4">
-              Villas de luxe à Marrakech — Trouvez la propriété idéale
+              {t("seoTitle")}
             </h2>
             <div className="space-y-4 text-gray-600 leading-relaxed">
               <p>
-                Explorez notre catalogue complet de villas et propriétés de luxe à Marrakech. Chaque bien est soigneusement sélectionné pour son emplacement privilégié, son architecture distinctive et ses prestations haut de gamme. Que vous cherchiez une villa avec piscine chauffée dans la Palmeraie, un riad rénové dans la Médina ou un domaine de charme près du golf Amelkis, notre équipe vous accompagne à chaque étape.
+                {t("seoP1")}
               </p>
               <p>
-                Filtrez vos résultats par type de propriété, budget, nombre de chambres ou quartier. Nous proposons des villas pour toutes les occasions : séjours en famille, vacances entre amis, mariages d&apos;exception, séminaires d&apos;entreprise ou investissement immobilier. Nos biens sont situés dans les quartiers les plus prisés — <strong>Gueliz</strong>, <strong>La Palmeraie</strong>, <strong>Route de l&apos;Ourika</strong>, <strong>Targa</strong>, <strong>Amelkis</strong> et <strong>Sidi Youssef Ben Ali</strong>.
+                {t("seoP2")}
               </p>
               <p>
-                Chaque villa dispose d&apos;une page détaillée avec galerie photos, description complète, tarifs, disponibilité en temps réel et avis de nos clients. Vous pouvez directement effectuer une demande de réservation en ligne ou contacter notre équipe pour un conseil personnalisé.
+                {t("seoP3")}
               </p>
             </div>
           </div>

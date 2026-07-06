@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Eye, BedDouble, Bath, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslations, useLocale } from "next-intl";
 import { PropertyListItem, TYPE_LABELS, TYPE_COLORS, STATUS_LABELS } from "@/types";
 import { useCurrency } from "@/components/CurrencyContext";
 
@@ -22,12 +23,15 @@ export default function PropertyGrid({
   onPageChange,
 }: PropertyGridProps) {
   const { convert, currency, symbol } = useCurrency();
+  const t = useTranslations("properties");
+  const locale = useLocale();
+  const localeStr = locale === "en" ? "en-US" : "fr-FR";
   if (properties.length === 0) {
     return (
       <div className="text-center py-20">
-        <p className="text-gray-500 text-lg">Aucune propriété trouvée</p>
+        <p className="text-gray-500 text-lg">{t("noResults")}</p>
         <p className="text-gray-400 text-sm mt-2">
-          Essayez de modifier vos filtres
+          {t("noResultsDesc")}
         </p>
       </div>
     );
@@ -36,7 +40,7 @@ export default function PropertyGrid({
   return (
     <div>
       <p className="text-sm text-gray-500 mb-6">
-        {total} propriété{total !== 1 ? "s" : ""} trouvée{total !== 1 ? "s" : ""}
+        {total} {t("resultsCount")}
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -58,7 +62,7 @@ export default function PropertyGrid({
                 />
               ) : (
                 <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
-                  Aucune image
+                  {t("noImage")}
                 </div>
               )}
               <div className="absolute top-3 left-3 flex gap-2">
@@ -95,21 +99,21 @@ export default function PropertyGrid({
               <div className="flex items-center gap-4 mt-3 text-sm text-gray-600">
                 <span className="flex items-center gap-1">
                   <BedDouble className="size-4 text-gray-400" />
-                  {property.bedrooms} {property.bedrooms > 1 ? "chambres" : "chambre"}
+                  {property.bedrooms} {t("bedrooms")}
                 </span>
                 <span className="flex items-center gap-1">
                   <Bath className="size-4 text-gray-400" />
-                  {property.bathrooms} {property.bathrooms > 1 ? "sdb" : "sdb"}
+                  {property.bathrooms} {t("bathrooms")}
                 </span>
               </div>
 
               <div className="mt-3 pt-3 border-t border-gray-100 flex items-center justify-between">
                 <span className="text-lg font-bold text-[#0d47a1]">
-                  {convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}
+                  {convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}
                 </span>
                 {property.pricePeriod && (
                   <span className="text-xs text-gray-400">
-                    /{property.pricePeriod === "nightly" ? "nuit" : property.pricePeriod}
+                    {t("perNight")}
                   </span>
                 )}
               </div>
