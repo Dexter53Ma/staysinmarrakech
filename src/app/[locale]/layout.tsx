@@ -1,5 +1,4 @@
-import type {Metadata, Viewport} from 'next';
-import {Raleway} from 'next/font/google';
+import type {Metadata} from 'next';
 import {NextIntlClientProvider} from 'next-intl';
 import {getTranslations, getMessages} from 'next-intl/server';
 import {SettingsProvider} from '@/components/SettingsContext';
@@ -8,20 +7,6 @@ import {CurrencyProvider} from '@/components/CurrencyContext';
 import FloatingContact from '@/components/FloatingContact';
 import BackToTop from '@/components/BackToTop';
 import ErrorBoundary from '@/components/ErrorBoundary';
-import '../globals.css';
-
-export const viewport: Viewport = {
-  width: 'device-width',
-  initialScale: 1,
-  maximumScale: 5,
-  themeColor: '#000000',
-};
-
-const raleway = Raleway({
-  variable: '--font-raleway',
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700', '800'],
-});
 
 export async function generateMetadata({params}: {params: Promise<{locale: string}>}): Promise<Metadata> {
   const {locale} = await params;
@@ -95,32 +80,23 @@ export default async function LocaleLayout({
   const t = await getTranslations({locale, namespace: 'common'});
 
   return (
-    <html
-      lang={locale}
-      className={`${raleway.variable} h-full antialiased`}
-    >
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </head>
-      <body className="min-h-full flex flex-col font-sans pb-[env(safe-area-inset-bottom)]">
-        <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[9999] focus:bg-[#0d47a1] focus:text-white focus:px-4 focus:py-2 focus:rounded">
-          {t('skipToContent')}
-        </a>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <SettingsProvider>
-            <ServicesProvider>
-              <CurrencyProvider>
-                <div id="main-content" className="flex-1 flex flex-col">
-                  <ErrorBoundary>{children}</ErrorBoundary>
-                </div>
-                <FloatingContact />
-                <BackToTop />
-              </CurrencyProvider>
-            </ServicesProvider>
-          </SettingsProvider>
-        </NextIntlClientProvider>
-      </body>
-    </html>
+    <>
+    <a href="#main-content" className="sr-only focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-[9999] focus:bg-[#0d47a1] focus:text-white focus:px-4 focus:py-2 focus:rounded">
+      {t('skipToContent')}
+    </a>
+    <NextIntlClientProvider locale={locale} messages={messages}>
+      <SettingsProvider>
+        <ServicesProvider>
+          <CurrencyProvider>
+            <div id="main-content" className="flex-1 flex flex-col">
+              <ErrorBoundary>{children}</ErrorBoundary>
+            </div>
+            <FloatingContact />
+            <BackToTop />
+          </CurrencyProvider>
+        </ServicesProvider>
+      </SettingsProvider>
+    </NextIntlClientProvider>
+    </>
   );
 }
