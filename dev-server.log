@@ -1257,3 +1257,25 @@ Import trace:
  GET /fr 200 in 361ms (next.js: 117ms, proxy.ts: 21ms, application-code: 223ms)
  GET /fr 200 in 397ms (next.js: 149ms, proxy.ts: 22ms, application-code: 226ms)
  GET /api/properties?limit=6 200 in 397ms (next.js: 107ms, application-code: 290ms)
+ GET /api/settings 401 in 65ms (next.js: 54ms, application-code: 12ms)
+ GET /fr 200 in 691ms (next.js: 13ms, proxy.ts: 5ms, application-code: 673ms)
+ GET /api/csrf 200 in 33ms (next.js: 28ms, application-code: 5ms)
+ GET /api/csrf 200 in 8ms (next.js: 3ms, application-code: 5ms)
+ GET /api/services 200 in 724ms (next.js: 24ms, application-code: 701ms)
+ GET /api/properties?limit=6 200 in 297ms (next.js: 3ms, application-code: 293ms)
+[browser] Image with src "/images/logo.png" has either width or height modified, but not the other. If you use CSS to change the size of your image, also include the styles 'width: "auto"' or 'height: "auto"' to maintain the aspect ratio.
+ GET /api/locations 200 in 553ms (next.js: 33ms, application-code: 520ms)
+ GET /api/properties?limit=6 200 in 297ms (next.js: 3ms, application-code: 294ms)
+ GET /api/testimonials 200 in 603ms (next.js: 94ms, application-code: 509ms)
+ GET /api/services 200 in 503ms (next.js: 3ms, application-code: 501ms)
+ GET /api/blog 200 in 659ms (next.js: 66ms, application-code: 593ms)
+⨯ upstream image https://eltzpybedrveeitdgjig.supabase.co/storage/v1/object/public/uploads/1783044121323-5otowb.webp resolved to private ip ["64:ff9b::6812:260a","64:ff9b::ac40:95f6"]
+⨯ upstream image https://eltzpybedrveeitdgjig.supabase.co/storage/v1/object/public/uploads/1783042896196-wuodld.webp resolved to private ip ["64:ff9b::6812:260a","64:ff9b::ac40:95f6"]
+⨯ upstream image https://eltzpybedrveeitdgjig.supabase.co/storage/v1/object/public/uploads/1783039682641-gcah9z.jpg resolved to private ip ["64:ff9b::6812:260a","64:ff9b::ac40:95f6"]
+⨯ upstream image https://eltzpybedrveeitdgjig.supabase.co/storage/v1/object/public/uploads/1783040191529-eipbs3.jpg resolved to private ip ["64:ff9b::6812:260a","64:ff9b::ac40:95f6"]
+ GET /api/locations 200 in 210ms (next.js: 3ms, application-code: 207ms)
+ GET /api/testimonials 200 in 213ms (next.js: 3ms, application-code: 210ms)
+ GET /api/blog 200 in 232ms (next.js: 3ms, application-code: 229ms)
+ GET /api/services 200 in 515ms (next.js: 4ms, application-code: 511ms)
+[browser] Image with src "/images/activities/sonotherapie.webp" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
+Read more: https://nextjs.org/docs/app/api-reference/components/image#loading

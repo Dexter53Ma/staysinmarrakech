@@ -18,8 +18,6 @@ const ALLOWED_KEYS = new Set([
 ]);
 
 export async function GET() {
-  const auth = await requireAdminApi();
-  if (auth.error) return auth.error;
   try {
     const settings = await prisma.siteSetting.findMany();
     const obj: Record<string, string> = {};

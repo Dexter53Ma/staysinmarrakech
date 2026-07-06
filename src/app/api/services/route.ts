@@ -27,7 +27,8 @@ export async function GET(request: NextRequest) {
       return NextResponse.json(paginatedResponse(services, total, page, limit));
     }
     return NextResponse.json(services);
-  } catch {
+  } catch (e) {
+    console.error("GET /api/services error:", e);
     return apiError("Erreur lors du chargement");
   }
 }
