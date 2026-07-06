@@ -103,13 +103,28 @@ export interface Testimonial {
 
 // ─── UI Constants ────────────────────────────────────────
 
-export const TYPE_LABELS: Record<string, string> = {
-  VILLA: "Villa",
-  APARTMENT: "Appartement",
-  HOUSE: "Maison",
-  LAND: "Terrain",
-  COMMERCIAL: "Commercial",
-};
+export function getTypeLabel(type: PropertyType, locale: string = 'fr'): string {
+  const labels: Record<PropertyType, Record<string, string>> = {
+    VILLA: { fr: 'Villa', en: 'Villa' },
+    RIAD: { fr: 'Riad', en: 'Riad' },
+    APARTMENT: { fr: 'Appartement', en: 'Apartment' },
+    HOUSE: { fr: 'Maison', en: 'House' },
+    LAND: { fr: 'Terrain', en: 'Land' },
+    COMMERCIAL: { fr: 'Commercial', en: 'Commercial' },
+  };
+  return labels[type]?.[locale] ?? type;
+}
+
+export function getStatusLabel(status: PropertyStatus, locale: string = 'fr'): string {
+  const labels: Record<PropertyStatus, Record<string, string>> = {
+    AVAILABLE: { fr: 'Disponible', en: 'Available' },
+    SOLD: { fr: 'Vendu', en: 'Sold' },
+    RENTED: { fr: 'Loué', en: 'Rented' },
+    PENDING: { fr: 'En attente', en: 'Pending' },
+    MAINTENANCE: { fr: 'Maintenance', en: 'Maintenance' },
+  };
+  return labels[status]?.[locale] ?? status;
+}
 
 export const TYPE_COLORS: Record<string, string> = {
   VILLA: "bg-purple-100 text-purple-800",
@@ -117,14 +132,6 @@ export const TYPE_COLORS: Record<string, string> = {
   HOUSE: "bg-green-100 text-green-800",
   LAND: "bg-yellow-100 text-yellow-800",
   COMMERCIAL: "bg-red-100 text-red-800",
-};
-
-export const STATUS_LABELS: Record<string, string> = {
-  AVAILABLE: "Disponible",
-  SOLD: "Vendu",
-  RENTED: "Loué",
-  PENDING: "En attente",
-  MAINTENANCE: "Maintenance",
 };
 
 export const STATUS_COLORS: Record<string, string> = {
@@ -135,10 +142,28 @@ export const STATUS_COLORS: Record<string, string> = {
   MAINTENANCE: "bg-orange-100 text-orange-800",
 };
 
+/** @deprecated Use getTypeLabel() instead */
+export const TYPE_LABELS: Record<string, string> = {
+  VILLA: "Villa",
+  APARTMENT: "Appartement",
+  HOUSE: "Maison",
+  LAND: "Terrain",
+  COMMERCIAL: "Commercial",
+};
+
+/** @deprecated Use getStatusLabel() instead */
+export const STATUS_LABELS: Record<string, string> = {
+  AVAILABLE: "Disponible",
+  SOLD: "Vendu",
+  RENTED: "Loué",
+  PENDING: "En attente",
+  MAINTENANCE: "Maintenance",
+};
+
 // ─── Utilities ───────────────────────────────────────────
 
-export function formatPrice(price: number, currency: string): string {
-  return new Intl.NumberFormat("fr-FR", {
+export function formatPrice(price: number, currency: string, locale: string = 'fr'): string {
+  return new Intl.NumberFormat(locale === 'en' ? 'en-US' : 'fr-FR', {
     style: "currency",
     currency,
     maximumFractionDigits: 0,

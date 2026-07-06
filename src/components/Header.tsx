@@ -7,12 +7,12 @@ import {Link, useRouter, usePathname} from '@/i18n/navigation';
 import { useSettings } from "@/components/SettingsContext";
 import { useServices, ServiceItem } from "@/components/ServicesContext";
 import { useCurrency, type Currency } from "@/components/CurrencyContext";
+import LanguageSwitcher from "@/components/LanguageSwitcher";
 import {
   Icon,
   faPhone,
   faEnvelope,
   faHeart,
-  faLanguage,
   faBars,
   faChevronDown,
   faTimes,
@@ -90,10 +90,6 @@ export default function Header() {
     const handler = (e: MouseEvent) => {
       if (servicesRef.current && !servicesRef.current.contains(e.target as Node)) setServicesOpen(false);
       if (villasRef.current && !villasRef.current.contains(e.target as Node)) setVillasOpen(false);
-      const target = e.target as HTMLElement;
-      if (!target.closest("[data-dropdown]")) {
-        setLangOpen(false);
-      }
     };
     document.addEventListener("mousedown", handler);
     return () => document.removeEventListener("mousedown", handler);
@@ -154,22 +150,7 @@ export default function Header() {
               <Icon icon={faHeart} className="text-[9px]" />
               <span>{t('selection')}</span>
             </Link>
-            <div className="relative" data-dropdown>
-              <button onClick={() => { setLangOpen(!langOpen); }} className="flex items-center gap-1 hover:text-[#ffb000] transition-colors">
-                <Icon icon={faLanguage} className="text-[9px]" />
-                <span>{locale.toUpperCase()}</span>
-                <Icon icon={faChevronDown} className="text-[7px]" />
-              </button>
-              {langOpen && (
-                <div className="absolute right-0 top-full mt-1 bg-white text-gray-800 rounded-lg shadow-xl border border-gray-100 min-w-[120px] z-50 overflow-hidden">
-                  {languages.map((l) => (
-                    <button key={l.code} onClick={() => { router.push(pathname, {locale: l.code}); setLangOpen(false); }} className={`block w-full text-left px-4 py-2 text-sm hover:bg-blue-50 transition-colors ${l.code === locale ? "font-semibold text-black" : ""}`}>
-                      {l.label}
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
+            <LanguageSwitcher />
             <div className="relative" data-dropdown>
               <button onClick={() => { setCurrencyOpen(!currencyOpen); }} className="flex items-center gap-1 hover:text-[#ffb000] transition-colors">
                 <span className="text-[9px] font-bold">{currency === "EUR" ? "€" : currency === "MAD" ? "DH" : "$"}</span>

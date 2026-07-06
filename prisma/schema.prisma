@@ -157,21 +157,26 @@ enum BookingStatus {
 // ─── Services ───────────────────────────────────────────
 
 model Service {
-  id              String    @id @default(cuid())
-  title           String
-  slug            String    @unique
-  description     String    @db.Text
-  longDescription String?   @db.Text @map("long_description")
-  metaDescription String?   @db.Text @map("meta_description")
-  features        String?   @db.Text // JSON array of feature strings
-  image           String?
-  category        String?
-  price           Float?
-  priceUnit       String?   @map("price_unit") // per person, per session, per hour
-  isActive        Boolean   @default(true) @map("is_active")
-  sortOrder       Int       @default(0) @map("sort_order")
-  createdAt       DateTime  @default(now()) @map("created_at")
-  updatedAt       DateTime  @updatedAt @map("updated_at")
+  id                String    @id @default(cuid())
+  title             String
+  slug              String    @unique
+  description       String    @db.Text
+  titleEn           String?   @map("title_en")
+  descriptionEn     String?   @db.Text @map("description_en")
+  longDescription   String?   @db.Text @map("long_description")
+  longDescriptionEn String?   @db.Text @map("long_description_en")
+  metaDescription   String?   @db.Text @map("meta_description")
+  metaDescriptionEn String?   @db.Text @map("meta_description_en")
+  features          String?   @db.Text // JSON array of feature strings
+  featuresEn        String?   @db.Text @map("features_en")
+  image             String?
+  category          String?
+  price             Float?
+  priceUnit         String?   @map("price_unit") // per person, per session, per hour
+  isActive          Boolean   @default(true) @map("is_active")
+  sortOrder         Int       @default(0) @map("sort_order")
+  createdAt         DateTime  @default(now()) @map("created_at")
+  updatedAt         DateTime  @updatedAt @map("updated_at")
 
   @@map("services")
 }
@@ -187,6 +192,9 @@ model BlogPost {
   image       String?
   author      String    @default("Admin")
   category    String?
+  titleEn     String?   @map("title_en")
+  excerptEn   String?   @map("excerpt_en")
+  contentEn   String?   @db.Text @map("content_en")
   isPublished Boolean   @default(false) @map("is_published")
   publishedAt DateTime? @map("published_at")
   createdAt   DateTime  @default(now()) @map("created_at")
@@ -255,16 +263,18 @@ model Favorite {
 // ─── Locations ──────────────────────────────────────────
 
 model Location {
-  id          String    @id @default(cuid())
-  name        String
-  slug        String    @unique
-  description String?   @db.Text
-  image       String?
-  latitude    Float?
-  longitude   Float?
-  sortOrder   Int       @default(0) @map("sort_order")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  id            String    @id @default(cuid())
+  name          String
+  slug          String    @unique
+  description   String?   @db.Text
+  nameEn        String?   @map("name_en")
+  descriptionEn String?   @db.Text @map("description_en")
+  image         String?
+  latitude      Float?
+  longitude     Float?
+  sortOrder     Int       @default(0) @map("sort_order")
+  createdAt     DateTime  @default(now()) @map("created_at")
+  updatedAt     DateTime  @updatedAt @map("updated_at")
 
   @@map("locations")
 }
@@ -272,16 +282,19 @@ model Location {
 // ─── Hero Slides ────────────────────────────────────────
 
 model HeroSlide {
-  id          String    @id @default(cuid())
-  title       String
-  subtitle    String?
-  image       String
-  link        String?
-  buttonText  String?   @map("button_text")
-  sortOrder   Int       @default(0) @map("sort_order")
-  isActive    Boolean   @default(true) @map("is_active")
-  createdAt   DateTime  @default(now()) @map("created_at")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  id           String    @id @default(cuid())
+  title        String
+  subtitle     String?
+  image        String
+  link         String?
+  buttonText   String?   @map("button_text")
+  titleEn      String?   @map("title_en")
+  subtitleEn   String?   @map("subtitle_en")
+  buttonTextEn String?   @map("button_text_en")
+  sortOrder    Int       @default(0) @map("sort_order")
+  isActive     Boolean   @default(true) @map("is_active")
+  createdAt    DateTime  @default(now()) @map("created_at")
+  updatedAt    DateTime  @updatedAt @map("updated_at")
 
   @@map("hero_slides")
 }
@@ -294,6 +307,9 @@ model StaticPage {
   title       String
   content     String    @db.Text
   metaDesc    String?   @map("meta_desc")
+  titleEn     String?   @map("title_en")
+  contentEn   String?   @db.Text @map("content_en")
+  metaDescEn  String?   @map("meta_desc_en")
   updatedAt   DateTime  @updatedAt @map("updated_at")
 
   @@map("static_pages")
@@ -319,6 +335,7 @@ model SiteSetting {
   id        String   @id @default(cuid())
   key       String   @unique
   value     String?  @db.Text
+  valueEn   String?  @db.Text @map("value_en")
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("site_settings")

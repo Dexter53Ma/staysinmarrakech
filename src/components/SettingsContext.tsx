@@ -1,30 +1,42 @@
 "use client";
 
 import { createContext, useContext, useEffect, useState } from "react";
+import {useLocale} from 'next-intl';
 
 export interface SiteSettings {
   site_name?: string;
+  site_name_en?: string;
   site_description?: string;
+  site_description_en?: string;
   phone_1?: string;
   phone_2?: string;
   email?: string;
   address?: string;
+  address_en?: string;
   facebook?: string;
   twitter?: string;
   instagram?: string;
   linkedin?: string;
   logo_url?: string;
   hero_title?: string;
+  hero_title_en?: string;
   hero_subtitle?: string;
+  hero_subtitle_en?: string;
   location_title?: string;
+  location_title_en?: string;
   location_description?: string;
+  location_description_en?: string;
   location_image?: string;
   location_link_text?: string;
+  location_link_text_en?: string;
   location_link_href?: string;
   shortrental_title?: string;
+  shortrental_title_en?: string;
   shortrental_description?: string;
+  shortrental_description_en?: string;
   shortrental_image?: string;
   shortrental_link_text?: string;
+  shortrental_link_text_en?: string;
   shortrental_link_href?: string;
   stats_experience?: string;
   stats_clients?: string;
@@ -32,14 +44,24 @@ export interface SiteSettings {
   stats_services?: string;
   stats_presence?: string;
   events_title?: string;
+  events_title_en?: string;
   events_description?: string;
+  events_description_en?: string;
   events_image?: string;
   vacations_title?: string;
+  vacations_title_en?: string;
   vacations_description?: string;
+  vacations_description_en?: string;
   vacations_image?: string;
 }
 
-const SettingsContext = createContext<SiteSettings>({});
+export interface SiteSettingsContextValue extends SiteSettings {
+  getLocalizedValue: (valueFr: string | undefined, valueEn: string | undefined) => string | undefined;
+}
+
+const SettingsContext = createContext<SiteSettingsContextValue>({
+  getLocalizedValue: (valueFr) => valueFr,
+});
 
 export function useSettings() {
   return useContext(SettingsContext);
@@ -47,6 +69,7 @@ export function useSettings() {
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
   const [settings, setSettings] = useState<SiteSettings>({});
+  const locale = useLocale();
 
   useEffect(() => {
     fetch("/api/settings")
@@ -59,8 +82,13 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       .catch((e) => console.error("[SettingsContext] fetch error:", e));
   }, []);
 
+  const getLocalizedValue = (valueFr: string | undefined, valueEn: string | undefined): string | undefined => {
+    if (locale === 'en' && valueEn) return valueEn;
+    return valueFr;
+  };
+
   return (
-    <SettingsContext.Provider value={settings}>
+    <SettingsContext.Provider value={{...settings, getLocalizedValue}}>
       {children}
     </SettingsContext.Provider>
   );

@@ -1,13 +1,8 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
+import {useTranslations} from 'next-intl';
 import { Icon, faCalendarAlt, faChevronDown, faArrowLeft, faArrowRight } from "@/components/icons";
-
-const monthNames = [
-  "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
-];
-const dayNames = ["Lu", "Ma", "Me", "Je", "Ve", "Sa", "Di"];
 
 function CalendarGrid({
   value,
@@ -20,6 +15,7 @@ function CalendarGrid({
   minDate: Date;
   onSelect?: () => void;
 }) {
+  const t = useTranslations('dates');
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
@@ -33,6 +29,12 @@ function CalendarGrid({
   const cells: (number | null)[] = [];
   for (let i = 0; i < offset; i++) cells.push(null);
   for (let d = 1; d <= daysInMonth; d++) cells.push(d);
+
+  const monthNames = [
+    t('january'), t('february'), t('march'), t('april'), t('may'), t('june'),
+    t('july'), t('august'), t('september'), t('october'), t('november'), t('december'),
+  ];
+  const dayNames = [t('mon'), t('tue'), t('wed'), t('thu'), t('fri'), t('sat'), t('sun')];
 
   const selectDate = (day: number) => {
     const iso = `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -91,7 +93,7 @@ function CalendarGrid({
           }}
           className="text-xs font-semibold text-[#0d47a1] hover:underline"
         >
-          Aujourd&apos;hui
+          {t('today')}
         </button>
       </div>
     </div>
@@ -117,6 +119,7 @@ export default function DateCalendarPicker({
 }: DateCalendarPickerProps) {
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
+  const t = useTranslations('dates');
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -139,8 +142,9 @@ export default function DateCalendarPicker({
     return () => { document.body.style.overflow = ""; };
   }, [open]);
 
+  const locale = t('locale') || 'fr-FR';
   const displayValue = value
-    ? new Date(value + "T00:00:00").toLocaleDateString("fr-FR", {
+    ? new Date(value + "T00:00:00").toLocaleDateString(locale, {
         day: "numeric",
         month: "short",
         year: "numeric",
