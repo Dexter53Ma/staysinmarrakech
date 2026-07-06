@@ -1,5 +1,1113 @@
 {
   "common": {
-    "loading": "Chargement..."
+    "back": "Retour",
+    "loading": "Chargement...",
+    "error": "Une erreur est survenue",
+    "errorRetry": "Veuillez réessayer",
+    "retry": "Réessayer",
+    "notFound": "Page non trouvée",
+    "notFoundDesc": "La page que vous recherchez n'est pas disponible ou a été déplacée.",
+    "home": "Retour à l'accueil",
+    "skipToContent": "Aller au contenu principal",
+    "close": "Fermer",
+    "confirm": "Confirmer",
+    "cancel": "Annuler",
+    "save": "Enregistrer",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "viewAll": "Voir tout",
+    "seeDetails": "Voir détails",
+    "currency": "Devise",
+    "language": "Langue"
+  },
+  "navigation": {
+    "location": "Location",
+    "vente": "Vente",
+    "villaLuxe": "Villa de Luxe",
+    "villaException": "Villa d'Exception",
+    "agence": "L'agence",
+    "temoignages": "Témoignages",
+    "blog": "Blog",
+    "contact": "Contact",
+    "selection": "Sélection",
+    "services": "Services",
+    "allServices": "Voir tous les services",
+    "book": "Réserver",
+    "bookNow": "Réserver maintenant"
+  },
+  "homepage": {
+    "heroTitle": "Marrakech, Maroc",
+    "heroSubtitle": "Location de villas de luxe à Marrakech",
+    "heroConcierge": "Service de conciergerie dédié pour un séjour inoubliable",
+    "typeLabel": "Type",
+    "typeAll": "Tous",
+    "typeApartment": "Appartement",
+    "locationLabel": "Location",
+    "saleLabel": "Vente",
+    "arrivalLabel": "Arrivée",
+    "departureLabel": "Départ",
+    "whenLabel": "Quand?",
+    "guestsLabel": "Voyageurs",
+    "confirmLabel": "Confirmer",
+    "searchLabel": "Rechercher",
+    "chooseLabel": "Choisir",
+    "discoverTitle": "Découvrez notre sélection de villas de luxe à Marrakech",
+    "discoverSubtitle": "Une sélection des meilleures villas pour un séjour d'exception",
+    "terrain": "Terrain",
+    "surface": "Surface",
+    "bedrooms": "Chambres",
+    "pax": "Pax",
+    "new": "Nouveauté",
+    "fromPrice": "A partir de",
+    "perNight": "€/nuit",
+    "prev": "Précédent",
+    "next": "Suivant",
+    "removeSelection": "Retirer de la sélection",
+    "addSelection": "Ajouter à la sélection",
+    "experienceLabel": "Expérience",
+    "clientsLabel": "Base clients",
+    "qualityLabel": "Qualité villas",
+    "servicesLabel": "Services intégrés",
+    "presenceLabel": "Présence sur place",
+    "discoverMarrakech": "Découvrez Marrakech",
+    "seeMore": "Voir plus",
+    "shortTermRental": "Courte durée",
+    "contactUs": "Contactez-nous",
+    "vacationVillas": "Location villas Marrakech",
+    "vacationSubtitle": "Réservez une villa de luxe pour vos vacances à Marrakech",
+    "eventsTitle": "Événements",
+    "vacationsTitle": "Vacances",
+    "activitiesTitle": "Activités Marrakech à découvrir",
+    "newsletterTitle": "Restez informé",
+    "newsletterSubtitle": "Rejoignez notre newsletter pour recevoir nos offres exclusives",
+    "emailPlaceholder": "Votre adresse email",
+    "subscribe": "S'abonner",
+    "subscribeSuccess": "Inscription réussie!",
+    "subscribeError": "Erreur lors de l'inscription",
+    "subscribeNetworkError": "Erreur réseau. Veuillez réessayer.",
+    "blogTitle": "Derniers articles du blog",
+    "blogSubtitle": "Découvrez nos actualités et conseils pour votre séjour à Marrakech",
+    "noImage": "Pas d'image",
+    "seeAllArticles": "Voir tous les articles",
+    "testimonialsTitle": "Avis clients",
+    "testimonialsSubtitle": "Témoignages de nos clients",
+    "testimonialsDesc": "Ce que nos clients disent de leur expérience avec StaysInMarrakech",
+    "callUs": "Appelez-nous",
+    "backToTop": "Retour en haut",
+    "content": {
+      "expertiseTitle": "Notre expertise",
+      "expertiseHeading": "StaysInMarrakech — Votre expert en villas de luxe à Marrakech",
+      "expertiseP1": "Depuis 2014, StaysInMarrakech accompagne les voyageurs exigeants et les investisseurs dans la recherche de villas de luxe à Marrakech. Notre connaissance approfondie de la ville rouge et de ses quartiers prestigieux — Palmeraie, Gueliz, Route de l'Ourika, Amelkis, Targa — nous permet de vous proposer des propriétés d'exception, soigneusement sélectionnées pour leur architecture, leur cadre et leurs prestations.",
+      "statClients": "Clients satisfaits",
+      "statClientsDesc": "Plus de mille familles et voyageurs nous font confiance chaque année pour leurs séjours à Marrakech.",
+      "statVillas": "Villas de prestige",
+      "statVillasDesc": "Une sélection exclusive de villas avec piscine privée, jardin et services de conciergerie haut de gamme.",
+      "statYears": "Années d'expérience",
+      "statYearsDesc": "Une décennie d'expertise dans l'immobilier de luxe à Marrakech, au service de votre satisfaction.",
+      "stayTitle": "Location de villas de luxe à Marrakech — Un séjour d'exception vous attend",
+      "stayP1": "Marrakech, la ville rouge, fascine par ses palais, ses jardins et son atmosphère unique. Que vous veniez pour des vacances en famille, un voyage entre amis, un mariage d'exception ou un séjour d'affaires, StaysInMarrakech met à votre disposition des villas de luxe qui sublimeront votre expérience.",
+      "stayP2": "Nos villas sont situées dans les quartiers les plus prisés de Marrakech. La Palmeraie offre un cadre verdoyant et paisible à quelques minutes du centre-ville. Gueliz, le quartier moderne, combine proximité des commerces et tranquillité. La route de l'Ourika séduit par ses panoramas sur l'Atlas, tandis qu'Amelkis et Targa sont réputés pour leurs domaines golfiques et leur tranquillité.",
+      "stayP3": "Chaque villa proposée par StaysInMarrakech est équipée de piscines privées chauffées, de jardins paysagers, d'espaces de vie spacieux et d'équipements haut de gamme. Notre équipe de conciergerie est disponible 7 jours sur 7 pour organiser vos transferts, réservations de restaurants, activités et excursions dans le désert d'Agafay ou les montagnes de l'Atlas.",
+      "bookingTitle": "Comment réserver votre villa de luxe à Marrakech ?",
+      "bookingP1": "Réserver une villa avec StaysInMarrakech est simple et sécurisé. Parcourez notre catalogue de propriétés, sélectionnez les dates de votre séjour et complétez le formulaire de réservation. Notre équipe vous recontacte sous 24 heures pour finaliser votre booking et répondre à toutes vos questions. Vous pouvez également nous contacter directement par téléphone au +212 6 21 18 94 96 ou par email à contact@staysinmarrakech.com pour un accompagnement personnalisé.",
+      "bookingP2": "Chaque réservation inclut un accueil personnalisé à l'aéroport de Marrakech-Ménara, un transfert privé vers votre villa, et un briefing complet avec notre équipe sur site. Vous bénéficiez également d'un interlocuteur dédié pendant toute la durée de votre séjour pour gérer toutes vos demandes.",
+      "conciergeTitle": "Services de conciergerie premium",
+      "conciergeP1": "Au-delà de la location de villas, StaysInMarrakech vous propose une gamme complète de services : chef privée pour des dîners gastronomiques, bien-être et spa à domicile, excursions en quad, buggy et balade en dromadaire, location de voitures de luxe et organisation d'événements dans des cadres exceptionnels. Notre objectif : transformer votre séjour à Marrakech en une expérience inoubliable.",
+      "conciergeP2": "Notre équipe de conciergerie est composée de professionnels locaux qui connaissent intimement Marrakech et ses alentours. Ils se chargent de tout : réservations dans les meilleurs restaurants, organisent des visites privées de la médina, des jardins Majorelle et Bahia, ou des excursions au désert d'Agafay. Que vous souhaitiez une journée détente au bord de la piscine ou une aventure dans les montagnes de l'Atlas, nous créons un programme sur mesure adapté à vos envies.",
+      "destinationTitle": "Marrakech — Une destination qui fascine",
+      "destinationP1": "Marrakech est bien plus qu'une simple destination touristique. C'est une ville qui marque les esprits par son contraste saisissant entre la médina millénaire et la ville moderne de Gueliz, entre les souks animés et les riads paisibles, entre le désert et les montagnes enneigées de l'Atlas. La ville rouge offre une mosaïque d'expériences culturelles, gastronomiques et sportives qui raviront tous les types de voyageurs.",
+      "destinationP2": "Que vous soyez passionné d'histoire et d'architecture, amateur de bonne cuisine, sportif en quête d'aventure ou simplement en quête de détente et de bien-être, Marrakech a tout pour vous satisfaire. Et avec une villa de luxe StaysInMarrakech comme base, vous profiterez du meilleur de la ville dans le confort et l'élégance les plus absolus."
+    }
+  },
+  "properties": {
+    "title": "Nos propriétés",
+    "subtitle": "Découvrez notre sélection de villas et propriétés de luxe à Marrakech",
+    "noResults": "Aucune propriété trouvée",
+    "noResultsDesc": "Essayez de modifier vos filtres",
+    "resultsCount": "propriétés trouvées",
+    "bedrooms": "chambres",
+    "bathrooms": "sdb",
+    "perNight": "/nuit",
+    "noImage": "Aucune image",
+    "filters": "Filtres",
+    "all": "Tous",
+    "villa": "Villa",
+    "riad": "Riad",
+    "apartment": "Appartement",
+    "house": "Maison",
+    "land": "Terrain",
+    "commercial": "Commercial",
+    "sortRecent": "Plus récent",
+    "sortPriceAsc": "Prix croissant",
+    "sortPriceDesc": "Prix décroissant",
+    "sortViews": "Plus vues",
+    "forRent": "Location",
+    "forSale": "Vente",
+    "budget": "Budget",
+    "bedroomsMin": "Chambres (min)",
+    "allBedrooms": "Toutes",
+    "quarter": "Quartier",
+    "amenities": "Équipements",
+    "sortBy": "Trier par",
+    "reset": "Réinitialiser",
+    "apply": "Appliquer",
+    "openFilters": "Ouvrir les filtres",
+    "featured": "Vedette",
+    "guests": "pers.",
+    "back": "Retour",
+    "views": "vues",
+    "description": "Description",
+    "amenitiesTitle": "Équipements",
+    "salePrice": "Prix de vente",
+    "contact": "Contacter",
+    "nights": "nuit(s)",
+    "total": "Total",
+    "selectDates": "Sélectionnez vos dates",
+    "bookingBtn": "Réserver",
+    "editDates": "Modifier/Choisir les dates",
+    "guestsLabel": "Voyageurs",
+    "fullName": "Nom complet",
+    "email": "Email",
+    "phone": "Téléphone (optionnel)",
+    "message": "Message (optionnel)",
+    "sendSuccess": "Demande envoyée avec succès!",
+    "sendError": "Erreur lors de l'envoi",
+    "selectDatesError": "Veuillez sélectionner vos dates",
+    "cleaningFee": "Frais de ménage",
+    "serviceFee": "Frais de service",
+    "continue": "Continuer",
+    "verify": "Vérifier",
+    "confirmRequest": "Confirmer la demande",
+    "sending": "Envoi...",
+    "dates": "Dates",
+    "info": "Infos",
+    "confirm": "Confirm.",
+    "bedroomsFeature": "Chambres",
+    "bathroomsFeature": "Salles de bain",
+    "garages": "Garages",
+    "maxGuests": "Max. voyageurs",
+    "plotArea": "Terrain",
+    "builtArea": "Surface construite",
+    "yearBuilt": "Année construction",
+    "minStay": "Min. séjour",
+    "featuresTitle": "Caractéristiques",
+    "nightsUnit": "nuits",
+    "reviews": "Avis",
+    "similarTitle": "Propriétés similaires",
+    "bedroomsAbbrev": "ch.",
+    "bathroomsAbbrev": "sdb",
+    "availability": "Disponibilité",
+    "liveCalendar": "Calendrier en temps réel",
+    "daysReserved": "jour(s) réservé(s)",
+    "available": "Disponible",
+    "reserved": "Réservé",
+    "today": "Aujourd'hui",
+    "legend": "Légende",
+    "daysThisMonth": "jours ce mois",
+    "daysBlocked": "jours bloqués"
+  },
+  "services": {
+    "title": "Nos Services & Activités",
+    "subtitle": "Découvrez notre sélection de services et activités à Marrakech",
+    "specificRequest": "Une demande spécifique?",
+    "contactUs": "Contactez-nous",
+    "whatsIncluded": "Ce qui est inclus",
+    "interested": "Intéressé par ce service?",
+    "requestQuote": "Demandez un devis",
+    "callUs": "Appelez-nous",
+    "summary": "Résumé",
+    "otherServices": "Autres services",
+    "location": "Marrakech, Maroc",
+    "notFound": "Service introuvable",
+    "serviceInMarrakech": "Service à Marrakech",
+    "highPoints": "Points forts",
+    "whatWeOffer": "Ce que nous offrons",
+    "whyChoose": "Pourquoi choisir StaysInMarrakech",
+    "similarArticles": "Articles similaires",
+    "bookActivity": "Réserver cette activité",
+    "similarActivities": "Activités similaires",
+    "newService": "Nouveau service",
+    "editService": "Modifier le service",
+    "titleLabel": "Titre",
+    "shortDesc": "Description courte",
+    "fullContent": "Contenu complet",
+    "metaDesc": "Meta description",
+    "featuresLabel": "Features / Inclus",
+    "imageUrl": "URL de l'image",
+    "category": "Catégorie",
+    "priceLabel": "Prix",
+    "priceUnit": "Unite de prix",
+    "saving": "Enregistrement...",
+    "update": "Mettre à jour",
+    "create": "Créer",
+    "cancel": "Annuler",
+    "error": "Erreur",
+    "networkError": "Erreur réseau",
+    "data": {
+      "votre-sejour": {
+        "title": "Votre séjour",
+        "category": "Conciergerie",
+        "metaDescription": "Service de conciergerie de luxe à Marrakech. Concierge dédié, check-in VIP, ménage, blanchisserie et services sur mesure pour un séjour inoubliable.",
+        "description": "Profitez d'un séjour de luxe à Marrakech avec nos services de conciergerie dédiés. Un concierge personnel s'occupe de chaque détail pour que vous n'ayez rien à faire.",
+        "longDescription": "Notre service de conciergerie premium met à votre disposition un conseiller dédié dès votre arrivée à Marrakech. Du transfert aéroport à l'organisation de vos activités, chaque demande est traitée avec une attention minutieuse. Nous gérons le check-in et le check-out de votre villa, coordonnons le ménage quotidien, supervisons la blanchisserie et veillons à ce que votre espace soit toujours impeccable.",
+        "features": [
+          "Concierge personnel dédié 24h/24",
+          "Check-in et check-out VIP dans votre villa",
+          "Ménage quotidien par équipe professionnelle",
+          "Service de blanchisserie et repassage",
+          "Gestion des courses et approvisionnement",
+          "Réservations restaurants et activités",
+          "Assistance multilingue (FR, EN, AR)",
+          "Service de garde d'enfants sur demande"
+        ],
+        "highlights": [
+          "Un seul interlocuteur pour tout votre séjour",
+          "Disponible 7j/7 par téléphone et WhatsApp",
+          "Réponse garantie en moins de 30 minutes"
+        ]
+      },
+      "vos-repas": {
+        "title": "Vos repas",
+        "category": "Gastronomie",
+        "metaDescription": "Cuisine privée et traiteur de luxe à Marrakech. Chef cuisinier marocain et international, menus sur mesure, dîners privés dans votre villa.",
+        "description": "Nos cuisiniers préparent des repas savoureux adaptés à vos envies. Cuisine marocaine authentique ou gastronomie internationale, directement dans votre villa.",
+        "longDescription": "Oubliez les restaurants bondés et savourez une expérience culinaire privée au confort de votre villa. Nos chefs cuisiniers, formés dans les meilleurs établissements de Marrakech et de l'international, préparent des repas exceptionnels adaptés à vos goûts, allergies et régimes alimentaires. Du petit-déjeuner copieux au dîner gastronomique sous les étoiles, chaque repas devient un moment de partage.",
+        "features": [
+          "Chef cuisinier marocain et international",
+          "Menus sur mesure (halal, végétarien, sans gluten)",
+          "Petit-déjeuner, déjeuner et dîner",
+          "Courses et approvisionnement inclus",
+          "Vaisselle et nettoyage compris",
+          "Dîners privés en terrasse ou jardin",
+          "Cours de cuisine marocaine disponibles",
+          "Service de traiteur pour événements"
+        ],
+        "highlights": [
+          "Produits frais du marché de Marrakech",
+          "Menus adaptés aux enfants",
+          "Possibilité de dîners thématiques"
+        ]
+      },
+      "votre-transport-sur-place": {
+        "title": "Votre transport sur place",
+        "category": "Transport",
+        "metaDescription": "Location de voitures de luxe avec chauffeur à Marrakech. VTC, berlines, minibus, navettes aéroport. Transferts privés et déplacements sur mesure.",
+        "description": "Déplacez-vous en toute sérénité avec nos services de transport de luxe. VTC, berlines, minibus... nous avons la solution pour tous vos déplacements à Marrakech.",
+        "longDescription": "Que ce soit pour un transfert depuis l'aéroport Marrakech Ménara, une journée d'excursion dans l'Atlas ou simplement pour vous déplacer dans la ville, notre flotte de véhicules de luxe et nos chauffeurs professionnels vous garantissent un trajet confortable et ponctuel. Chaque véhicule est climatisé, spacieux et entretenu selon les normes les plus strictes.",
+        "features": [
+          "Flotte de véhicules premium (Mercedes, BMW, Audi)",
+          "Chauffeurs professionnels et multilingues",
+          "Transferts aéroport aller-retour",
+          "Excursions journée dans l'Atlas et le désert",
+          "Mise à disposition pour la journée ou la semaine",
+          "Sièges bébé et rehausseurs disponibles",
+          "Eau minérale et Wi-Fi dans chaque véhicule",
+          "Réservation 24h/24 par téléphone ou WhatsApp"
+        ],
+        "highlights": [
+          "Ponctualité garantie",
+          "Véhicules neufs et climatisés",
+          "Pas de frais cachés"
+        ]
+      },
+      "van-avec-chauffeur": {
+        "title": "Van avec chauffeur",
+        "category": "Transport",
+        "metaDescription": "Location van avec chauffeur à Marrakech. Transport de groupes, familles et séminaires. Vans spacieux et confortables avec chauffeur professionnel.",
+        "description": "Voyagez confortablement en van avec chauffeur pour vos déplacements à Marrakech et ses alentours. Idéal pour les groupes et les familles nombreuses.",
+        "longDescription": "Notre service de van avec chauffeur est la solution idéale pour les groupes, familles nombreuses et séminaires d'entreprise. Nos vans 7, 8 et 15 places offrent un espace généreux pour les passagers et leurs bagages. Que ce soit pour un transfert aéroport, une excursion dans l'Atlas ou une journée de découverte de Marrakech, votre chauffeur vous attend à l'heure et vous accompagne tout au long de la journée.",
+        "features": [
+          "Vans 7, 8 et 15 places climatisés",
+          "Chauffeur professionnel et courtois",
+          "Grand espace bagages",
+          "Transferts aéroport groupes",
+          "Excursions journée avec itinéraire personnalisé",
+          "Eau, Wi-Fi et chargeurs USB à bord",
+          "Service de porte-à-porte",
+          "Facturation transparente"
+        ],
+        "highlights": [
+          "Idéal pour groupes de 4 à 15 personnes",
+          "Réduction pour réservations longue durée",
+          "Chauffeur à votre disposition toute la journée"
+        ]
+      },
+      "votre-bien-etre": {
+        "title": "Votre bien être",
+        "category": "Bien-être",
+        "metaDescription": "Services de bien-être et spa à Marrakech. Massage, yoga, hammam, sonothérapie et soins du corps. Relaxation et détente dans votre villa.",
+        "description": "Offrez-vous des moments de détente absolue avec nos services de bien-être. Yoga, massage, hammam, spa... nous sublimons votre séjour.",
+        "longDescription": "Marrakech est une ville de sérénité et de traditions millénaires. Plongez dans cette atmosphère unique avec nos services de bien-être exclusifs. Nos praticiens certifiés se déplacent directement dans votre villa pour vous offrir des moments de relaxation profonde. Du massage relaxant à la sonothérapie, en passant par le yoga de l'aube sur votre terrasse, chaque soin est une invitation au lâcher-prise.",
+        "features": [
+          "Massage relaxant, thai, californien et balinais",
+          "Séance de yoga et pilates en villa ou en plein air",
+          "Hammam traditionnel marocain avec gommage",
+          "Sonothérapie et méditation sonore",
+          "Soins du corps et du visage",
+          "Réflexologie plantaire",
+          "Rituels bien-être pour couples",
+          "Séances de respiration et cohérence cardiaque"
+        ],
+        "highlights": [
+          "Praticiens certifiés et expérimentés",
+          "Déplacement dans votre villa",
+          "Produits naturels et bio"
+        ]
+      },
+      "vos-activites": {
+        "title": "Vos activités",
+        "category": "Activités",
+        "metaDescription": "Toutes les activités à Marrakech : quad, buggy, montgolfière, wakeboard, jet ski, VTT, golf. Réservez vos expériences inoubliables.",
+        "description": "Découvrez notre sélection d'activités pour rendre votre séjour inoubliable. Quad, buggy, montgolfière, wakeboard, jet ski et bien plus.",
+        "longDescription": "Marrakech offre une diversité d'activités exceptionnelle, entre montagnes de l'Atlas, Palmeraie verdoyante et lacs paisibles. Notre équipe sélectionne pour vous les meilleures expériences, encadrées par des professionnels passionnés. Que vous soyez en quête de sensations fortes ou de moments de détente, nous avons l'activité parfaite pour chaque membre de votre groupe.",
+        "features": [
+          "Quad et buggy en Palmeraie et montagne",
+          "Montgolfière au lever du soleil",
+          "Wakeboard et jet ski sur les lacs",
+          "Excursions VTT dans l'Atlas",
+          "Golf sur les parcours prestigieux",
+          "Equitation et balades à cheval",
+          "Karting, paintball et side-car",
+          "Visites culturelles et découverte"
+        ],
+        "highlights": [
+          "Activités pour tous les âges",
+          "Équipement de sécurité fourni",
+          "Transfert inclus depuis votre villa"
+        ]
+      },
+      "quad-buggy": {
+        "title": "Quad/Buggy",
+        "category": "Sensations fortes",
+        "metaDescription": "Location de quad et buggy à Marrakech. Balade en Palmeraie et montagne de l'Atlas. Séances de 1h à 4h avec guide expert. Tous niveaux.",
+        "description": "Envie de sensations fortes ? Découvrez la Palmeraie et les pistes de montagne en quad ou en buggy avec un guide expert.",
+        "longDescription": "Parcourez les pistes sablonneuses de la Palmeraie de Marrakech en quad ou en buggy. Notre équipe de guides passionnés vous emmène à la découverte de paysages grandioses, entre oliveraies, palmeraies et villages berbères. Les véhicules, régulièrement entretenus et équipés de protections complètes, sont adaptés à tous les niveaux, des débutants aux conducteurs expérimentés.",
+        "features": [
+          "Quads 150cc, 250cc et 450cc",
+          "Buggys 2 places et 4 places",
+          "Parcours de 1h à 4h en Palmeraie",
+          "Excursion montagne dans l'Atlas",
+          "Guide expert et formé à la sécurité",
+          "Casques, gants et lunettes fournis",
+          "Eau minérale et rafraîchissements inclus",
+          "Photos et vidéos du parcours disponibles"
+        ],
+        "highlights": [
+          "Aucun permis nécessaire (quad 150cc)",
+          "Départ directement depuis votre villa",
+          "Parcours adapté aux débutants et confirmés"
+        ]
+      },
+      "montgolfiere": {
+        "title": "Montgolfière à Marrakech",
+        "category": "Expérience unique",
+        "metaDescription": "Vol en montgolfière au lever du soleil à Marrakech. Vol au-dessus de la Palmeraie et de l'Atlas. Expérience inoubliable avec champagne.",
+        "description": "Volez au-dessus de la Palmeraie en montgolfière et découvrez Marrakech sous un angle unique. Une expérience inoubliable au lever du soleil.",
+        "longDescription": "L'expérience du vol en montgolfière à Marrakech est l'une des activités les plus emblématiques de la ville. Décollage à l'aube depuis la Palmeraie, ascension douce au-dessus des palmeraies et des villages berbères, avec en toile de fond les sommets enneigés de l'Atlas. À l'atterrissage, un petit-déjeuner traditionnel marocain avec thé à la menthe et jus d'orange frais vous attend. Un souvenir gravé à jamais.",
+        "features": [
+          "Vol au lever du soleil (départ 6h-7h)",
+          "Durée du vol : 45 à 60 minutes",
+          "Capacité : 16 à 24 passagers par nacelle",
+          "Petit-déjeuner marocain inclus",
+          "Certificat de vol souvenir",
+          "Transfert aller-retour depuis votre villa",
+          "Guide francophone à bord",
+          "Vol possible toute l'année (météo permitting)"
+        ],
+        "highlights": [
+          "Vue panoramique sur l'Atlas et la Palmeraie",
+          "Expérience romantique pour couples",
+          "Idéal pour célébrer un anniversaire"
+        ]
+      },
+      "wakeboard-marrakech": {
+        "title": "Wakeboard à Marrakech",
+        "category": "Sports nautiques",
+        "metaDescription": "Wakeboard et wake sur lac à Marrakech. École de wakeboard pour débutants et confirmés. Équipement complet et moniteur diplômé.",
+        "description": "Envie de sensations aquatiques ? Le wakeboard est l'activité parfaite pour les amateurs de sports nautiques sur les lacs de Marrakech.",
+        "longDescription": "Les lacs de Marrakech, nichés au pied de l'Atlas, offrent un cadre idéal pour pratiquer le wakeboard. Que vous soyez débutant ou rider confirmé, nos moniteurs diplômés vous accompagnent pour progresser rapidement en toute sécurité. Le câble de traction permet de glisser à vitesse constante tout en profitant du paysage spectaculaire des montagnes.",
+        "features": [
+          "Lac artificiel avec câble de traction",
+          "Écoles pour débutants et confirmés",
+          "Moniteurs diplômés et francophones",
+          "Équipement complet fourni (board, gilet, casque)",
+          "Cours individuels et en groupe",
+          "Séances de 1h à demi-journée",
+          "Eau tiède en été (juin-septembre)",
+          "Vestiaires et douches sur place"
+        ],
+        "highlights": [
+          "Accessible dès 8 ans",
+          "Progression rapide avec le câble",
+          "Cadre exceptionnel au pied de l'Atlas"
+        ]
+      },
+      "vtt": {
+        "title": "Excursions VTT",
+        "category": "Aventure",
+        "metaDescription": "Excursions VTT dans l'Atlas et la Palmeraie de Marrakech. Parcours pour tous les niveaux. VTT électrique disponible. Guide expert inclus.",
+        "description": "Parcourez les sentiers de l'Atlas et de la Palmeraie en VTT. Des parcours adaptés à tous les niveaux pour découvrir les paysages exceptionnels.",
+        "longDescription": "Marrakech est un terrain de jeu exceptionnel pour les amateurs de VTT. Des sentiers de la Palmeraie aux cols de l'Atlas, nos excursions vous emmènent à la découverte de paysages variés : palmeraies, gorges, villages berbères et terrasses agricoles. Nos guides locaux connaissent chaque sentier et partagent avec vous leur passion pour la montagne et la culture amazigh.",
+        "features": [
+          "VTT traditionnel et VTT électrique (e-MTB)",
+          "Parcours Palmeraie, montagne et mixed",
+          "Difficultés : facile, moyenne, difficile",
+          "Durée : demi-journée ou journée complète",
+          "Guide expert et formé aux premiers secours",
+          "Véhicule de support sur les parcours longs",
+          "Casque et gants fournis",
+          "Pique-nique ou déjeuner inclus (journée)"
+        ],
+        "highlights": [
+          "E-MTB pour les débutants (assistance électrique)",
+          "Départ et retour depuis votre villa",
+          "Petit-déjeuner berbère en montagne possible"
+        ]
+      },
+      "terres-d-amanar-polo-berbere-babyfoot-humain-tyrolienne-accrobranche": {
+        "title": "Grand Canyon",
+        "category": "Aventure",
+        "metaDescription": "Parcours aventure au Grand Canyon de Marrakech. Tyrolienne, accrobranche, polo berbère et team building. Sensations garanties pour tous.",
+        "description": "Vivez une aventure unique au Grand Canyon de Marrakech. Tyrolienne, accrobranche, polo berbère... des sensations garanties pour toute la famille.",
+        "longDescription": "Le complexe des Terres d'Amanar, situé à 30 minutes de Marrakech, offre un parcours aventure complet au cœur de la nature. Glissez sur la tyrolienne de 180 mètres, enchaînez les ponts suspendus de l'accrobranche, affrontez vos amis au baby-foot géant humain ou initiés au polo berbère. Un terrain de jeu d'exception pour les familles, groupes d'amis et séminaires d'entreprise.",
+        "features": [
+          "Tyrolienne de 180 mètres",
+          "Parcours accrobranche 5 niveaux",
+          "Baby-foot humain géant",
+          "Initiation au polo berbère",
+          "Team building et games sur mesure",
+          "Déjeuner traditionnel inclus",
+          "Guide et moniteurs diplômés",
+          "Accessible dès 6 ans"
+        ],
+        "highlights": [
+          "Séjour d'une demi-journée ou journée complète",
+          "Cadre naturel exceptionnel dans l'Atlas",
+          "Idéal pour anniversaire et événements"
+        ]
+      },
+      "golf-1": {
+        "title": "Golf",
+        "category": "Sport",
+        "metaDescription": "Golf à Marrakech : Greenaouia Palmeraie, Amelkis, Royal Golf. Réservation parcours, cours avec pro et forfaits tout compris.",
+        "description": "Marrakech est un paradis pour les golfeurs. Profitez de nos parcours prestigieux 18 trous avec vue spectaculaire sur l'Atlas.",
+        "longDescription": "Marrakech compte certains des plus beaux parcours de golf d'Afrique du Nord. Des fairways de la Palmeraie aux terrains ombragés de l'Atlas, chaque parcours offre un cadre exceptionnel. Nous réservons vos créneaux, organisons les transferts et proposons des séances avec un pro pour parfaire votre swing sous le soleil de Marrakech.",
+        "features": [
+          "Réservation sur les meilleurs parcours de Marrakech",
+          "Greenaouia Palmeraie, Amelkis, Royal Golf, Noria",
+          "Transferts aller-retour depuis votre villa",
+          "Location de matériel complet (clubs, chariot)",
+          "Cours avec pro certifié PGA",
+          "Forfaits demi-journée et journée",
+          "Restaurant et club house sur place",
+          "Compétitions et tournois organisés"
+        ],
+        "highlights": [
+          "Parcours ouverts toute l'année",
+          "Climat idéal même en hiver (18-22°C)",
+          "Réduction pour groupes et séminaires"
+        ]
+      },
+      "desert-sensation": {
+        "title": "Désert sensation",
+        "category": "Aventure",
+        "metaDescription": "Excursion désert depuis Marrakech : buggy, quad, dromadaire et bivouac sous les étoiles. Aventure de 1 jour à 3 jours dans les dunes.",
+        "description": "Partez à l'aventure dans le désert de Marrakech. Buggy, quad, dromadaire... vivez des moments inoubliables au cœur des dunes.",
+        "longDescription": "Le désert de Marrakech, à quelques heures de la ville, vous attend pour une aventure unique. Parcourez les dunes en buggy ou en quad, chevauchez un dromadaire au coucher du soleil et dormez sous les étoiles dans un bivouac de luxe. Nos excursions désert sont conçues pour tous les âges et tous les niveaux d'adrénaline.",
+        "features": [
+          "Excursion d'une journée au désert d'Agafay",
+          "Séjours de 2 à 3 jours au Sahara (Merzouga)",
+          "Buggy, quad et 4x4 dans les dunes",
+          "Chevauchée de dromadaire au coucher du soleil",
+          "Bivouac de luxe sous les étoiles",
+          "Dîner traditionnel avec musique berbère",
+          "Petit-déjeuner et déjeuner inclus",
+          "Transfert depuis votre villa inclus"
+        ],
+        "highlights": [
+          "Désert d'Agafay à 40 min de Marrakech",
+          "Sahara (Merzouga) pour les grands voyages",
+          "Expérience magique au coucher du soleil"
+        ]
+      },
+      "visites-decouvertes": {
+        "title": "Visites découvertes",
+        "category": "Culture",
+        "metaDescription": "Visites guidées à Marrakech : Jardin Majorelle, Bahia, Koutoubia, souks, Ourika. Guide francophone, demi-journée ou journée complète.",
+        "description": "Découvrez les trésors de Marrakech avec nos visites guidées. Jardin Majorelle, Bahia, Koutoubia, souks et bien plus.",
+        "longDescription": "Marrakech regorge de trésors architecturaux et culturels. Nos guides passionnés et francophones vous emmènent à la découverte des sites incontournables et des cachettes secrètes de la ville. Du Jardin Majorelle aux souks animés, en passant par le Palais Bahia et la Koutoubia, chaque visite est une immersion dans l'histoire et la culture marocaine.",
+        "features": [
+          "Guide francophone certifié",
+          "Jardin Majorelle + Musée Yves Saint Laurent",
+          "Palais Bahia et Palais El Badi",
+          "Mosquée Koutoubia (extérieur)",
+          "Souks de la médina et artisanat",
+          "Cimetière Saâdien",
+          "Jardin Secret et Le Tanja",
+          "Demi-journée ou journée complète"
+        ],
+        "highlights": [
+          "Petit-déjeuner traditionnel au souk inclus",
+          "Dégustation de thé à la menthe",
+          "Arrêts photos dans les meilleurs spots"
+        ]
+      },
+      "equitation": {
+        "title": "Equitation",
+        "category": "Nature",
+        "metaDescription": "Balade à cheval à Marrakech : Palmeraie, montagne Atlas, plages d'Essaouira. Équitation pour débutants et confirmés. Poneys pour enfants.",
+        "description": "Promenez-vous à cheval dans les paysages exceptionnels de Marrakech. Balades en Palmeraie, randonnées en montagne, galop sur la plage.",
+        "longDescription": "L'equitation est une tradition séculaire au Maroc. Nos écuries, situées en Palmeraie ou au pied de l'Atlas, proposent des balades adaptées à tous les niveaux, des débutants aux cavaliers expérimentés. Chevaux et poneys bien dressés, encadrement passionné et paysages à couper le souffle pour des moments inoubliables.",
+        "features": [
+          "Balade en Palmeraie (1h, 2h, demi-journée)",
+          "Randonnée en montagne de l'Atlas",
+          "Galop sur la plage d'Essaouira (excursion)",
+          "Poneys pour enfants dès 4 ans",
+          "Cavaliers et guides professionnels",
+          "Chevaux arabes et barbes bien dressés",
+          "Casque et équipement fournis",
+          "Thé à la menthe au retour de balade"
+        ],
+        "highlights": [
+          "Aucune expérience nécessaire pour les débutants",
+          "Cadre exceptionnel des palmeraies",
+          "Excursion Essaouira possible en journée"
+        ]
+      },
+      "yoga-et-pilates": {
+        "title": "Yoga et Pilates",
+        "category": "Bien-être",
+        "metaDescription": "Cours de yoga et pilates à Marrakech. Instructeur certifié dans votre villa ou en extérieur. Hatha, vinyasa, yin et reformer. Tous niveaux.",
+        "description": "Séance de yoga et pilates dans le confort de votre villa ou en plein air. Nos instructeurs certifiés vous accompagnent.",
+        "longDescription": "Le climat ensoleillé de Marrakech est idéal pour pratiquer le yoga et le pilates en plein air. Nos instructeurs certifiés se déplacent dans votre villa, sur votre terrasse ou dans le jardin pour des séances personnalisées. Du yoga de l'aube au pilates du crépuscule, chaque séance est une parenthèse de sérénité au milieu de votre séjour.",
+        "features": [
+          "Cours de yoga (Hatha, Vinyasa, Yin, Restauratif)",
+          "Cours de pilates (mat et reformer)",
+          "Séances privées ou en petit groupe",
+          "En villa, en terrasse ou en jardin",
+          "Horaires flexibles (matin ou soir)",
+          "Tous niveaux : débutant à avancé",
+          "Matériel fourni (tapis, blocs, sangles)",
+          "Séances méditation et respiration"
+        ],
+        "highlights": [
+          "Instructeurs certifiés RYT-200 minimum",
+          "Séance d'essai gratuite de 30 min",
+          "Idéal pour retrouver forme et énergie"
+        ]
+      },
+      "aqua-karting": {
+        "title": "Aqua Karting",
+        "category": "Famille",
+        "metaDescription": "Aqua karting à Marrakech : karting sur l'eau pour toute la famille. Activité originale et fun. Location par session de 15 min.",
+        "description": "Le karting aquatique, une activité originale et fun pour toute la famille. Adrénaline et rires garantis sur l'eau.",
+        "longDescription": "L'aqua karting est l'activité la plus originale de Marrakech. Des karts sur pneus spéciaux glissent sur la surface de l'eau pour une expérience unique et hilarante. Accessible dès 6 ans avec un adulte, c'est l'activité parfaite pour une pause ludique entre deux visites ou pour occuper les enfants en toute sécurité.",
+        "features": [
+          "Karts sur l'eau à propulsion humaine",
+          "Accessible dès 6 ans (accompagné)",
+          "Sessions de 15 et 30 minutes",
+          "Équipement de sécurité fourni",
+          "Piscine dédiée et sécurisée",
+          "Surveillance par maître-nageur",
+          "Activité en extérieur, soleil garanti",
+          "Idéal pour groupes et anniversaires"
+        ],
+        "highlights": [
+          "Activité unique à Marrakech",
+          "Fun garanti pour petits et grands",
+          "Pas besoin de savoir nager"
+        ]
+      },
+      "karting": {
+        "title": "Karting",
+        "category": "Sensations fortes",
+        "metaDescription": "Circuit de karting à Marrakech. Karts seniors et juniors. Chronomètre, courses privées et événements d'entreprise.",
+        "description": "Prouvez vos talents de pilote sur notre circuit de karting professionnel. Émotions et vitesse pour petits et grands.",
+        "longDescription": "Notre circuit de karting, conçu selon les normes FIA, offre des sensations de vitesse authentiques dans un environnement sécurisé. Karts 4 temps puissants, chicanes techniques et lignes droites rapides pour un parcours exigeant. Chronomètre professionnel pour défier vos amis et famille. Les plus petits ont leurs propres karts junior sur un circuit adapté.",
+        "features": [
+          "Circuit professionnel de 800m",
+          "Karts seniors 4 temps (270cc)",
+          "Karts juniors dès 8 ans",
+          "Chronomètre en temps réel",
+          "Courses privées pour groupes",
+          "Événements d'entreprise et team building",
+          "Casque, combinaison et gants fournis",
+          "Briefing sécurité et formation incluse"
+        ],
+        "highlights": [
+          "Circuit homologué et sécurisé",
+          "Records personnels et podium",
+          "Idéal pour anniversaire et EVJF/EVG"
+        ]
+      },
+      "paintball": {
+        "title": "Paintball",
+        "category": "Team building",
+        "metaDescription": "Paintball à Marrakech : terrain en pleine nature, équipement complet, scénarios sur mesure. Team building, enterrement de vie et groupes.",
+        "description": "Affrontez vos amis sur notre terrain de paintball en pleine nature. Stratégie, team spirit et adrénaline au programme.",
+        "longDescription": "Notre terrain de paintball, situé en pleine nature à la sortie de Marrakech, offre des scénarios variés et immersifs. Forteresse, jungle, village berbère... chaque partie est une aventure stratégique unique. Équipement de dernière génération, barrières naturelles et artificielles, et équipe d'animation professionnelle pour des parties mémorables.",
+        "features": [
+          "Terrain de 5000m² en pleine nature",
+          "Scénarios variés (forteresse, jungle, berbère)",
+          "Équipement Markerm, gilet, masque, gants",
+          "Munitions : 200 billes par personne (plus disponibles)",
+          "Équipe d'animation et arbitrage",
+          "Groupes de 10 à 50 personnes",
+          "Waterproofing pour les marques",
+          "Eau et rafraîchissements inclus"
+        ],
+        "highlights": [
+          "Scénarios sur mesure pour team building",
+          "Enterrement de vie de jeune marié/mariée",
+          "Briefing sécurité et formation incluse"
+        ]
+      },
+      "side-car-vintage": {
+        "title": "Side Car Vintage",
+        "category": "Expérience unique",
+        "metaDescription": "Balade en side-car vintage à Marrakech. Tour de la médina, Palmeraie et atlas. Expérience unique et romantique en duo.",
+        "description": "Explorez Marrakech en side-car vintage. Une expérience unique et originale pour découvrir la ville rouge en duo.",
+        "longDescription": "Le side-car vintage est la façon la plus originale de découvrir Marrakech. En duo avec un pilote passionné, vous parcourez les ruelles animées de la médina, les routes ombragées de la Palmeraie et les villages de l'Atlas. Une expérience à la fois nostalgique et aventureuse, parfaite pour les couples et les amis en quête d'authenticité.",
+        "features": [
+          "Side-cars BMW et Ural vintage",
+          "Pilote passionné et guide local",
+          "Tour de la médina et souks",
+          "Balade en Palmeraie",
+          "Excursion dans l'Atlas (demi-journée)",
+          "Casque et lunettes fournis",
+          "Gilet pare-balles vestige (option)",
+          "Photos souvenir du trajet"
+        ],
+        "highlights": [
+          "Expérience exclusive à Marrakech",
+          "Idéal pour couples et anniversaires",
+          "Parcours personnalisable"
+        ]
+      },
+      "jet-ski": {
+        "title": "Jet Ski",
+        "category": "Sports nautiques",
+        "metaDescription": "Location de jet ski à Marrakech sur les lacs de l'Agdal. Balade en jet ski avec guide. Séances de 15 min à 1h. Tous niveaux.",
+        "description": "Envie d'adrénaline ? Partez en jet ski sur les lacs paisibles de Marrakech. Une expérience inoubliable au pied de l'Atlas.",
+        "longDescription": "Les lacs de l'Agdal et du barrage de Lalla Takerkoust offrent un cadre idéal pour la pratique du jet ski. L'eau calme et le paysage montagneux de l'Atlas créent un terrain de jeu spectaculaire. Nos moniteurs vous accompagnent pour une balade ou une session libre, en toute sécurité.",
+        "features": [
+          "Jet ski monoplace et biplace",
+          "Séances de 15 min, 30 min et 1h",
+          "Balade guidée sur le lac",
+          "Session libre pour confirmés",
+          "Équipement de sécurité fourni",
+          "Maître-nageur et bateau de surveillance",
+          "Transfert depuis votre villa possible",
+          "Photos et vidéos disponibles"
+        ],
+        "highlights": [
+          "Pas de permis nécessaire",
+          "Cadre exceptionnel au pied de l'Atlas",
+          "Activité pour les 12 ans et +"
+        ]
+      },
+      "sonographie": {
+        "title": "Sonothérapie",
+        "category": "Bien-être",
+        "metaDescription": "Séance de sonothérapie et méditation sonore à Marrakech. Bols tibétains, gongs et instruments vibratoires. Relaxation profonde en villa.",
+        "description": "Plongez dans une expérience de relaxation profonde avec la sonothérapie. Les vibrations des bols tibétains et gongs vous apaiseront.",
+        "longDescription": "La sonothérapie est une pratique ancestrale qui utilise les vibrations sonores pour harmoniser le corps et l'esprit. Nos praticiens certifiés utilisent des bols tibétains, des gongs et des instruments vibratoires pour vous guider vers un état de relaxation profonde. Cette expérience immersive, idéale en complément d'un yoga ou d'un massage, vous procure un lâcher-prise total.",
+        "features": [
+          "Séance individuelle ou collective",
+          "Bols tibétains, gongs, carillons",
+          "Méditation guidée et respiration",
+          "Durée : 45 min à 1h30",
+          "En villa, en jardin ou en extérieur",
+          "Tapis, couvertures et coussins fournis",
+          "Thé de wellness en entrée",
+          "Possibilité de séance nocturne sous les étoiles"
+        ],
+        "highlights": [
+          "Expérience rare et authentique",
+          "Idéal pour le stress et l'insomnie",
+          "Praticien certifié en son-thérapie"
+        ]
+      },
+      "vos-soirees-festives": {
+        "title": "Vos soirées festives",
+        "category": "Événementiel",
+        "metaDescription": "Organisation de soirées privées à Marrakech. DJ, traiteur, décoration, sonorisation. Soirées dans votre villa ou en lieu privé.",
+        "description": "Organisez des soirées mémorables dans votre villa. DJ, traiteur, décoration, sonorisation... nous nous occupons de tout.",
+        "longDescription": "Marrakech est la ville parfaite pour célébrer. Que ce soit pour un anniversaire, un enterrement de vie, un réveillon ou simplement une soirée entre amis, notre équipe événementielle transforme votre villa en un lieu de fête exceptionnel. DJ, traiteur gastronomique, décorateur, éclairage d'ambiance... chaque détail est pensé pour créer une atmosphère inoubliable.",
+        "features": [
+          "DJ et sonorisation professionnelle",
+          "Traiteur gastronomique et bar open",
+          "Décoration et éclairage d'ambiance",
+          "Show de lumière et fumée",
+          "Animation et hostesses",
+          "Location de matériel (tables, chaises, vaisselle)",
+          "Photographe et vidéaste sur demande",
+          "Coordination complète de A à Z"
+        ],
+        "highlights": [
+          "Événements de 20 à 200 personnes",
+          "Résidences privées et riads disponibles",
+          "Conformité avec les règlements locaux"
+        ]
+      },
+      "vos-demandes-specifiques": {
+        "title": "Vos demandes spécifiques",
+        "category": "Sur mesure",
+        "metaDescription": "Service sur mesure à Marrakech. Demandes spéciales, événements privés, expériences exclusives. Contactez-nous pour un devis personnalisé.",
+        "description": "Vous avez une demande particulière ? Notre équipe est à votre écoute pour créer une expérience 100% sur mesure à Marrakech.",
+        "longDescription": "Chaque client est unique et chaque séjour mérite une touche personnalisée. Que vous souhaitiez organiser un mariage sur une terrasse avec vue Atlas, réserver un dîner privée dans un riad historique, organiser un vol en hélicoptère au-dessus du désert ou toute autre idée créative, notre équipe se mobilise pour transformer votre rêve en réalité.",
+        "features": [
+          "Étude personnalisée de votre projet",
+          "Devis gratuit et sans engagement",
+          "Réseau de prestataires certifiés",
+          "Événements sur mesure (mariages, anniversaires)",
+          "Expériences exclusives et insolites",
+          "Gestion logistique complète",
+          "Suivi en temps réel par WhatsApp",
+          "Assurance et garantie décennale"
+        ],
+        "highlights": [
+          "Réponse sous 24h maximum",
+          "Aucune demande n'est trop complexe",
+          "Accompagnement de A à Z"
+        ]
+      },
+      "votre-seminaire": {
+        "title": "Votre séminaire",
+        "category": "Entreprise",
+        "metaDescription": "Organisation de séminaires d'entreprise à Marrakech. Salles de réunion, team building, gala diner. Résidences de luxe et riads privés.",
+        "description": "Organisez votre séminaire d'entreprise à Marrakech. Espaces de réception, équipements, team building... tout est possible.",
+        "longDescription": "Marrakech est devenue la destination de référence pour les séminaires d'entreprise en Afrique du Nord. Le mélange unique de modernité et de tradition, le climat ensoleillé et la richesse des expériences disponibles en font un cadre idéal pour motiver vos équipes. Nos résidences de luxe et riads privés offrent des espaces de réception modulables, des équipements techniques dernière génération et un service sur mesure.",
+        "features": [
+          "Résidences de luxe et riads privés",
+          "Salles de réunion modulables (10 à 200 personnes)",
+          "Équipements techniques (vidéoprojecteur, son, Wi-Fi)",
+          "Team building sur mesure (quad, escape game, cooking)",
+          "Gala diner et soirées privées",
+          "Excursions et activités de groupe",
+          "Logistique et coordinateur dédié",
+          "Transferts et navettes aéroport"
+        ],
+        "highlights": [
+          "Destination ensoleillée toute l'année",
+          "Excellent rapport qualité-prix",
+          "Équipe francophone dédiée"
+        ]
+      }
+    }
+  },
+  "locations": {
+    "palmeraie": {
+      "title": "Location de villa dans la Palmeraie de Marrakech",
+      "subtitle": "Découvrez nos villas de luxe dans le quartier le plus prestigieux de Marrakech. La Palmeraie offre un cadre verdoyant et paisible, idéal pour des vacances en famille ou entre amis.",
+      "whyChoose": "Pourquoi choisir la Palmeraie ?",
+      "description1": "La Palmeraie de Marrakech est un quartier résidentiel prisé, situé à environ 10 minutes en voiture du centre-ville. Ce domaine de plusieurs milliers d'hectares de palmiers-dattiers offre un cadre naturel exceptionnel, loin de l'agitation de la médina.",
+      "description2": "Les villas de la Palmeraie se distinguent par leurs grands jardins paysagers, leurs piscines privées chauffées et leur architecture mêlant tradition marocaine et confort moderne. C'est le choix idéal pour les familles, les groupes d'amis ou les voyageurs en quête de tranquillité et de prestige.",
+      "bullets": [
+        "Calme et verdure en plein cœur de Marrakech",
+        "10 minutes du centre-ville et de la médina",
+        "Villas avec grands jardins et piscines privées",
+        "Proximité des golfs et centres équestres"
+      ],
+      "nearbyTitle": "Activités à proximité",
+      "nearbyItems": [
+        "Golf Royal — 18 trous, ambiance internationale",
+        "Balades en dromadaire dans les palmeraies",
+        "Buggys et quads dans le désert d'Agafay",
+        "Restaurants gastronomiques à 10 min"
+      ],
+      "villasTitle": "Nos villas disponibles à la Palmeraie",
+      "noVilla": "Aucune villa disponible dans la Palmeraie pour le moment.",
+      "seeVilla": "Voir la villa",
+      "faqTitle": "FAQ — La Palmeraie",
+      "faq": {
+        "q1": "La Palmeraie est-elle éloignée du centre-ville ?",
+        "a1": "Non, la Palmeraie se situe à seulement 10-15 minutes en voiture du centre-ville et de la place Jemaa el-Fna. C'est le meilleur des deux mondes : tranquillité et proximité.",
+        "q2": "Les villas de la Palmeraie ont-elles des piscines ?",
+        "a2": "Oui, toutes nos villas de la Palmeraie disposent de piscines privées chauffées, entourées de jardins paysagers avec palmiers et oliviers.",
+        "q3": "Peut-on organiser des excursions depuis la Palmeraie ?",
+        "a3": "Absolument. Notre conciergerie organise des balades en dromadaire, des excursions au désert d'Agafay, des visites de la médina et bien plus."
+      }
+    },
+    "gueliz": {
+      "title": "Location de villa à Gueliz, Marrakech",
+      "subtitle": "Gueliz, le quartier moderne de Marrakech, allie urbanité et charme marocain. Vivant, accessible et dynamique, c'est l'endroit idéal pour un séjour à Marrakech.",
+      "whyChoose": "Pourquoi choisir Gueliz ?",
+      "description1": "Gueliz est le quartier moderne de Marrakech, créé pendant le protectorat français. C'est aujourd'hui le cœur névralgique de la vie urbaine de la ville, avec ses boutiques de design, ses galeries d'art et sa scène gastronomique en plein essor.",
+      "description2": "Les villas de Gueliz offrent un accès direct aux commerces, restaurants et lieux culturels, tout en bénéficiant du calme des résidences privées. Idéal pour les voyageurs qui souhaitent profiter de la ville sans se déplacer.",
+      "bullets": [
+        "Quartier moderne et dynamique",
+        "Boutiques, restaurants et galeries à pied",
+        "Proximité de la place Jemaa el-Fna",
+        "Bien connecté (taxis, bus, tramway)"
+      ],
+      "nearbyTitle": "Vie à Gueliz",
+      "nearbyItems": [
+        "Carré Eden — centre commercial moderne",
+        "Galerie d'art contemporain et musées",
+        "Cafés tendance et restaurants gastronomiques",
+        "Jardin Majorelle à 5 minutes"
+      ],
+      "villasTitle": "Nos villas disponibles à Gueliz",
+      "noVilla": "Aucune villa disponible à Gueliz pour le moment.",
+      "seeVilla": "Voir la villa",
+      "faqTitle": "FAQ — Gueliz",
+      "faq": {
+        "q1": "Gueliz est-il un quartier sûr ?",
+        "a1": "Oui, Gueliz est l'un des quartiers les plus sûrs de Marrakech, très fréquenté par les touristes et les expatriés. Les rues sont bien éclairées et animées jusqu'à tard le soir.",
+        "q2": "Peut-on se déplacer à pied depuis Gueliz ?",
+        "a2": "Oui, Gueliz est l'un des rares quartiers de Marrakech où la marche est agréable. Les boutiques, cafés et restaurants sont accessibles à pied, et le Jardin Majorelle est à quelques minutes.",
+        "q3": "Les villas de Gueliz sont-elles bruyantes ?",
+        "a3": "Non, nos villas sont situées dans des résidences privées calmes, tout en étant à proximité immédiate de l'animation du quartier. Vous avez le meilleur des deux mondes."
+      }
+    },
+    "targa": {
+      "title": "Location de villa à Targa, Marrakech",
+      "subtitle": "Targa est un quartier résidentiel tranquille de Marrakech, apprécié pour ses villas familiales, ses espaces verts et sa proximité avec le centre-ville.",
+      "whyChoose": "Pourquoi choisir Targa ?",
+      "description1": "Targa est un quartier résidentiel en pleine expansion, situé entre Gueliz et l'océan de sables. Ce quartier combine le calme des résidences familiales et la proximité des commerces et écoles internationales.",
+      "description2": "Les villas de Targa sont modernes, spacieuses et entourées de jardins paysagers. Le quartier est particulièrement apprécié par les familles avec enfants et les expatriés en recherche de tranquillité et de sécurité.",
+      "bullets": [
+        "Quartier familial et sécurisé",
+        "Villas modernes avec grands jardins",
+        "Proximité des écoles internationales",
+        "10-15 minutes du centre-ville"
+      ],
+      "nearbyTitle": "Le quartier Targa",
+      "nearbyItems": [
+        "Écoles internationales à proximité",
+        "Centres commerciaux et marchés",
+        "Espaces verts et parcs",
+        "Cliniques et pharmacies à proximité"
+      ],
+      "villasTitle": "Nos villas disponibles à Targa",
+      "noVilla": "Aucune villa disponible à Targa pour le moment.",
+      "seeVilla": "Voir la villa",
+      "faqTitle": "FAQ — Targa",
+      "faq": {
+        "q1": "Targa est-il adapté aux familles ?",
+        "a1": "Oui, Targa est l'un des quartiers les plus familiaux de Marrakech. Les rues sont calmes, les villas spacieuses et les écoles internationales sont à proximité.",
+        "q2": "Peut-on se déplacer facilement depuis Targa ?",
+        "a2": "Oui, Targa est bien connecté au centre-ville (10-15 min en voiture) et à la route de l'Ourika. Notre conciergerie peut organiser des transferts.",
+        "q3": "Les villas sont-elles modernes ?",
+        "a3": "Oui, la plupart des villas de Targa sont récentes ou rénovées, avec des équipements modernes (cuisine équipée, climatisation, piscine privée)."
+      }
+    },
+    "amelkis": {
+      "title": "Location de villa à Amelkis, Marrakech",
+      "subtitle": "Amelkis est un quartier résidentiel prisé de Marrakech, réputé pour son domaine golfique et ses villas de prestige. Un cadre d'exception pour des vacances de luxe.",
+      "whyChoose": "Pourquoi choisir Amelkis ?",
+      "description1": "Amelkis est l'un des quartiers les plus prestigieux de Marrakech. Ce domaine résidentiel de 400 hectares entoure le Royal Golf d'Amelkis, l'un des plus beaux parcours du Maroc. Les villas y sont nichées dans un cadre verdoyant, entre oliviers et palmiers.",
+      "description2": "Le quartier attire une clientèle internationale exigeante en quête de calme, de sécurité et de prestige. Les propriétés y sont spacieuses, avec des jardins paysagers et des piscines privées, idéales pour les familles et les passionnés de golf.",
+      "bullets": [
+        "Domaine golfique prestigieux (Royal Golf Amelkis)",
+        "Calme et sécurité 24h/24",
+        "Villas spacieuses avec grands jardins",
+        "Proximité du centre-ville (15 min)"
+      ],
+      "nearbyTitle": "Le quartier Amelkis",
+      "nearbyItems": [
+        "Royal Golf Amelkis — 27 trous, classement national",
+        "Centre commercial à 5 minutes",
+        "Restaurants et cafés branchés",
+        "Proximité des cliniques et hôpitaux"
+      ],
+      "villasTitle": "Nos villas disponibles à Amelkis",
+      "noVilla": "Aucune villa disponible à Amelkis pour le moment.",
+      "seeVilla": "Voir la villa",
+      "faqTitle": "FAQ — Amelkis",
+      "faq": {
+        "q1": "Faut-il être golfeur pour habiter à Amelkis ?",
+        "a1": "Non, le golf est un atout mais pas une obligation. Amelkis est avant tout un quartier résidentiel calme et sécurisé, apprécié par les familles et les voyageurs en quête de tranquillité.",
+        "q2": "Amelkis est-il bien desservi ?",
+        "a2": "Oui, Amelkis est à 15 minutes du centre-ville, à proximité des commerces et bien connecté. Notre conciergerie peut organiser des transferts et des véhicules.",
+        "q3": "Les villas sont-elles grandes ?",
+        "a3": "Oui, les villas d'Amelkis sont parmi les plus spacieuses de Marrakech, souvent avec 4 à 6 chambres, des jardins de 1000m² et plus, et des piscines privées."
+      }
+    },
+    "routeOurika": {
+      "title": "Location de villa sur la Route de l'Ourika",
+      "subtitle": "La route de l'Ourika est l'une des routes les plus pittoresques du Maroc. Panoramas sur le Haut Atlas, villages berbères et nature préservée à 20 minutes de Marrakech.",
+      "whyChoose": "Pourquoi choisir la Route de l'Ourika ?",
+      "description1": "La route de l'Ourika s'étire sur 30 kilomètres depuis Marrakech jusqu'au cœur du Haut Atlas. C'est une destination prisée pour ses paysages grandioses, ses cascades et ses villages berbères traditionnels.",
+      "description2": "Les villas de cette zone offrent des vues spectaculaires sur les montagnes de l'Atlas, un calme absolu et une connexion directe avec la nature. C'est le choix idéal pour les voyageurs en quête d'authenticité et de sérénité.",
+      "bullets": [
+        "Panoramas exceptionnels sur le Haut Atlas",
+        "Calme absolu et nature préservée",
+        "Villages berbères et cascades à découvrir",
+        "20-30 minutes du centre de Marrakech"
+      ],
+      "nearbyTitle": "Activités à proximité",
+      "nearbyItems": [
+        "Randonnées dans le Haut Atlas",
+        "Cascades d'Ourika (Setti Fatma)",
+        "Villages berbères traditionnels",
+        "Visite de souk et marchés locaux"
+      ],
+      "villasTitle": "Nos villas sur la Route de l'Ourika",
+      "noVilla": "Aucune villa disponible sur la Route de l'Ourika pour le moment.",
+      "seeVilla": "Voir la villa",
+      "faqTitle": "FAQ — Route de l'Ourika",
+      "faq": {
+        "q1": "Faut-il une voiture pour se déplacer ?",
+        "a1": "Oui, une voiture est recommandée pour profiter pleinement de la zone. Notre conciergerie peut organiser un véhicule avec chauffeur ou une location.",
+        "q2": "Les villas ont-elles une vue sur l'Atlas ?",
+        "a2": "Oui, la plupart de nos villas de la route de l'Ourika offrent des vues spectaculaires sur les montagnes du Haut Atlas, parfois avec couchers de soleil inoubliables.",
+        "q3": "Peut-on faire des randonnées depuis la villa ?",
+        "a3": "Absolument. La route de l'Ourika est le point de départ de nombreuses randonnées, des balades douces aux treks plus ambitieux dans le Haut Atlas."
+      }
+    }
+  },
+  "contact": {
+    "title": "Contactez-nous",
+    "responseTime": "Nous répondons sous 2 heures",
+    "formTitle": "Envoyez-nous un message",
+    "successMessage": "Merci! Votre message a été envoyé avec succès.",
+    "name": "Nom",
+    "email": "Email",
+    "phone": "Téléphone",
+    "subject": "Sujet",
+    "chooseSubject": "Choisir un sujet",
+    "subjectBooking": "Réservation de villa",
+    "subjectAvailability": "Vérifier la disponibilité",
+    "subjectQuote": "Demande de devis",
+    "subjectEvent": "Organisation d'événement",
+    "subjectConcierge": "Services de conciergerie",
+    "subjectOther": "Autre demande",
+    "message": "Message",
+    "sending": "Envoi en cours...",
+    "send": "Envoyer",
+    "address": "Adresse",
+    "telephone": "Téléphone",
+    "emailLabel": "Email",
+    "hours": "Horaires",
+    "followUs": "Suivez-nous",
+    "sendError": "Erreur lors de l'envoi",
+    "sendErrorMsg": "Une erreur est survenue. Veuillez réessayer."
+  },
+  "legal": {
+    "mentionsLegales": "Mentions légales",
+    "privacyPolicy": "Politique de confidentialité"
+  },
+  "seo": {
+    "homepageTitle": "Location et vente de villas de luxe à Marrakech",
+    "homepageDesc": "StaysInMarrakech est une société spécialisée dans la location de villas de luxe et de prestige à Marrakech. Découvrez nos villas avec piscine privée, locations pour vacances, mariages et événements.",
+    "propertiesTitle": "Propriétés à Marrakech",
+    "propertiesDesc": "Découvrez notre sélection de villas et propriétés de luxe à Marrakech pour la location et la vente.",
+    "villaLocationTitle": "Location de villa à Marrakech",
+    "servicesTitle": "Nos Services & Activités à Marrakech",
+    "blogTitle": "Blog — Évasion",
+    "testimonialsTitle": "Témoignages des clients",
+    "contactTitle": "Contactez-nous - StaysInMarrakech",
+    "agencyTitle": "L'agence - StaysInMarrakech"
+  },
+  "features": {
+    "pool": "Piscine",
+    "privatePool": "Piscine privée",
+    "heatedPool": "Piscine chauffée",
+    "indoorPool": "Piscine intérieure",
+    "garden": "Jardin",
+    "terrace": "Terrasse",
+    "balcon": "Balcon",
+    "rooftop": "Toiture terrasse",
+    "parking": "Parking",
+    "garage": "Garage",
+    "aircon": "Climatisation",
+    "heating": "Chauffage",
+    "wifi": "Wi-Fi",
+    "tv": "Télévision",
+    "washer": "Lave-linge",
+    "dryer": "Sèche-linge",
+    "dishwasher": "Lave-vaisselle",
+    "oven": "Four",
+    "microwave": "Micro-ondes",
+    "coffee": "Machine à café",
+    "bbq": "Barbecue",
+    "outdoorKitchen": "Cuisine extérieure",
+    "hammam": "Hammam",
+    "sauna": "Sauna",
+    "gym": "Salle de sport",
+    "spa": "Spa",
+    "massage": "Massage",
+    "cinema": "Salle de cinéma",
+    "billiards": "Billard",
+    "tableTennis": "Ping-pong",
+    "football": "Terrain de football",
+    "tennis": "Tennis",
+    "security": "Sécurité",
+    "alarm": "Alarme",
+    "camera": "Caméras",
+    "guard": "Gardien",
+    "concierge": "Conciergerie",
+    "housekeeper": "Femme de ménage",
+    "chef": "Chef privé",
+    "driver": "Chauffeur",
+    "babyEquipment": "Équipement bébé",
+    "accessible": "Accessible PMR",
+    "fireplace": "Cheminée",
+    "library": "Bibliothèque",
+    "office": "Bureau",
+    "laundry": "Buanderie",
+    "storage": "Rangement",
+    "view": "Vue",
+    "mountainView": "Vue montagne",
+    "gardenView": "Vue jardin",
+    "cityView": "Vue ville",
+    "golf": "Golf",
+    "beach": "Plage",
+    "mountains": "Montagnes",
+    "historicalCenter": "Centre historique",
+    "medina": "Médina",
+    "souk": "Souk",
+    "categories": {
+      "exterior": "Extérieur",
+      "wellness": "Bien-être",
+      "entertainment": "Divertissement",
+      "kitchen": "Cuisine",
+      "comfort": "Confort",
+      "services": "Services",
+      "securityCat": "Sécurité",
+      "location": "Emplacement"
+    }
+  },
+  "faqs": {
+    "title": "Questions fréquentes",
+    "q1": "Comment réserver une villa?",
+    "a1": "Vous pouvez réserver directement en ligne ou nous contacter par téléphone ou email. Notre équipe vous accompagnera tout au long du processus.",
+    "q2": "Quels sont les modalités de paiement?",
+    "a2": "Nous acceptons les virements bancaires, les cartes de crédit et les paiements en espèces. Un acompte de 30% est requis à la réservation.",
+    "q3": "Puis-je annuler ma réservation?",
+    "a3": "Oui, vous pouvez annuler gratuitement jusqu'à 30 jours avant votre arrivée. Au-delà, des frais d'annulation s'appliquent.",
+    "q4": "Les villas sont-elles meublées?",
+    "a4": "Oui, toutes nos villas sont entièrement meublées et équipées pour votre confort.",
+    "q5": "Y a-t-il un service de ménage?",
+    "a5": "Oui, un service de ménage est inclus dans toutes nos villas. Des services supplémentaires sont disponibles sur demande.",
+    "q6": "Puis-je organiser un événement dans une villa?",
+    "a6": "Oui, certaines villas sont adaptées aux événements. Contactez-nous pour discuter de votre projet.",
+    "q7": "Les animaux sont-ils admis?",
+    "a7": "Cela dépend de la villa. Contactez-nous pour vérifier la politique animaux de la villa qui vous intéresse.",
+    "q8": "Comment puis-je arriver à l'aéroport?",
+    "a8": "Nous pouvons organiser un transfert depuis l'aéroport de Marrakech-Ménara. Contactez-nous pour réserver."
+  },
+  "validation": {
+    "nameRequired": "Le nom est requis",
+    "emailRequired": "L'email est requis",
+    "emailInvalid": "Format d'email invalide",
+    "phoneInvalid": "Format de téléphone invalide",
+    "messageRequired": "Le message est requis",
+    "subjectRequired": "Le sujet est requis"
+  },
+  "dates": {
+    "months": ["Janvier", "Février", "Mars", "Avril", "Mai", "Juin", "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"],
+    "monthsShort": ["Janv", "Févr", "Mars", "Avr", "Mai", "Juin", "Juil", "Août", "Sept", "Oct", "Nov", "Déc"],
+    "days": ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
+    "daysShort": ["Lu", "Ma", "Me", "Je", "Ve", "Sa", "Di"],
+    "today": "Aujourd'hui"
+  },
+  "error": {
+    "title": "Une erreur est survenue",
+    "message": "Nous nous excusons pour ce désagrément.",
+    "retry": "Veuillez réessayer",
+    "retryBtn": "Réessayer"
   }
 }
