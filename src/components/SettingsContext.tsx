@@ -68,7 +68,7 @@ export function useSettings() {
 }
 
 export function SettingsProvider({ children }: { children: React.ReactNode }) {
-  const [settings, setSettings] = useState<SiteSettings>({});
+  const [rawSettings, setRawSettings] = useState<Record<string, string>>({});
   const locale = useLocale();
 
   useEffect(() => {
@@ -77,7 +77,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       .then((data: Record<string, string>) => {
         const map: Record<string, string> = {};
         Object.entries(data).forEach(([key, value]) => { map[key] = value || ""; });
-        setSettings(map as SiteSettings);
+        setRawSettings(map);
       })
       .catch((e) => console.error("[SettingsContext] fetch error:", e));
   }, []);
@@ -86,6 +86,22 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
     if (locale === 'en' && valueEn) return valueEn;
     return valueFr;
   };
+
+  const localizedKeys = [
+    'hero_title', 'hero_subtitle', 'site_name', 'site_description', 'address',
+    'location_title', 'location_description', 'location_link_text',
+    'shortrental_title', 'shortrental_description', 'shortrental_link_text',
+    'events_title', 'events_description', 'vacations_title', 'vacations_description',
+  ];
+
+  const settings: SiteSettings = {};
+  for (const [key, value] of Object.entries(rawSettings)) {
+    if (localizedKeys.includes(key)) {
+      (settings as Record<string, string>)[key] = getLocalizedValue(value, rawSettings[`${key}_en`]) || '';
+    } else {
+      (settings as Record<string, string>)[key] = value;
+    }
+  }
 
   return (
     <SettingsContext.Provider value={{...settings, getLocalizedValue}}>
