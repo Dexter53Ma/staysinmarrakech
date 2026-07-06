@@ -65,7 +65,7 @@ function _bookingSchema(locale: string = 'fr') {
   });
 }
 
-function _testimonialSchema(locale: string = 'fr') {
+function _testimonialSchema(_locale: string = 'fr') {
   return z.object({
     guestName: z.string().min(1).max(200),
     guestCountry: z.string().max(100).optional().nullable(),
@@ -167,7 +167,7 @@ function _locationSchema(locale: string = 'fr') {
   });
 }
 
-function _pageSchema(locale: string = 'fr') {
+function _pageSchema(_locale: string = 'fr') {
   return z.object({
     title: z.string().min(1).max(300),
     slug: z.string().max(300).optional().nullable(),
