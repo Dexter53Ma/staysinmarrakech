@@ -8,8 +8,13 @@ const handleI18nRouting = createMiddleware(routing);
 export async function proxy(request: NextRequest) {
   // Run i18n routing first
   const i18nResponse = await handleI18nRouting(request);
-  if (i18nResponse && i18nResponse.status >= 300 && i18nResponse.status < 400) {
-    return i18nResponse;
+  if (i18nResponse) {
+    // Return if it's a redirect (3xx) or a rewrite (has x-nextjs-rewrite header)
+    const isRedirect = i18nResponse.status >= 300 && i18nResponse.status < 400;
+    const isRewrite = i18nResponse.headers.get('x-nextjs-rewrite');
+    if (isRedirect || isRewrite) {
+      return i18nResponse;
+    }
   }
 
   let supabaseResponse = NextResponse.next({ request });

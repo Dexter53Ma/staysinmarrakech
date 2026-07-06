@@ -1,7 +1,7 @@
 import type {Metadata, Viewport} from 'next';
 import {Raleway} from 'next/font/google';
-import {NextIntlClientProvider, useMessages} from 'next-intl';
-import {getTranslations} from 'next-intl/server';
+import {NextIntlClientProvider} from 'next-intl';
+import {getTranslations, getMessages} from 'next-intl/server';
 import {SettingsProvider} from '@/components/SettingsContext';
 import {ServicesProvider} from '@/components/ServicesContext';
 import {CurrencyProvider} from '@/components/CurrencyContext';
@@ -91,7 +91,7 @@ export default async function LocaleLayout({
   params: Promise<{locale: string}>;
 }>) {
   const {locale} = await params;
-  const messages = useMessages();
+  const messages = await getMessages({locale});
   const t = await getTranslations({locale, namespace: 'common'});
 
   return (

@@ -27,8 +27,8 @@ export default function Footer() {
   ];
 
   const usefulLinks = [
-    { label: tCommon("legal") || "Mentions légales", href: "/mentions-legales" },
-    { label: tCommon("legal") || "Politique de confidentialité", href: "/politique-de-confidentialite" },
+    { label: "Mentions légales", href: "/mentions-legales" },
+    { label: "Politique de confidentialité", href: "/politique-de-confidentialite" },
     { label: "Location villa luxe Gueliz", href: "/marrakech-villas/location-villa-marrakech" },
     { label: "Location villa luxe Palmeraie", href: "/marrakech-villas/location-villa-marrakech" },
     { label: "Location villa luxe Route de l'Ourika", href: "/marrakech-villas/location-villa-marrakech" },
