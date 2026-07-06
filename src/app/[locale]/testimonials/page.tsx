@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Icon, faStar, faFilter } from "@/components/icons";
@@ -18,6 +19,7 @@ interface Testimonial {
 }
 
 export default function TestimonialsPage() {
+  const t = useTranslations("testimonials");
   const [testimonials, setTestimonials] = useState<Testimonial[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [filterValue, setFilterValue] = useState("");
@@ -49,7 +51,7 @@ export default function TestimonialsPage() {
           <div className="max-w-[1200px] mx-auto px-4">
             <div className="mb-10">
               <h1 className="text-3xl md:text-4xl font-bold text-[#34495e] uppercase mb-4">
-                Témoignages des clients
+                {t("title")}
               </h1>
               <div className="w-20 h-1 bg-[#ffb000] mb-6" />
             </div>
@@ -60,7 +62,7 @@ export default function TestimonialsPage() {
                 className="flex items-center gap-2 bg-[#0d47a1] hover:bg-[#0a3a82] text-white font-medium py-2.5 px-6 rounded transition-colors text-sm uppercase tracking-wide"
               >
                 <Icon icon={faFilter} className="text-sm" />
-                <span>Filtrer</span>
+                <span>{t("filter")}</span>
               </button>
             </div>
 
@@ -71,7 +73,7 @@ export default function TestimonialsPage() {
               >
                 <input
                   type="text"
-                  placeholder="Nom de la villa"
+                  placeholder={t("villaName")}
                   value={filterValue}
                   onChange={(e) => setFilterValue(e.target.value)}
                   className="border border-[#ddd] rounded px-4 py-2 text-sm w-64 focus:outline-none focus:border-[#0d47a1]"
@@ -80,7 +82,7 @@ export default function TestimonialsPage() {
                   type="submit"
                   className="bg-[#0d47a1] hover:bg-[#0a3a82] text-white font-medium py-2 px-6 rounded text-sm"
                 >
-                  Filtrer
+                  {t("filter")}
                 </button>
               </form>
             )}
@@ -128,7 +130,7 @@ export default function TestimonialsPage() {
 
             {filtered.length === 0 && (
               <p className="text-center text-gray-500 py-12">
-                Aucun témoignage trouvé.
+                {t("noTestimonials")}
               </p>
             )}
           </div>

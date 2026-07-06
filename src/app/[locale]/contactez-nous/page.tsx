@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Icon, faMapMarkerAlt, faPhone, faEnvelope, faFacebookF, faInstagram, faLinkedinIn, faCheck, faCalendarAlt } from "@/components/icons";
@@ -15,6 +16,7 @@ phone1: "+212 6 21 18 94 96",
 };
 
 export default function ContactPage() {
+  const t = useTranslations("contact");
   const settings = useSettings();
   const { csrfFetch } = useCsrf();
   const [formData, setFormData] = useState({
@@ -42,11 +44,11 @@ export default function ContactPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(formData),
       });
-      if (!res.ok) throw new Error("Erreur lors de l'envoi");
+      if (!res.ok) throw new Error(t("sendError"));
       setSubmitted(true);
       setFormData({ name: "", email: "", phone: "", subject: "", message: "" });
     } catch {
-      setError("Une erreur est survenue. Veuillez réessayer ou nous contacter par téléphone.");
+      setError(t("sendErrorMsg"));
     } finally {
       setSubmitting(false);
     }
@@ -58,11 +60,11 @@ export default function ContactPage() {
   const email = settings.email || FALLBACK.email;
 
   const contactInfo = [
-    { icon: faMapMarkerAlt, label: "Adresse", value: address },
-    { icon: faPhone, label: "Téléphone", value: phone1, href: `tel:${phone1.replace(/[^0-9+]/g, "")}` },
-    ...(phone2 ? [{ icon: faPhone, label: "Téléphone 2", value: phone2, href: `tel:${phone2.replace(/[^0-9+]/g, "")}` }] : []),
-    { icon: faEnvelope, label: "Email", value: email, href: `mailto:${email}` },
-    { icon: faCalendarAlt, label: "Horaires", value: "7j/7 — 9h à 20h" },
+    { icon: faMapMarkerAlt, label: t("address"), value: address },
+    { icon: faPhone, label: t("telephone"), value: phone1, href: `tel:${phone1.replace(/[^0-9+]/g, "")}` },
+    ...(phone2 ? [{ icon: faPhone, label: t("telephone") + " 2", value: phone2, href: `tel:${phone2.replace(/[^0-9+]/g, "")}` }] : []),
+    { icon: faEnvelope, label: t("emailLabel"), value: email, href: `mailto:${email}` },
+    { icon: faCalendarAlt, label: t("hours"), value: "7j/7 — 9h à 20h" },
   ];
 
   return (
@@ -71,17 +73,17 @@ export default function ContactPage() {
       <main className="flex-1 bg-[#f5f5f5]">
         <div className="max-w-[1200px] mx-auto px-4 py-12">
           <div className="mb-8">
-            <h1 className="text-3xl md:text-4xl font-bold text-[#0d47a1] mb-2">Contactez-nous</h1>
-            <p className="text-gray-600">Nous répondons sous 2 heures durante les heures d&apos;ouverture.</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-[#0d47a1] mb-2">{t("title")}</h1>
+            <p className="text-gray-600">{t("responseTime")}</p>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-xl font-semibold text-[#34495e] mb-6">Envoyez-nous un message</h2>
+              <h2 className="text-xl font-semibold text-[#34495e] mb-6">{t("formTitle")}</h2>
               {submitted ? (
                 <div className="flex items-center gap-3 bg-green-50 border border-green-300 text-green-700 px-4 py-3 rounded">
                   <Icon icon={faCheck} className="text-green-600" />
-                  <span>Merci ! Votre message a été envoyé avec succès. Nous vous répondrons sous 2 heures.</span>
+                  <span>{t("successMessage")}</span>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="flex flex-col gap-4">
@@ -91,43 +93,43 @@ export default function ContactPage() {
                     </div>
                   )}
                   <div>
-                    <label htmlFor="name" className="block text-sm font-medium text-[#34495e] mb-1">Nom *</label>
+                    <label htmlFor="name" className="block text-sm font-medium text-[#34495e] mb-1">{t("name")} *</label>
                     <input type="text" id="name" name="name" value={formData.name} onChange={handleChange} required
                       className="w-full px-3 py-2.5 border border-[#eaedf1] rounded text-[#34495e] focus:outline-none focus:border-[#0d47a1] focus:ring-1 focus:ring-[#0d47a1]" />
                   </div>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                     <div>
-                      <label htmlFor="email" className="block text-sm font-medium text-[#34495e] mb-1">Email *</label>
+                      <label htmlFor="email" className="block text-sm font-medium text-[#34495e] mb-1">{t("email")} *</label>
                       <input type="email" id="email" name="email" value={formData.email} onChange={handleChange} required
                         className="w-full px-3 py-2.5 border border-[#eaedf1] rounded text-[#34495e] focus:outline-none focus:border-[#0d47a1] focus:ring-1 focus:ring-[#0d47a1]" />
                     </div>
                     <div>
-                      <label htmlFor="phone" className="block text-sm font-medium text-[#34495e] mb-1">Téléphone</label>
+                      <label htmlFor="phone" className="block text-sm font-medium text-[#34495e] mb-1">{t("phone")}</label>
                       <input type="tel" id="phone" name="phone" value={formData.phone} onChange={handleChange}
                         className="w-full px-3 py-2.5 border border-[#eaedf1] rounded text-[#34495e] focus:outline-none focus:border-[#0d47a1] focus:ring-1 focus:ring-[#0d47a1]" />
                     </div>
                   </div>
                   <div>
-                    <label htmlFor="subject" className="block text-sm font-medium text-[#34495e] mb-1">Sujet *</label>
+                    <label htmlFor="subject" className="block text-sm font-medium text-[#34495e] mb-1">{t("subject")} *</label>
                     <select id="subject" name="subject" value={formData.subject} onChange={handleChange} required
                       className="w-full px-3 py-2.5 border border-[#eaedf1] rounded text-[#34495e] focus:outline-none focus:border-[#0d47a1] focus:ring-1 focus:ring-[#0d47a1]">
-                      <option value="">Choisir un sujet</option>
-                      <option value="Réservation">Réservation de villa</option>
-                      <option value="Disponibilité">Vérifier la disponibilité</option>
-                      <option value="Devis">Demande de devis</option>
-                      <option value="Événement">Organisation d&apos;événement</option>
-                      <option value="Conciergerie">Services de conciergerie</option>
-                      <option value="Autre">Autre demande</option>
+                      <option value="">{t("chooseSubject")}</option>
+                      <option value="Réservation">{t("subjectBooking")}</option>
+                      <option value="Disponibilité">{t("subjectAvailability")}</option>
+                      <option value="Devis">{t("subjectQuote")}</option>
+                      <option value="Événement">{t("subjectEvent")}</option>
+                      <option value="Conciergerie">{t("subjectConcierge")}</option>
+                      <option value="Autre">{t("subjectOther")}</option>
                     </select>
                   </div>
                   <div>
-                    <label htmlFor="message" className="block text-sm font-medium text-[#34495e] mb-1">Message *</label>
+                    <label htmlFor="message" className="block text-sm font-medium text-[#34495e] mb-1">{t("message")} *</label>
                     <textarea id="message" name="message" value={formData.message} onChange={handleChange} required rows={5}
                       className="w-full px-3 py-2.5 border border-[#eaedf1] rounded text-[#34495e] focus:outline-none focus:border-[#0d47a1] focus:ring-1 focus:ring-[#0d47a1] resize-vertical" />
                   </div>
                   <button type="submit" disabled={submitting}
                     className="bg-[#0d47a1] hover:bg-[#0a3a82] disabled:bg-gray-400 text-white font-bold uppercase py-2.5 px-8 rounded transition-colors w-fit">
-                    {submitting ? "Envoi en cours..." : "Envoyer"}
+                    {submitting ? t("sending") : t("send")}
                   </button>
                 </form>
               )}
@@ -154,7 +156,7 @@ export default function ContactPage() {
                   </div>
                 ))}
                 <div className="border-t border-gray-100 pt-4 mt-2">
-                  <p className="text-sm text-gray-500 mb-3">Suivez-nous</p>
+                  <p className="text-sm text-gray-500 mb-3">{t("followUs")}</p>
                   <div className="flex items-center gap-4">
                     {settings.facebook && (
                       <a href={settings.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#0d47a1] rounded-full flex items-center justify-center text-white hover:bg-[#0a3a82] transition-colors">

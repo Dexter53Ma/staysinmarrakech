@@ -1,17 +1,24 @@
+import type { Metadata } from 'next';
 import Image from "next/image";
 import Link from "next/link";
+import { getTranslations } from 'next-intl/server';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Blog — Évasion",
-  description: "Conseils, idées et inspirations pour votre séjour à Marrakech : villas de luxe, immobilier, activités, événements et découverte de la ville rouge.",
-};
+export async function generateMetadata({params}: {params: Promise<{locale: string}>}): Promise<Metadata> {
+  const {locale} = await params;
+  const t = await getTranslations({locale, namespace: 'seo'});
+  return {
+    title: t('blogTitle'),
+  };
+}
 
-export default async function BlogPage() {
+export default async function BlogPage({params}: {params: Promise<{locale: string}>}) {
+  const {locale} = await params;
+  const commonT = await getTranslations({locale, namespace: 'common'});
   const posts = await prisma.blogPost.findMany({
     where: { isPublished: true },
     orderBy: { publishedAt: "desc" },
@@ -35,7 +42,7 @@ export default async function BlogPage() {
             Evasion
           </h1>
           {posts.length === 0 ? (
-            <p className="text-center text-gray-500 py-12">Aucun article pour le moment.</p>
+            <p className="text-center text-gray-500 py-12">{commonT("noArticles")}</p>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {posts.map((post) => (
@@ -62,7 +69,7 @@ export default async function BlogPage() {
                       )}
                       <span>
                         {post.publishedAt
-                          ? new Date(post.publishedAt).toLocaleDateString("fr-FR", {
+                          ? new Date(post.publishedAt).toLocaleDateString(locale === 'en' ? 'en-US' : 'fr-FR', {
                               day: "numeric",
                               month: "long",
                               year: "numeric",

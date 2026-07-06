@@ -1,18 +1,25 @@
+import type { Metadata } from 'next';
+import { getTranslations } from 'next-intl/server';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 
-export const metadata = {
-  title: "Politique de confidentialité",
-  description: "Politique de confidentialité du site StaysInMarrakech - Comment nous protégeons vos données.",
-};
+export async function generateMetadata({params}: {params: Promise<{locale: string}>}): Promise<Metadata> {
+  const {locale} = await params;
+  const t = await getTranslations({locale, namespace: 'legal'});
+  return {
+    title: t('privacyPolicy'),
+  };
+}
 
-export default function PolitiqueConfidentialite() {
+export default async function PolitiqueConfidentialite({params}: {params: Promise<{locale: string}>}) {
+  const {locale} = await params;
+  const t = await getTranslations({locale, namespace: 'legal'});
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1">
         <section className="py-16 px-4 max-w-[800px] mx-auto">
-          <h1 className="text-3xl font-bold text-[#0d47a1] mb-8">Politique de confidentialité</h1>
+          <h1 className="text-3xl font-bold text-[#0d47a1] mb-8">{t('privacyPolicy')}</h1>
 
           <div className="prose prose-gray max-w-none space-y-6 text-sm leading-relaxed text-gray-700">
             <p><em>Dernière mise à jour : 28 juin 2026</em></p>

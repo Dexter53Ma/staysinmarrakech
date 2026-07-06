@@ -18,7 +18,8 @@
     "viewAll": "View all",
     "seeDetails": "See details",
     "currency": "Currency",
-    "language": "Language"
+    "language": "Language",
+    "noArticles": "No articles for now."
   },
   "navigation": {
     "location": "Rent",
@@ -1008,6 +1009,21 @@
     "testimonialsTitle": "Client testimonials",
     "contactTitle": "Contact us - StaysInMarrakech",
     "agencyTitle": "The agency - StaysInMarrakech"
+  },
+  "testimonials": {
+    "title": "Client testimonials",
+    "filter": "Filter",
+    "villaName": "Villa name",
+    "noTestimonials": "No testimonials found."
+  },
+  "agency": {
+    "fallbackTitle": "StaysInMarrakech Team",
+    "fallbackContent": [
+      "Commercial Director for many years at Filovent, Europe's leader in boat rental with over 17,000 references across 57 countries, Cyrille decided to create in 2014 a agency specialising in seasonal rental of charming and character properties in Marrakech.",
+      "Today, StaysInMarrakech's area of expertise has expanded from seasonal rentals to long-term rentals and more recently to sales, always with the same concern for offering quality properties and rigorous support services, in defining client needs as well as in daily management.",
+      "Composed of a young and dynamic team of specialists in each area of expertise, StaysInMarrakech offers an optimum and reactive service, always with the concern of being exemplary in know-how as well as in people skills. Passion, good humour and excellence are our daily values.",
+      "StaysInMarrakech is a company specialising in luxury and prestige villa rentals in Marrakech."
+    ]
   },
   "features": {
     "pool": "Swimming pool",
