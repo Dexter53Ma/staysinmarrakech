@@ -1,5 +1,5 @@
 import Image from "next/image";
-import Link from "next/link";
+import {Link} from "@/i18n/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import PriceDisplay from "@/components/PriceDisplay";
