@@ -19,21 +19,21 @@ export default function Footer() {
   const { services } = useServices();
 
   const villaLinks = [
-    { label: t("location") + " villa Marrakech", href: "/marrakech-villas/location-villa-marrakech" },
-    { label: t("vente") + " villa Marrakech", href: "/marrakech-villas/vente-villa-marrakech" },
-    { label: "Villas de luxe", href: "/marrakech-villas/villa-de-luxe" },
-    { label: "Villas d'exception", href: "/marrakech-villas/villa-exception" },
-    { label: t("location") + " courte durée", href: "/marrakech-villas/location-villa-marrakech" },
-    { label: t("location") + " longue durée", href: "/marrakech-villas/location-villa-marrakech" },
+    { label: t("location") + " " + t("villaMarrakech").toLowerCase(), href: "/marrakech-villas/location-villa-marrakech" },
+    { label: t("vente") + " " + t("villaMarrakech").toLowerCase(), href: "/marrakech-villas/vente-villa-marrakech" },
+    { label: t("villaLuxe"), href: "/marrakech-villas/villa-de-luxe" },
+    { label: t("villaException"), href: "/marrakech-villas/villa-exception" },
+    { label: t("location") + " " + t("courteDuree"), href: "/marrakech-villas/location-villa-marrakech" },
+    { label: t("location") + " " + t("longueDuree"), href: "/marrakech-villas/location-villa-marrakech" },
   ];
 
   const usefulLinks = [
-    { label: "Mentions légales", href: "/mentions-legales" },
-    { label: "Politique de confidentialité", href: "/politique-de-confidentialite" },
-    { label: "Location villa luxe Gueliz", href: "/marrakech-villas/location-villa-marrakech" },
-    { label: "Location villa luxe Palmeraie", href: "/marrakech-villas/location-villa-marrakech" },
-    { label: "Location villa luxe Route de l'Ourika", href: "/marrakech-villas/location-villa-marrakech" },
-    { label: "Location villa luxe Amelkis", href: "/marrakech-villas/location-villa-marrakech" },
+    { label: t("mentionsLegales"), href: "/mentions-legales" },
+    { label: t("privacyPolicy"), href: "/politique-de-confidentialite" },
+    { label: t("location") + " " + t("villaLuxe").toLowerCase() + " Gueliz", href: "/marrakech-villas/location-villa-marrakech" },
+    { label: t("location") + " " + t("villaLuxe").toLowerCase() + " Palmeraie", href: "/marrakech-villas/location-villa-marrakech" },
+    { label: t("location") + " " + t("villaLuxe").toLowerCase() + " Route de l'Ourika", href: "/marrakech-villas/location-villa-marrakech" },
+    { label: t("location") + " " + t("villaLuxe").toLowerCase() + " Amelkis", href: "/marrakech-villas/location-villa-marrakech" },
   ];
 
   const contactLinks = [
@@ -56,10 +56,10 @@ export default function Footer() {
   ];
 
   const columns = [
-    { title: t("location") + " & " + t("vente") + " villas", links: villaLinks },
+    { title: t("location") + " & " + t("vente") + " " + t("locationSaleVillas"), links: villaLinks },
     { title: t("usefulLinks"), links: usefulLinks },
-    { title: t("services") + " & activités", links: serviceLinks },
-    { title: t("about"), links: [], description: settings.site_description || "StaysInMarrakech est une société spécialisée dans la location de villas de luxe et de prestige à Marrakech." },
+    { title: t("services") + " & " + t("servicesActivities"), links: serviceLinks },
+    { title: t("about"), links: [], description: settings.site_description || t("aboutFallback") },
     { title: t("contact"), links: contactLinks },
   ];
 

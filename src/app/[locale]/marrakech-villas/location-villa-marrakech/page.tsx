@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslations } from "next-intl";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Image from "next/image";
@@ -46,13 +47,6 @@ const chambresOptions = [
   { label: "8+", value: 8 },
 ];
 
-const typeOptions = [
-  { value: "ALL", label: "Tous" },
-  { value: "VILLA", label: "Villa" },
-  { value: "RIAD", label: "Riad" },
-  { value: "APARTMENT", label: "Appartement" },
-];
-
 const quartierOptions = [
   "Palmeraie", "Hivernage", "Gueliz", "Médina", "Route de l'Ourika",
   "Route de Ouarzazate", "Golf d'Amelkis", "Golf de Samanah",
@@ -82,6 +76,14 @@ interface ApiProperty {
 
 export default function LocationVillaMarrakech() {
   const { convert, symbol } = useCurrency();
+  const t = useTranslations("properties");
+  const tp = useTranslations("locationPage");
+  const typeOptions = [
+    { value: "ALL", label: t("all") },
+    { value: "VILLA", label: "Villa" },
+    { value: "RIAD", label: "Riad" },
+    { value: "APARTMENT", label: t("apartment") },
+  ];
   const [villas, setVillas] = useState<ListingVilla[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedType, setSelectedType] = useState("ALL");
@@ -157,22 +159,22 @@ export default function LocationVillaMarrakech() {
         <div className="relative max-w-[1200px] mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-5">
             <Icon icon={faMapMarkerAlt} className="text-[#ffb000] text-xs" />
-            <span className="text-white/90 text-sm font-medium">Marrakech, Maroc</span>
+            <span className="text-white/90 text-sm font-medium">{tp("locationMarrakech")}</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
-            Villas de Luxe en Location
+            {tp("villasForRent")}
           </h1>
           <p className="text-white/70 text-base md:text-lg max-w-xl mx-auto">
-            Découvrez notre sélection exclusive de villas prestigieuses à Marrakech
+            {tp("discoverExclusive")}
           </p>
 
           {/* Quick Stats */}
           <div className="flex items-center justify-center gap-6 mt-6 text-white/60 text-sm">
-            <span>{filtered.length} villas disponibles</span>
+            <span>{filtered.length} {tp("villasAvailable")}</span>
             <span className="w-1 h-1 bg-white/30 rounded-full" />
-            <span>{quartierOptions.length} quartiers</span>
+            <span>{quartierOptions.length} {tp("quartiers")}</span>
             <span className="w-1 h-1 bg-white/30 rounded-full" />
-            <span>Service 24/7</span>
+            <span>{tp("service247")}</span>
           </div>
         </div>
       </section>
@@ -190,7 +192,7 @@ export default function LocationVillaMarrakech() {
               }`}
             >
               <Icon icon={faSlidersH} className="text-xs" />
-              Filtres
+              {t("filters")}
               {hasFilters && (
                 <span className="bg-[#ffb000] text-[#0d47a1] text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
                   {selectedChambres.length + selectedQuartiers.length}
@@ -202,21 +204,21 @@ export default function LocationVillaMarrakech() {
                 onClick={() => { setSelectedType("ALL"); setSelectedPricePeriod("nightly"); setSelectedChambres([]); setSelectedQuartiers([]); }}
                 className="text-xs text-red-500 hover:text-red-600 font-medium"
               >
-                Tout effacer
+                {t("clearAll")}
               </button>
             )}
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400 hidden sm:inline">Trier par</span>
+            <span className="text-sm text-gray-400 hidden sm:inline">{t("sortBy")}</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortKey)}
               className="bg-gray-100 border-0 rounded-lg px-3 py-2 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#0d47a1]/20"
             >
-              <option value="newest">Plus récentes</option>
-              <option value="price-asc">Prix croissant</option>
-              <option value="price-desc">Prix décroissant</option>
-              <option value="bedrooms">Plus de chambres</option>
+              <option value="newest">{t("sortRecent")}</option>
+              <option value="price-asc">{t("sortPriceAsc")}</option>
+              <option value="price-desc">{t("sortPriceDesc")}</option>
+              <option value="bedrooms">{t("sortBedrooms")}</option>
             </select>
           </div>
         </div>
@@ -227,13 +229,13 @@ export default function LocationVillaMarrakech() {
         <div className="bg-white border-b border-gray-200 shadow-sm">
           <div className="max-w-[1200px] mx-auto px-4 py-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-[#0d47a1]">Filtres avancés</h3>
+              <h3 className="font-bold text-[#0d47a1]">{t("advancedFilters")}</h3>
               {hasFilters && (
                 <button
                   onClick={() => { setSelectedType("ALL"); setSelectedPricePeriod("nightly"); setSelectedChambres([]); setSelectedQuartiers([]); }}
                   className="text-sm text-red-500 hover:text-red-600 font-medium"
                 >
-                  Tout effacer
+                  {t("clearAll")}
                 </button>
               )}
             </div>
@@ -241,7 +243,7 @@ export default function LocationVillaMarrakech() {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 block">
-                  Type de bien
+                  {t("propertyType")}
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {typeOptions.map((opt) => (
@@ -262,7 +264,7 @@ export default function LocationVillaMarrakech() {
 
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 block">
-                  Location / Vente
+                  {t("rentSale")}
                 </label>
                 <div className="flex flex-wrap gap-2">
                   <button
@@ -273,7 +275,7 @@ export default function LocationVillaMarrakech() {
                         : "bg-white text-gray-600 border-gray-200 hover:border-[#0d47a1] hover:text-[#0d47a1]"
                     }`}
                   >
-                    Location
+                    {t("forRent")}
                   </button>
                   <button
                     onClick={() => setSelectedPricePeriod("sale")}
@@ -283,14 +285,14 @@ export default function LocationVillaMarrakech() {
                         : "bg-white text-gray-600 border-gray-200 hover:border-[#0d47a1] hover:text-[#0d47a1]"
                     }`}
                   >
-                    Vente
+                    {t("forSale")}
                   </button>
                 </div>
               </div>
 
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 block">
-                  Chambres
+                  {t("bedrooms")}
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {chambresOptions.map((opt) => (
@@ -311,7 +313,7 @@ export default function LocationVillaMarrakech() {
 
               <div>
                 <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 block">
-                  Quartier
+                  {t("quarter")}
                 </label>
                 <div className="flex flex-wrap gap-2">
                   {quartierOptions.map((q) => (
@@ -349,7 +351,7 @@ export default function LocationVillaMarrakech() {
             )}
             {selectedPricePeriod !== "nightly" && (
               <span className="inline-flex items-center gap-1 bg-[#0d47a1]/10 text-[#0d47a1] text-xs font-medium px-3 py-1.5 rounded-full">
-                {selectedPricePeriod === "sale" ? "Vente" : "Location"}
+                {selectedPricePeriod === "sale" ? t("forSale") : t("forRent")}
                 <button onClick={() => setSelectedPricePeriod("nightly")} className="hover:text-red-500">
                   <Icon icon={faTimes} className="text-[10px]" />
                 </button>
@@ -357,7 +359,7 @@ export default function LocationVillaMarrakech() {
             )}
             {selectedChambres.map((c) => (
               <span key={`c-${c}`} className="inline-flex items-center gap-1 bg-[#0d47a1]/10 text-[#0d47a1] text-xs font-medium px-3 py-1.5 rounded-full">
-                {c}+ chambres
+                {c}+ {t("bedrooms")}
                 <button onClick={() => toggleChambres(c)} className="hover:text-red-500">
                   <Icon icon={faTimes} className="text-[10px]" />
                 </button>
@@ -393,13 +395,13 @@ export default function LocationVillaMarrakech() {
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Icon icon={faSearch} className="text-gray-300 text-2xl" />
             </div>
-            <h3 className="text-xl font-bold text-gray-700 mb-2">Aucune villa trouvée</h3>
-            <p className="text-gray-400 mb-6">Essayez de modifier vos critères de recherche</p>
+            <h3 className="text-xl font-bold text-gray-700 mb-2">{t("noResults")}</h3>
+            <p className="text-gray-400 mb-6">{t("noResultsDesc")}</p>
             <button
               onClick={() => { setSelectedType("ALL"); setSelectedPricePeriod("nightly"); setSelectedChambres([]); setSelectedQuartiers([]); }}
               className="bg-[#0d47a1] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#0a3a82] transition-colors"
             >
-              Réinitialiser les filtres
+              {t("resetFilters")}
             </button>
           </div>
         ) : (
@@ -425,14 +427,14 @@ export default function LocationVillaMarrakech() {
                   <div className="absolute bottom-4 left-4">
                     <div className="bg-white/95 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg">
                       <span className="text-[#0d47a1] font-bold text-lg">{convert(villa.price, villa.currency as "EUR" | "MAD" | "USD").toLocaleString("fr-FR")} {symbol}</span>
-                      <span className="text-gray-400 text-xs ml-1">/ nuit</span>
+                      <span className="text-gray-400 text-xs ml-1">{t("perNight")}</span>
                     </div>
                   </div>
 
                   {/* Featured Badge */}
                   {villa.isFeatured && (
                     <div className="absolute top-4 left-4 bg-[#ffb000] text-[#0d47a1] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                      Vedette
+                      {t("featured")}
                     </div>
                   )}
 
@@ -461,19 +463,19 @@ export default function LocationVillaMarrakech() {
                       <div className="w-7 h-7 bg-blue-50 rounded-lg flex items-center justify-center">
                         <Icon icon={faBed} className="text-[#0d47a1] text-xs" />
                       </div>
-                      <span>{villa.chambres} ch.</span>
+                      <span>{villa.chambres} {t("bedroomsAbbrev")}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-500 text-sm">
                       <div className="w-7 h-7 bg-blue-50 rounded-lg flex items-center justify-center">
                         <Icon icon={faBath} className="text-[#0d47a1] text-xs" />
                       </div>
-                      <span>{villa.bathrooms} SdB</span>
+                      <span>{villa.bathrooms} {t("bathroomsAbbrev")}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-500 text-sm">
                       <div className="w-7 h-7 bg-blue-50 rounded-lg flex items-center justify-center">
                         <Icon icon={faUsers} className="text-[#0d47a1] text-xs" />
                       </div>
-                      <span>{villa.pax} pers.</span>
+                      <span>{villa.pax} {t("guests")}</span>
                     </div>
                     {villa.surface > 0 && (
                       <div className="flex items-center gap-2 text-gray-500 text-sm">

@@ -6,6 +6,7 @@ import Footer from "@/components/Footer";
 import Image from "next/image";
 import {Link} from "@/i18n/navigation";
 import { useCurrency } from "@/components/CurrencyContext";
+import { useTranslations, useLocale } from "next-intl";
 import {
   Icon,
   faBed,
@@ -64,6 +65,9 @@ type SortKey = "newest" | "price-asc" | "price-desc" | "surface";
 
 export default function VenteVillaMarrakech() {
   const { convert, symbol } = useCurrency();
+  const t = useTranslations("properties");
+  const ts = useTranslations("salePage");
+  const locale = useLocale();
   const [villas, setVillas] = useState<Villa[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedQuartiers, setSelectedQuartiers] = useState<string[]>([]);
@@ -122,21 +126,21 @@ export default function VenteVillaMarrakech() {
         <div className="relative max-w-[1200px] mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-5">
             <Icon icon={faHome} className="text-[#f39c12] text-xs" />
-            <span className="text-white/90 text-sm font-medium">Propriétés exclusives</span>
+            <span className="text-white/90 text-sm font-medium">{ts("exclusiveProperties")}</span>
           </div>
           <h1 className="text-3xl md:text-4xl font-bold text-white mb-3 tracking-tight">
-            Villas de Prestige à Vendre
+            {ts("villasForSale")}
           </h1>
           <p className="text-white/70 text-base md:text-lg max-w-xl mx-auto">
-            Investissez dans l&apos;élégance marocaine — nos experts vous accompagnent
+            {ts("investSubtitle")}
           </p>
 
           {/* Trust Badges */}
           <div className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-8">
             {[
-              { icon: faShieldAlt, label: "Transactions sécurisées" },
-              { icon: faHandshake, label: "Accompagnement juridique" },
-              { icon: faKey, label: "Clés en main" },
+              { icon: faShieldAlt, label: ts("secureTransactions") },
+              { icon: faHandshake, label: ts("legalSupport") },
+              { icon: faKey, label: ts("turnkey") },
             ].map((item) => (
               <div key={item.label} className="flex items-center gap-2 text-white/60 text-sm">
                 <Icon icon={item.icon} className="text-[#f39c12]" />
@@ -160,7 +164,7 @@ export default function VenteVillaMarrakech() {
               }`}
             >
               <Icon icon={faSlidersH} className="text-xs" />
-              Quartier
+              {t("quarter")}
               {selectedQuartiers.length > 0 && (
                 <span className="bg-[#f39c12] text-[#1a3c5e] text-[10px] font-bold w-5 h-5 rounded-full flex items-center justify-center">
                   {selectedQuartiers.length}
@@ -172,21 +176,21 @@ export default function VenteVillaMarrakech() {
                 onClick={() => setSelectedQuartiers([])}
                 className="text-xs text-red-500 hover:text-red-600 font-medium"
               >
-                Tout effacer
+                {t("clearAll")}
               </button>
             )}
           </div>
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-400 hidden sm:inline">Trier par</span>
+            <span className="text-sm text-gray-400 hidden sm:inline">{t("sortBy")}</span>
             <select
               value={sortBy}
               onChange={(e) => setSortBy(e.target.value as SortKey)}
               className="bg-gray-100 border-0 rounded-lg px-3 py-2 text-sm text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#1a3c5e]/20"
             >
-              <option value="newest">Plus récentes</option>
-              <option value="price-asc">Prix croissant</option>
-              <option value="price-desc">Prix décroissant</option>
-              <option value="surface">Plus grande surface</option>
+              <option value="newest">{t("sortRecent")}</option>
+              <option value="price-asc">{t("sortPriceAsc")}</option>
+              <option value="price-desc">{t("sortPriceDesc")}</option>
+              <option value="surface">{t("sortSurface")}</option>
             </select>
           </div>
         </div>
@@ -197,19 +201,19 @@ export default function VenteVillaMarrakech() {
         <div className="bg-white border-b border-gray-200 shadow-sm">
           <div className="max-w-[1200px] mx-auto px-4 py-6">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="font-bold text-[#1a3c5e]">Filtres</h3>
+              <h3 className="font-bold text-[#1a3c5e]">{t("filters")}</h3>
               {selectedQuartiers.length > 0 && (
                 <button
                   onClick={() => setSelectedQuartiers([])}
                   className="text-sm text-red-500 hover:text-red-600 font-medium"
                 >
-                  Tout effacer
+                  {t("clearAll")}
                 </button>
               )}
             </div>
             <div>
               <label className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3 block">
-                Quartier
+                {t("quarter")}
               </label>
               <div className="flex flex-wrap gap-2">
                 {quartierOptions.map((q) => (
@@ -266,13 +270,13 @@ export default function VenteVillaMarrakech() {
             <div className="w-20 h-20 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
               <Icon icon={faSearch} className="text-gray-300 text-2xl" />
             </div>
-            <h3 className="text-xl font-bold text-gray-700 mb-2">Aucune propriété trouvée</h3>
-            <p className="text-gray-400 mb-6">Essayez de modifier vos critères de recherche</p>
+            <h3 className="text-xl font-bold text-gray-700 mb-2">{t("noResults")}</h3>
+            <p className="text-gray-400 mb-6">{t("noResultsDesc")}</p>
             <button
               onClick={() => setSelectedQuartiers([])}
               className="bg-[#1a3c5e] text-white px-6 py-2.5 rounded-lg font-medium hover:bg-[#14324e] transition-colors"
             >
-              Réinitialiser les filtres
+              {t("resetFilters")}
             </button>
           </div>
         ) : (
@@ -297,18 +301,18 @@ export default function VenteVillaMarrakech() {
                   {/* Price Badge */}
                   <div className="absolute bottom-4 left-4">
                     <div className="bg-white/95 backdrop-blur-sm rounded-xl px-4 py-2 shadow-lg">
-                      <span className="text-[#1a3c5e] font-bold text-lg">{convert(villa.price, "EUR").toLocaleString("fr-FR")} {symbol}</span>
+                      <span className="text-[#1a3c5e] font-bold text-lg">{convert(villa.price, "EUR").toLocaleString(locale === "en" ? "en-US" : "fr-FR")} {symbol}</span>
                     </div>
                   </div>
 
                   {/* Sale Badge */}
                   <div className="absolute top-4 left-4 bg-[#27ae60] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                    À Vendre
+                    {ts("forSale")}
                   </div>
 
                   {villa.isFeatured && (
                     <div className="absolute top-4 right-4 bg-[#f39c12] text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                      Exclusif
+                      {ts("exclusive")}
                     </div>
                   )}
 
@@ -346,20 +350,20 @@ export default function VenteVillaMarrakech() {
                         <div className="w-7 h-7 bg-emerald-50 rounded-lg flex items-center justify-center">
                           <Icon icon={faMaximize} className="text-emerald-600 text-xs" />
                         </div>
-                        <span>Terrain {villa.terrain} m²</span>
+                        <span>{t("land")} {villa.terrain} m²</span>
                       </div>
                     )}
                     <div className="flex items-center gap-2 text-gray-500 text-sm">
                       <div className="w-7 h-7 bg-emerald-50 rounded-lg flex items-center justify-center">
                         <Icon icon={faBed} className="text-emerald-600 text-xs" />
                       </div>
-                      <span>{villa.chambres} ch.</span>
+                      <span>{villa.chambres} {t("bedroomsAbbrev")}</span>
                     </div>
                     <div className="flex items-center gap-2 text-gray-500 text-sm">
                       <div className="w-7 h-7 bg-emerald-50 rounded-lg flex items-center justify-center">
                         <Icon icon={faBath} className="text-emerald-600 text-xs" />
                       </div>
-                      <span>{villa.bathrooms} SdB</span>
+                      <span>{villa.bathrooms} {t("bathroomsAbbrev")}</span>
                     </div>
                   </div>
                 </div>
@@ -373,16 +377,16 @@ export default function VenteVillaMarrakech() {
       <section className="bg-[#1a3c5e] py-16">
         <div className="max-w-[1200px] mx-auto px-4 text-center">
           <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">
-            Vous cherchez une propriété spécifique ?
+            {ts("ctaTitle")}
           </h2>
           <p className="text-white/60 mb-8 max-w-xl mx-auto">
-            Nos experts en immobilier de luxe à Marrakech sont à votre disposition pour trouver la propriété de vos rêves.
+            {ts("ctaDesc")}
           </p>
           <Link
             href="/contactez-nous"
             className="inline-flex items-center gap-2 bg-[#f39c12] hover:bg-[#e67e22] text-white px-8 py-3.5 rounded-xl font-bold transition-colors shadow-lg"
           >
-            Contactez nos experts
+            {ts("ctaButton")}
             <Icon icon={faArrowRight} className="text-sm" />
           </Link>
         </div>

@@ -10,12 +10,12 @@ export default function EventsSection() {
   const settings = useSettings();
   const t = useTranslations("homepage");
 
-  const eventTitle = settings.events_title || "Location villas pour événements à Marrakech";
-  const eventDescription = settings.events_description || "Organisez vos événements dans un cadre d'exception grâce à nos villas de luxe à Marrakech. Que ce soit pour une fête, un mariage, un anniversaire en villa de luxe, ou une réunion privée, StaysInMarrakech vous propose une sélection exclusive de villas à louer à Marrakech.";
+  const eventTitle = settings.events_title || t("eventsFallbackTitle");
+  const eventDescription = settings.events_description || t("eventsFallbackDesc");
   const eventImage = settings.events_image || "/images/sections/evenements.webp";
 
-  const vacationTitle = settings.vacations_title || "Location villa de luxe pour vacances à Marrakech";
-  const vacationDescription = settings.vacations_description || "Découvrez nos villas de luxe à Marrakech, parfaites pour des vacances inoubliables. Réservez dès maintenant et profitez d'un séjour d'exception avec services personnalisés.";
+  const vacationTitle = settings.vacations_title || t("vacationsFallbackTitle");
+  const vacationDescription = settings.vacations_description || t("vacationsFallbackDesc");
   const vacationImage = settings.vacations_image || "/images/sections/vacances-marrakech.webp";
 
   return (

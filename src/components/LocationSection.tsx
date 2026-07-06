@@ -10,8 +10,8 @@ export default function LocationSection() {
   const settings = useSettings();
   const t = useTranslations("homepage");
 
-  const title = settings.location_title || "StaysInMarrakech : Location de villa de luxe à Marrakech";
-  const description = settings.location_description || "StaysInMarrakech est une société spécialisée dans la location de villas de luxe et de prestige à Marrakech.";
+  const title = settings.location_title || t("locationFallbackTitle");
+  const description = settings.location_description || t("locationFallbackDesc");
   const image = settings.location_image || "/images/sections/location-villa-marrakech.webp";
   const linkText = settings.location_link_text || t("seeMore");
   const linkHref = settings.location_link_href || "/marrakech-villas/location-villa-marrakech";

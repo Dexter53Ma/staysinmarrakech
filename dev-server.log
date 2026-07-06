@@ -1279,3 +1279,17 @@ Import trace:
  GET /api/services 200 in 515ms (next.js: 4ms, application-code: 511ms)
 [browser] Image with src "/images/activities/sonotherapie.webp" was detected as the Largest Contentful Paint (LCP). Please add the `loading="eager"` property if this image is above the fold.
 Read more: https://nextjs.org/docs/app/api-reference/components/image#loading
+✓ Compiled in 115ms
+✓ Compiled in 87ms
+✓ Compiled in 90ms
+✓ Compiled in 98ms
+✓ Compiled in 98ms
+✓ Compiled in 86ms
+✓ Compiled in 82ms
+✓ Compiled in 71ms
+✓ Compiled in 92ms
+✓ Compiled in 78ms
+✓ Compiled in 87ms
+✓ Compiled in 97ms
+✓ Compiled in 88ms
+✓ Compiled in 96ms

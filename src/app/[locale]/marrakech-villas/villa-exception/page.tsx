@@ -3,6 +3,7 @@ import {Link} from "@/i18n/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Icon, faCrown, faGem } from "@/components/icons";
+import { useTranslations } from "next-intl";
 
 const villas = [
   { slug: "villa-selma", name: "Villa Selma", image: "/images/villas/selma.jpg", chambres: 21, pax: 46 },
@@ -12,6 +13,8 @@ const villas = [
 ];
 
 export default function VillaException() {
+  const t = useTranslations("exceptionPage");
+  const tp = useTranslations("properties");
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -26,13 +29,13 @@ export default function VillaException() {
         <div className="relative max-w-[1200px] mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-[#d4af37]/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
             <Icon icon={faCrown} className="text-[#d4af37] text-xs" />
-            <span className="text-[#d4af37]/90 text-sm font-medium">Collection Prestige</span>
+            <span className="text-[#d4af37]/90 text-sm font-medium">{t("prestigeCollection")}</span>
           </div>
           <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-            Villas d&apos;Exception
+            {t("title")}
           </h1>
           <p className="text-white/60 text-lg md:text-xl max-w-2xl mx-auto">
-            Un héritage d&apos;élégance marocaine — nos propriétés les plus prestigieuses
+            {t("subtitle")}
           </p>
         </div>
       </section>
@@ -60,7 +63,7 @@ export default function VillaException() {
                 {/* Badge */}
                 <div className="absolute top-4 left-4 bg-[#d4af37] text-[#1a1a2e] text-[10px] font-bold px-3 py-1.5 rounded-full uppercase tracking-wider flex items-center gap-1.5">
                   <Icon icon={faGem} className="text-[8px]" />
-                  Exception
+                  {t("badge")}
                 </div>
 
                 {/* Content Overlay */}
@@ -69,9 +72,9 @@ export default function VillaException() {
                     {villa.name}
                   </h3>
                   <div className="flex items-center gap-4 text-white/70 text-sm">
-                    <span>{villa.chambres} chambres</span>
+                    <span>{villa.chambres} {tp("bedrooms")}</span>
                     <span className="w-1 h-1 bg-white/40 rounded-full" />
-                    <span>{villa.pax} personnes</span>
+                    <span>{villa.pax} {tp("guests")}</span>
                   </div>
                 </div>
 

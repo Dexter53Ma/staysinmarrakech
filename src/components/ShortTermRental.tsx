@@ -10,8 +10,8 @@ export default function ShortTermRental() {
   const settings = useSettings();
   const t = useTranslations("homepage");
 
-  const title = settings.shortrental_title || "Location villas courte durée à Marrakech";
-  const description = settings.shortrental_description || "Notre équipe connaît parfaitement Marrakech et se passionne pour proposer des villas de charme et de caractère, idéales pour une location de villa de luxe à Marrakech. Ces villas se distinguent par leur architecture exceptionnelle, leur situation privilégiée, leur mobilier raffiné, et leur décoration soignée.";
+  const title = settings.shortrental_title || t("shortRentalFallbackTitle");
+  const description = settings.shortrental_description || t("shortRentalFallbackDesc");
   const image = settings.shortrental_image || "/images/sections/courte-duree.webp";
   const linkText = settings.shortrental_link_text || t("contactUs");
   const linkHref = settings.shortrental_link_href || "/contactez-nous";

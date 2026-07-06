@@ -3,6 +3,7 @@ import Footer from "@/components/Footer";
 import Image from "next/image";
 import {Link} from "@/i18n/navigation";
 import { Icon, faStar } from "@/components/icons";
+import { useTranslations } from "next-intl";
 
 const villas = [
   { slug: "villa-selma", name: "Villa Selma", image: "/images/villas/selma.jpg", chambres: 21, pax: 46 },
@@ -16,6 +17,8 @@ const villas = [
 ];
 
 export default function VillaDeLuxe() {
+  const t = useTranslations("luxuryPage");
+  const tp = useTranslations("properties");
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
@@ -30,13 +33,13 @@ export default function VillaDeLuxe() {
         <div className="relative max-w-[1200px] mx-auto px-4 text-center">
           <div className="inline-flex items-center gap-2 bg-white/10 backdrop-blur-sm rounded-full px-4 py-1.5 mb-6">
             <Icon icon={faStar} className="text-[#ffb000] text-xs" />
-            <span className="text-white/90 text-sm font-medium">Sélection Premium</span>
+            <span className="text-white/90 text-sm font-medium">{t("premiumSelection")}</span>
           </div>
           <h1 className="text-3xl md:text-5xl font-bold text-white mb-4 tracking-tight">
-            Villas de Luxe
+            {t("title")}
           </h1>
           <p className="text-white/70 text-lg md:text-xl max-w-2xl mx-auto">
-            L&apos;art de vivre à Marrakech dans nos villas les plus raffinées
+            {t("subtitle")}
           </p>
         </div>
       </section>
@@ -63,7 +66,7 @@ export default function VillaDeLuxe() {
 
                 {/* Badge */}
                 <div className="absolute top-3 left-3 bg-[#ffb000] text-[#0d47a1] text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                  Luxe
+                  {t("luxuryBadge")}
                 </div>
 
                 {/* Arrow */}
@@ -86,13 +89,13 @@ export default function VillaDeLuxe() {
                     <svg className="w-3.5 h-3.5 text-[#0d47a1]" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
                     </svg>
-                    {villa.chambres} ch.
+                    {villa.chambres} {tp("bedroomsAbbrev")}
                   </span>
                   <span className="flex items-center gap-1">
                     <svg className="w-3.5 h-3.5 text-[#0d47a1]" fill="currentColor" viewBox="0 0 20 20">
                       <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z" />
                     </svg>
-                    {villa.pax} pers.
+                    {villa.pax} {tp("guests")}
                   </span>
                 </div>
               </div>

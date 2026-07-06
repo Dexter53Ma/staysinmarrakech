@@ -4,8 +4,24 @@ import Image from "next/image";
 import {Link} from "@/i18n/navigation";
 import { Eye, BedDouble, Bath, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
-import { PropertyListItem, TYPE_LABELS, TYPE_COLORS, STATUS_LABELS } from "@/types";
+import { PropertyListItem, TYPE_COLORS } from "@/types";
 import { useCurrency } from "@/components/CurrencyContext";
+
+const TYPE_KEYS: Record<string, string> = {
+  VILLA: "Villa",
+  APARTMENT: "properties.apartment",
+  HOUSE: "properties.house",
+  LAND: "properties.land",
+  COMMERCIAL: "properties.commercial",
+};
+
+const STATUS_KEYS: Record<string, string> = {
+  AVAILABLE: "properties.available",
+  SOLD: "properties.sold",
+  RENTED: "properties.rented",
+  PENDING: "properties.pending",
+  MAINTENANCE: "Maintenance",
+};
 
 interface PropertyGridProps {
   properties: PropertyListItem[];
@@ -69,11 +85,11 @@ export default function PropertyGrid({
                 <span
                   className={`text-xs font-medium px-2.5 py-1 rounded-full ${TYPE_COLORS[property.type] || "bg-gray-100 text-gray-800"}`}
                 >
-                  {TYPE_LABELS[property.type] || property.type}
+                  {t(TYPE_KEYS[property.type] || "Villa")}
                 </span>
                 {property.status !== "AVAILABLE" && (
                   <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-orange-100 text-orange-800">
-                    {STATUS_LABELS[property.status] || property.status}
+                    {t(STATUS_KEYS[property.status] || property.status)}
                   </span>
                 )}
               </div>

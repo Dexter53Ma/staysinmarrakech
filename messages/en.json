@@ -38,7 +38,14 @@
     "services": "Services",
     "allServices": "View all services",
     "book": "Book",
-    "bookNow": "Book now"
+    "bookNow": "Book now",
+    "courteDuree": "Short-term rental",
+    "longueDuree": "Long-term rental",
+    "mentionsLegales": "Legal notices",
+    "privacyPolicy": "Privacy policy",
+    "aboutFallback": "StaysInMarrakech specializes in luxury and prestige villa rentals in Marrakech.",
+    "locationSaleVillas": "rental & sale villas",
+    "servicesActivities": "services & activities"
   },
   "homepage": {
     "heroTitle": "Marrakech, Morocco",
@@ -99,6 +106,23 @@
     "testimonialsDesc": "What our clients say about their experience with StaysInMarrakech",
     "callUs": "Call us",
     "backToTop": "Back to top",
+    "faqTitle": "Frequently Asked Questions",
+    "faqSubtitle": "Everything you need to know about our luxury villa rentals in Marrakech",
+    "locationFallbackTitle": "StaysInMarrakech: Luxury villa rental in Marrakech",
+    "locationFallbackDesc": "StaysInMarrakech specializes in luxury and prestige villa rentals in Marrakech.",
+    "shortRentalFallbackTitle": "Short-term villa rental in Marrakech",
+    "shortRentalFallbackDesc": "Our team knows Marrakech perfectly and is passionate about offering charming and characterful villas, ideal for a luxury villa rental in Marrakech.",
+    "eventsFallbackTitle": "Event villa rental in Marrakech",
+    "eventsFallbackDesc": "Organize your events in an exceptional setting with our luxury villas in Marrakech...",
+    "vacationsFallbackTitle": "Luxury vacation villa rental in Marrakech",
+    "vacationsFallbackDesc": "Discover our luxury villas in Marrakech, perfect for an unforgettable vacation. Book now and enjoy an exceptional stay with personalized services.",
+    "experienceFallback": "StaysInMarrakech since 2014",
+    "clientsFallback": "1000+ clients",
+    "qualityFallback": "Villas verified every 3 months",
+    "servicesFallback": "Dedicated concierge for you",
+    "presenceFallback": "Support throughout your stay",
+    "typeVilla": "Villa",
+    "typeRiad": "Riad",
     "content": {
       "expertiseTitle": "Our expertise",
       "expertiseHeading": "StaysInMarrakech — Your luxury villa expert in Marrakech",
@@ -213,7 +237,18 @@
     "seoTitle": "Luxury villas in Marrakech — Find the ideal property",
     "seoP1": "Explore our complete catalogue of luxury villas and properties in Marrakech. Each property is carefully selected for its prime location, distinctive architecture and high-end amenities. Whether you're looking for a villa with a heated pool in the Palmeraie, a renovated riad in the Medina or a charming estate near Amelkis golf, our team supports you every step of the way.",
     "seoP2": "Filter your results by property type, budget, number of bedrooms or district. We offer villas for all occasions: family holidays, trips with friends, exceptional weddings, corporate retreats or real estate investment. Our properties are located in Marrakech's most sought-after districts — Gueliz, La Palmeraie, Route de l'Ourika, Targa, Amelkis and Sidi Youssef Ben Ali.",
-    "seoP3": "Each villa features a detailed page with photo gallery, full description, pricing, real-time availability and client reviews. You can submit a booking request online or contact our team for personalised advice."
+    "seoP3": "Each villa features a detailed page with photo gallery, full description, pricing, real-time availability and client reviews. You can submit a booking request online or contact our team for personalised advice.",
+    "sold": "Sold",
+    "rented": "Rented",
+    "pending": "Pending",
+    "clearAll": "Clear all",
+    "sortBedrooms": "Most bedrooms",
+    "sortSurface": "Largest area",
+    "noResultsDesc": "Try modifying your search criteria",
+    "resetFilters": "Reset filters",
+    "propertyType": "Property type",
+    "rentSale": "Rent / Sale",
+    "advancedFilters": "Advanced filters"
   },
   "services": {
     "title": "Our Services & Activities",
@@ -992,7 +1027,9 @@
     "hours": "Hours",
     "followUs": "Follow us",
     "sendError": "Error sending message",
-    "sendErrorMsg": "An error occurred. Please try again."
+    "sendErrorMsg": "An error occurred. Please try again.",
+    "openingHours": "7 days a week - 9am to 8pm",
+    "ourDetails": "Our details"
   },
   "legal": {
     "mentionsLegales": "Legal notices",
@@ -1095,23 +1132,23 @@
     }
   },
   "faqs": {
-    "title": "Frequently asked questions",
-    "q1": "How to book a villa?",
-    "a1": "You can book directly online or contact us by phone or email. Our team will guide you throughout the process.",
-    "q2": "What are the payment terms?",
-    "a2": "We accept bank transfers, credit cards and cash payments. A 30% deposit is required upon booking.",
-    "q3": "Can I cancel my booking?",
-    "a3": "Yes, you can cancel free of charge up to 30 days before your arrival. Beyond that, cancellation fees apply.",
-    "q4": "Are the villas furnished?",
-    "a4": "Yes, all our villas are fully furnished and equipped for your comfort.",
-    "q5": "Is there a cleaning service?",
-    "a5": "Yes, cleaning service is included in all our villas. Additional services are available upon request.",
-    "q6": "Can I organise an event at a villa?",
-    "a6": "Yes, some villas are suitable for events. Contact us to discuss your project.",
-    "q7": "Are pets allowed?",
-    "a7": "It depends on the villa. Contact us to check the pet policy of the villa you're interested in.",
-    "q8": "How can I get to the airport?",
-    "a8": "We can arrange a transfer from Marrakech-Menara airport. Contact us to book."
+    "title": "Frequently Asked Questions",
+    "q1": "What is the average price of a luxury villa in Marrakech?",
+    "a1": "Our luxury villas in Marrakech are available from 350€ per night. Prices vary depending on size, location, and amenities.",
+    "q2": "What is the best time to rent a villa in Marrakech?",
+    "a2": "Marrakech is a year-round destination. Peak season is March-May and September-November with ideal weather.",
+    "q3": "Do the villas include a concierge service?",
+    "a3": "Yes, all our villas benefit from our dedicated concierge service to make your stay exceptional.",
+    "q4": "Which neighborhoods in Marrakech are the villas located in?",
+    "a4": "Our villas are located in the most sought-after neighborhoods: Palmeraie, Gueliz, Route de l'Ourika, Amelkis, and Targa.",
+    "q5": "Do I need a visa to rent a villa in Morocco?",
+    "a5": "EU citizens do not need a visa for stays up to 90 days. A valid passport is sufficient.",
+    "q6": "What is the difference between short-term and long-term rental?",
+    "a6": "Short-term rental (1-30 nights) is ideal for vacations. Long-term rental (1-12 months) suits expats and professionals.",
+    "q7": "Do you offer airport transfers from Marrakech?",
+    "a7": "Yes, we organize private transfers from Marrakech Menara Airport to your villa.",
+    "q8": "Are the villas suitable for families with children?",
+    "a8": "Absolutely. Most of our villas have children's rooms, pools, and gardens suitable for families."
   },
   "validation": {
     "nameRequired": "Name is required",
@@ -1153,5 +1190,38 @@
     "message": "We apologise for the inconvenience.",
     "retry": "Please try again",
     "retryBtn": "Try again"
+  },
+  "salePage": {
+    "exclusiveProperties": "Exclusive properties",
+    "villasForSale": "Prestige Villas for Sale",
+    "investSubtitle": "Invest in Moroccan elegance — our experts guide you",
+    "secureTransactions": "Secure transactions",
+    "legalSupport": "Legal support",
+    "turnkey": "Turnkey",
+    "forSale": "For Sale",
+    "exclusive": "Exclusive",
+    "ctaTitle": "Looking for a specific property?",
+    "ctaDesc": "Our luxury real estate experts in Marrakech are at your disposal to find the property of your dreams.",
+    "ctaButton": "Contact our experts"
+  },
+  "luxuryPage": {
+    "premiumSelection": "Premium Selection",
+    "title": "Luxury Villas",
+    "subtitle": "The art of living in Marrakech in our most refined villas",
+    "luxuryBadge": "Luxury"
+  },
+  "exceptionPage": {
+    "prestigeCollection": "Prestige Collection",
+    "title": "Exceptional Villas",
+    "subtitle": "A legacy of Moroccan elegance — our most prestigious properties",
+    "badge": "Exception"
+  },
+  "locationPage": {
+    "locationMarrakech": "Marrakech, Morocco",
+    "villasForRent": "Luxury Villas for Rent",
+    "discoverExclusive": "Discover our exclusive selection of prestigious villas in Marrakech",
+    "villasAvailable": "villas available",
+    "quartiers": "neighborhoods",
+    "service247": "24/7 Service"
   }
 }

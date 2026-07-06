@@ -9,11 +9,11 @@ export default function IconsSection() {
   const t = useTranslations("homepage");
 
   const cards = [
-    { icon: faStar, title: t("experienceLabel"), description: settings.stats_experience || "StaysInMarrakech existe depuis 2014" },
-    { icon: faUsers, title: t("clientsLabel"), description: settings.stats_clients || "+ de 1000 clients" },
-    { icon: faHome, title: t("qualityLabel"), description: settings.stats_quality || "Villas vérifiées tous les 3 mois" },
-    { icon: faConciergeBell, title: t("servicesLabel"), description: settings.stats_services || "Conciergerie dédiée pour vous" },
-    { icon: faShieldAlt, title: t("presenceLabel"), description: settings.stats_presence || "Accompagnement tout au long de votre séjour" },
+    { icon: faStar, title: t("experienceLabel"), description: settings.stats_experience || t("experienceFallback") },
+    { icon: faUsers, title: t("clientsLabel"), description: settings.stats_clients || t("clientsFallback") },
+    { icon: faHome, title: t("qualityLabel"), description: settings.stats_quality || t("qualityFallback") },
+    { icon: faConciergeBell, title: t("servicesLabel"), description: settings.stats_services || t("servicesFallback") },
+    { icon: faShieldAlt, title: t("presenceLabel"), description: settings.stats_presence || t("presenceFallback") },
   ];
 
   return (
