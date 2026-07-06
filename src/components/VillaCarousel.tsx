@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
   Icon,
   faArrowLeft,
@@ -41,19 +42,21 @@ interface RawProperty {
   isFeatured?: boolean;
 }
 
-const features = [
-  { icon: faMapMarkerAlt, label: "Terrain" },
-  { icon: faMaximize, label: "Surface" },
-  { icon: faBed, label: "Chambres" },
-  { icon: faUsers, label: "Pax" },
-];
-
 export default function VillaCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations("homepage");
+  const tCommon = useTranslations("common");
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [wishlist, setWishlist] = useState<string[]>([]);
   const [villas, setVillas] = useState<Villa[]>([]);
+
+  const features = [
+    { icon: faMapMarkerAlt, label: t("terrain") },
+    { icon: faMaximize, label: t("surface") },
+    { icon: faBed, label: t("bedrooms") },
+    { icon: faUsers, label: t("pax") },
+  ];
 
   useEffect(() => {
     fetch("/api/properties?limit=6")
@@ -63,7 +66,7 @@ export default function VillaCarousel() {
           name: p.title,
           image: p.images?.[0]?.url || "/images/villas/default.webp",
           quartier: p.quarter || "",
-          price: p.price ? `À partir de ${Number(p.price).toLocaleString("fr-FR")} € /nuit` : "",
+          price: p.price ? `${t("fromPrice")} ${Number(p.price).toLocaleString("fr-FR")} ${t("perNight")}` : "",
           terrain: p.plotArea ? `${p.plotArea}m²` : "",
           surface: p.builtArea ? `${p.builtArea}m²` : "",
           chambres: p.bedrooms || 0,
@@ -74,7 +77,7 @@ export default function VillaCarousel() {
         setVillas(mapped);
       })
       .catch((e) => console.error("[VillaCarousel] fetch error:", e));
-  }, []);
+  }, [t]);
 
   const toggleWishlist = (name: string) => {
     setWishlist((prev) =>
@@ -111,10 +114,10 @@ export default function VillaCarousel() {
     <section className="py-16 px-4 max-w-[1200px] mx-auto overflow-hidden">
       <div className="text-center mb-10">
         <h2 className="text-2xl md:text-3xl font-bold text-[#0d47a1] mb-3">
-          Découvrez notre sélection de villas de luxe à Marrakech
+          {t("discoverTitle")}
         </h2>
         <p className="text-[#34495e] text-lg">
-          Une sélection des meilleures villas à Marrakech.
+          {t("discoverSubtitle")}
         </p>
       </div>
 
@@ -145,7 +148,7 @@ export default function VillaCarousel() {
           <button
             onClick={() => scroll("left")}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#0d47a1] hover:text-white transition-colors"
-            aria-label="Précédent"
+            aria-label={t("prev")}
           >
             <Icon icon={faArrowLeft} />
           </button>
@@ -171,13 +174,13 @@ export default function VillaCarousel() {
                   />
                   {villa.isFeatured && (
                     <span className="absolute top-2 left-2 bg-[#0d47a1] text-white text-[11px] font-bold px-2 py-1 rounded">
-                      Nouveauté
+                      {t("new")}
                     </span>
                   )}
                   <button
                     onClick={(e) => { e.preventDefault(); toggleWishlist(villa.name); }}
                     className="absolute top-2 right-2 w-11 h-11 rounded-full bg-white/80 flex items-center justify-center hover:bg-white transition-colors z-10"
-                    aria-label={wishlist.includes(villa.name) ? "Retirer de la sélection" : "Ajouter à la sélection"}
+                    aria-label={wishlist.includes(villa.name) ? t("removeSelection") : t("addSelection")}
                   >
                     <Icon
                       icon={wishlist.includes(villa.name) ? faHeart : farHeart}
@@ -216,7 +219,7 @@ export default function VillaCarousel() {
                   href={`/properties/${villa.slug}`}
                   className="flex items-center justify-center gap-2 w-full bg-[#0d47a1] text-white text-[13px] font-medium py-2.5 rounded hover:bg-[#0a3a82] transition-colors"
                 >
-                  Voir détails
+                  {tCommon("seeDetails")}
                 </Link>
               </div>
             </div>
@@ -227,7 +230,7 @@ export default function VillaCarousel() {
           <button
             onClick={() => scroll("right")}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#0d47a1] hover:text-white transition-colors"
-            aria-label="Suivant"
+            aria-label={t("next")}
           >
             <Icon icon={faArrowRight} />
           </button>

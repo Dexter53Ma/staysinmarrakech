@@ -1,10 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useTranslations } from "next-intl";
 import { ArrowUp } from "lucide-react";
 
 export default function BackToTop() {
   const [show, setShow] = useState(false);
+  const t = useTranslations("homepage");
 
   useEffect(() => {
     const onScroll = () => setShow(window.scrollY > 400);
@@ -19,7 +21,7 @@ export default function BackToTop() {
       onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
       className="fixed left-6 z-50 w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm border border-gray-200 shadow-lg flex items-center justify-center text-gray-600 hover:bg-[#0d47a1] hover:text-white hover:border-[#0d47a1] transition-all duration-200"
       style={{ bottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}
-      aria-label="Retour en haut"
+      aria-label={t("backToTop")}
     >
       <ArrowUp className="size-5" />
     </button>

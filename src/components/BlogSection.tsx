@@ -2,7 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 
 interface Post {
   title: string;
@@ -15,6 +16,7 @@ interface Post {
 
 export default function BlogSection() {
   const [posts, setPosts] = useState<Post[]>([]);
+  const t = useTranslations("homepage");
 
   useEffect(() => {
     fetch("/api/blog")
@@ -33,10 +35,10 @@ export default function BlogSection() {
           <span className="text-[#0d47a1] text-sm font-semibold">Blog</span>
         </div>
         <h2 className="text-[26px] font-bold uppercase text-[#0b1014] mb-3">
-          Derniers articles du blog
+          {t("blogTitle")}
         </h2>
         <p className="text-[#666] text-[15px]">
-          Découvrez nos actualités, conseils et inspirations pour un séjour inoubliable
+          {t("blogSubtitle")}
         </p>
       </div>
 
@@ -74,7 +76,7 @@ export default function BlogSection() {
               </div>
             ) : (
               <div className="w-full h-[200px] bg-gray-200 flex items-center justify-center text-gray-400">
-                Pas d&apos;image
+                {t("noImage")}
               </div>
             )}
             <div className="p-5">
@@ -99,7 +101,7 @@ export default function BlogSection() {
         href="/blog"
         className="inline-flex items-center gap-2 mt-8 font-bold uppercase text-[#0d47a1] hover:text-[#0a3a82] transition-colors text-sm"
       >
-        Voir tous les articles
+        {t("seeAllArticles")}
         <span className="text-lg">→</span>
       </Link>
     </section>

@@ -1,17 +1,19 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { Icon, faStar, faUsers, faHome, faConciergeBell, faShieldAlt } from "@/components/icons";
 import { useSettings } from "@/components/SettingsContext";
 
 export default function IconsSection() {
   const settings = useSettings();
+  const t = useTranslations("homepage");
 
   const cards = [
-    { icon: faStar, title: "Expérience", description: settings.stats_experience || "StaysInMarrakech existe depuis 2014" },
-    { icon: faUsers, title: "Base clients", description: settings.stats_clients || "+ de 1000 clients" },
-    { icon: faHome, title: "Qualité villas", description: settings.stats_quality || "Villas vérifiées tous les 3 mois" },
-    { icon: faConciergeBell, title: "Services intégrés", description: settings.stats_services || "Conciergerie dédiée pour vous" },
-    { icon: faShieldAlt, title: "Présence sur place", description: settings.stats_presence || "Accompagnement tout au long de votre séjour" },
+    { icon: faStar, title: t("experienceLabel"), description: settings.stats_experience || "StaysInMarrakech existe depuis 2014" },
+    { icon: faUsers, title: t("clientsLabel"), description: settings.stats_clients || "+ de 1000 clients" },
+    { icon: faHome, title: t("qualityLabel"), description: settings.stats_quality || "Villas vérifiées tous les 3 mois" },
+    { icon: faConciergeBell, title: t("servicesLabel"), description: settings.stats_services || "Conciergerie dédiée pour vous" },
+    { icon: faShieldAlt, title: t("presenceLabel"), description: settings.stats_presence || "Accompagnement tout au long de votre séjour" },
   ];
 
   return (

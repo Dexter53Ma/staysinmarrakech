@@ -30,16 +30,6 @@ async function getHeroSlides() {
   }
 }
 
-export const metadata = {
-  title: "StaysInMarrakech — Location et vente de villas de luxe à Marrakech",
-  description: "StaysInMarrakech, votre partenaire de confiance pour la location et la vente de villas de luxe à Marrakech. Villas avec piscine privée, locations vacances, mariages et événements.",
-  openGraph: {
-    title: "StaysInMarrakech — Location et vente de villas de luxe à Marrakech",
-    description: "Découvrez nos villas de luxe à Marrakech avec piscine privée. Location pour vacances, mariages et événements.",
-    url: "https://staysinmarrakech.netlify.app",
-  },
-};
-
 const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "RealEstateAgent",

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import { Icon, faEnvelope, faCheck, faSpinner } from "@/components/icons";
 import { useCsrf } from "@/hooks/useCsrf";
 
@@ -9,6 +10,7 @@ export default function Newsletter() {
   const [status, setStatus] = useState<"idle" | "loading" | "success" | "error">("idle");
   const [message, setMessage] = useState("");
   const { csrfFetch } = useCsrf();
+  const t = useTranslations("homepage");
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -23,15 +25,15 @@ export default function Newsletter() {
       const data = await res.json();
       if (res.ok) {
         setStatus("success");
-        setMessage(data.message || "Inscription réussie !");
+        setMessage(data.message || t("subscribeSuccess"));
         setEmail("");
       } else {
         setStatus("error");
-        setMessage(data.error || "Erreur lors de l'inscription");
+        setMessage(data.error || t("subscribeError"));
       }
     } catch {
       setStatus("error");
-      setMessage("Erreur réseau. Veuillez réessayer.");
+      setMessage(t("subscribeNetworkError"));
     }
     setTimeout(() => setStatus("idle"), 5000);
   }
@@ -44,10 +46,10 @@ export default function Newsletter() {
           <span className="text-white/90 text-sm font-medium">Newsletter</span>
         </div>
         <h2 className="text-white text-xl sm:text-2xl md:text-3xl font-bold mb-3">
-          Restez informé
+          {t("newsletterTitle")}
         </h2>
         <p className="text-white/70 text-sm sm:text-base mb-10 max-w-xl mx-auto">
-          Rejoignez notre newsletter et restez informé des dernières nouveautés, offres exclusives et événements exceptionnels.
+          {t("newsletterSubtitle")}
         </p>
 
         <form onSubmit={handleSubmit} className="max-w-[500px] mx-auto">
@@ -59,7 +61,7 @@ export default function Newsletter() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
-                placeholder="Votre adresse email"
+                placeholder={t("emailPlaceholder")}
                 className="w-full h-13 pl-11 pr-4 rounded-xl text-sm text-gray-800 placeholder:text-gray-400 outline-none focus:ring-2 focus:ring-[#ffb000] focus:ring-offset-2 transition-all"
                 disabled={status === "loading"}
               />
@@ -74,7 +76,7 @@ export default function Newsletter() {
               ) : status === "success" ? (
                 <Icon icon={faCheck} className="text-sm" />
               ) : null}
-              <span className="hidden sm:inline">S&apos;abonner</span>
+              <span className="hidden sm:inline">{t("subscribe")}</span>
               <span className="sm:hidden">OK</span>
             </button>
           </div>

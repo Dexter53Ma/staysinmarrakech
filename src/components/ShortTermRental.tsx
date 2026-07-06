@@ -1,16 +1,18 @@
 "use client";
 
+import { useTranslations } from "next-intl";
 import { useSettings } from "@/components/SettingsContext";
 import Image from "next/image";
 import { Icon, faArrowRight } from "@/components/icons";
 
 export default function ShortTermRental() {
   const settings = useSettings();
+  const t = useTranslations("homepage");
 
   const title = settings.shortrental_title || "Location villas courte durée à Marrakech";
   const description = settings.shortrental_description || "Notre équipe connaît parfaitement Marrakech et se passionne pour proposer des villas de charme et de caractère, idéales pour une location de villa de luxe à Marrakech. Ces villas se distinguent par leur architecture exceptionnelle, leur situation privilégiée, leur mobilier raffiné, et leur décoration soignée.";
   const image = settings.shortrental_image || "/images/sections/courte-duree.webp";
-  const linkText = settings.shortrental_link_text || "Contactez-nous";
+  const linkText = settings.shortrental_link_text || t("contactUs");
   const linkHref = settings.shortrental_link_href || "/contactez-nous";
 
   return (
@@ -30,7 +32,7 @@ export default function ShortTermRental() {
           </div>
           <div className="w-full md:w-1/2">
             <div className="inline-flex items-center gap-2 bg-[#0d47a1]/10 rounded-full px-4 py-1.5 mb-5">
-              <span className="text-[#0d47a1] text-sm font-semibold">Courte durée</span>
+              <span className="text-[#0d47a1] text-sm font-semibold">{t("shortTermRental")}</span>
             </div>
             <h3 className="text-xl sm:text-2xl md:text-3xl font-bold text-[#22313d] mb-4 leading-tight">
               {title}

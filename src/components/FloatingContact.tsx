@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useTranslations } from "next-intl";
 import {
   Icon,
   faPhone,
@@ -11,6 +12,7 @@ import {
 
 export default function FloatingContact() {
   const [open, setOpen] = useState(false);
+  const t = useTranslations("homepage");
 
   return (
     <div className="fixed bottom-20 right-4 sm:right-6 z-50" style={{ bottom: "calc(80px + env(safe-area-inset-bottom, 0px))" }}>
@@ -21,7 +23,7 @@ export default function FloatingContact() {
             className="flex items-center gap-3 bg-white text-[#34495e] px-4 py-3 rounded-full shadow-lg hover:shadow-xl transition-shadow text-sm font-medium"
           >
             <Icon icon={faPhone} className="text-[#0d47a1]" />
-            <span className="hidden sm:inline">Appelez-nous</span>
+            <span className="hidden sm:inline">{t("callUs")}</span>
           </a>
           <a
             href="https://wa.me/212621189496"

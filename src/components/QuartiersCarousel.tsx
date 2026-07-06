@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import { useTranslations } from "next-intl";
+import { Link } from "@/i18n/navigation";
 import {
   Icon,
   faArrowLeft,
@@ -17,6 +18,7 @@ interface Quartier {
 
 export default function QuartiersCarousel() {
   const scrollRef = useRef<HTMLDivElement>(null);
+  const t = useTranslations("homepage");
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [canScrollRight, setCanScrollRight] = useState(true);
   const [quartiers, setQuartiers] = useState<Quartier[]>([]);
@@ -62,10 +64,10 @@ export default function QuartiersCarousel() {
   return (
     <section className="max-w-[1140px] mx-auto py-[60px] px-[15px] overflow-hidden">
       <h2 className="text-[26px] font-bold uppercase text-[#0b1014] mb-4">
-        Location villas Marrakech
+        {t("vacationVillas")}
       </h2>
       <p className="text-[#34495e] text-[16px] mb-10">
-        Réservez une villa à Marrakech avec StaysInMarrakech pour profiter d&apos;un séjour unique alliant confort, élégance et services haut de gamme.
+        {t("vacationSubtitle")}
       </p>
 
       <div className="relative">
@@ -73,7 +75,7 @@ export default function QuartiersCarousel() {
           <button
             onClick={() => scroll("left")}
             className="absolute left-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#0d47a1] hover:text-white transition-all duration-300"
-            aria-label="Précédent"
+            aria-label={t("prev")}
           >
             <Icon icon={faArrowLeft} />
           </button>
@@ -109,7 +111,7 @@ export default function QuartiersCarousel() {
           <button
             onClick={() => scroll("right")}
             className="absolute right-0 top-1/2 -translate-y-1/2 z-10 bg-white shadow-lg rounded-full w-11 h-11 flex items-center justify-center hover:bg-[#0d47a1] hover:text-white transition-all duration-300"
-            aria-label="Suivant"
+            aria-label={t("next")}
           >
             <Icon icon={faArrowRight} />
           </button>
