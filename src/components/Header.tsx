@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef } from "react";
 import Image from "next/image";
-import Link from "next/link";
+import {useTranslations, useLocale} from 'next-intl';
+import {Link, useRouter, usePathname} from '@/i18n/navigation';
 import { useSettings } from "@/components/SettingsContext";
 import { useServices, ServiceItem } from "@/components/ServicesContext";
 import { useCurrency, type Currency } from "@/components/CurrencyContext";
@@ -32,23 +33,12 @@ interface SubMenuItem {
   children?: SubMenuItem[];
 }
 
-const villaLinks: SubMenuItem[] = [
-  { label: "Location", href: "/marrakech-villas/location-villa-marrakech", icon: faKey },
-  { label: "Vente", href: "/marrakech-villas/vente-villa-marrakech", icon: faHome },
-  { label: "Villa de Luxe", href: "/marrakech-villas/villa-de-luxe", icon: faStar },
-  { label: "Villa d'Exception", href: "/marrakech-villas/villa-exception", icon: faStar },
-];
-
-const extraNavLinks = [
-  { label: "L'agence", href: "/agence" },
-  { label: "Témoignages", href: "/testimonials" },
-  { label: "Blog", href: "/blog" },
-  { label: "Contact", href: "/contactez-nous" },
-];
-
-const languages = ["Français", "English"];
-
 export default function Header() {
+  const t = useTranslations('navigation');
+  const tCommon = useTranslations('common');
+  const locale = useLocale();
+  const router = useRouter();
+  const pathname = usePathname();
   const settings = useSettings();
   const { services } = useServices();
   const { currency, setCurrency } = useCurrency();
@@ -60,6 +50,25 @@ export default function Header() {
   const [scrolled, setScrolled] = useState(false);
   const servicesRef = useRef<HTMLDivElement>(null);
   const villasRef = useRef<HTMLDivElement>(null);
+
+  const villaLinks: SubMenuItem[] = [
+    { label: t('location'), href: '/marrakech-villas/location-villa-marrakech', icon: faKey },
+    { label: t('vente'), href: '/marrakech-villas/vente-villa-marrakech', icon: faHome },
+    { label: t('villaLuxe'), href: '/marrakech-villas/villa-de-luxe', icon: faStar },
+    { label: t('villaException'), href: '/marrakech-villas/villa-exception', icon: faStar },
+  ];
+
+  const extraNavLinks = [
+    { label: t('agence'), href: '/agence' },
+    { label: t('temoignages'), href: '/testimonials' },
+    { label: t('blog'), href: '/blog' },
+    { label: t('contact'), href: '/contactez-nous' },
+  ];
+
+  const languages = [
+    {code: 'fr', label: 'Français'},
+    {code: 'en', label: 'English'},
+  ];
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 20);
@@ -143,19 +152,19 @@ export default function Header() {
             <span className="w-px h-3 bg-white/20" />
             <Link href="/villas/wishlist" className="flex items-center gap-1.5 hover:text-[#ffb000] transition-colors">
               <Icon icon={faHeart} className="text-[9px]" />
-              <span>Sélection</span>
+              <span>{t('selection')}</span>
             </Link>
             <div className="relative" data-dropdown>
               <button onClick={() => { setLangOpen(!langOpen); }} className="flex items-center gap-1 hover:text-[#ffb000] transition-colors">
                 <Icon icon={faLanguage} className="text-[9px]" />
-                <span>FR</span>
+                <span>{locale.toUpperCase()}</span>
                 <Icon icon={faChevronDown} className="text-[7px]" />
               </button>
               {langOpen && (
                 <div className="absolute right-0 top-full mt-1 bg-white text-gray-800 rounded-lg shadow-xl border border-gray-100 min-w-[120px] z-50 overflow-hidden">
                   {languages.map((l) => (
-                    <button key={l} onClick={() => setLangOpen(false)} className={`block w-full text-left px-4 py-2 text-sm hover:bg-blue-50 transition-colors $                      {l === "Français" ? "font-semibold text-black" : ""}`}>
-                      {l}
+                    <button key={l.code} onClick={() => { router.push(pathname, {locale: l.code}); setLangOpen(false); }} className={`block w-full text-left px-4 py-2 text-sm hover:bg-blue-50 transition-colors ${l.code === locale ? "font-semibold text-black" : ""}`}>
+                      {l.label}
                     </button>
                   ))}
                 </div>
@@ -260,7 +269,7 @@ export default function Header() {
                   </div>
                     <div className="mt-4 pt-4 border-t border-gray-100 text-center">
                     <Link href="/service" onClick={() => setServicesOpen(false)} className="text-sm font-semibold text-black hover:underline">
-                      Voir tous les services →
+                      {t('allServices')} →
                     </Link>
                   </div>
                 </div>
@@ -286,7 +295,7 @@ export default function Header() {
               className="hidden lg:flex items-center gap-2 bg-[#ffb000] hover:bg-[#e6a000] text-black text-[13px] font-bold px-5 py-2.5 rounded-lg transition-colors"
             >
               <Icon icon={faPhone} className="text-[10px]" />
-              <span>Réserver</span>
+              <span>{t('book')}</span>
             </Link>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
@@ -351,7 +360,7 @@ export default function Header() {
                       </Link>
                     ))}
                     <Link href="/service" className="text-[#ffb000] text-sm font-semibold py-1.5 block">
-                      Voir tout →
+                      {tCommon('viewAll')} →
                     </Link>
                   </div>
                 )}
@@ -371,16 +380,16 @@ export default function Header() {
                 className="flex items-center gap-2 text-white text-sm font-semibold uppercase py-3 border-b border-white/10 hover:text-[#ffb000] transition-colors min-h-[44px] active:scale-[0.98]"
               >
                 <Icon icon={faHeart} className="text-[#ffb000] text-xs" />
-                Sélection
+                {t('selection')}
               </Link>
 
               {/* Language Switcher */}
               <div className="py-3 border-b border-white/10">
-                <p className="text-white/40 text-xs uppercase tracking-wider mb-2">Langue</p>
+                <p className="text-white/40 text-xs uppercase tracking-wider mb-2">{tCommon('language')}</p>
                 <div className="flex gap-2">
                   {languages.map((l) => (
-                    <button key={l} onClick={() => setMobileOpen(false)} className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] active:scale-[0.98] ${l === "Français" ? "bg-[#ffb000] text-black" : "bg-white/10 text-white/70 hover:bg-white/20"}`}>
-                      {l}
+                    <button key={l.code} onClick={() => { router.push(pathname, {locale: l.code}); setMobileOpen(false); }} className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] active:scale-[0.98] ${l.code === locale ? "bg-[#ffb000] text-black" : "bg-white/10 text-white/70 hover:bg-white/20"}`}>
+                      {l.label}
                     </button>
                   ))}
                 </div>
@@ -388,7 +397,7 @@ export default function Header() {
 
               {/* Currency Switcher */}
               <div className="py-3 border-b border-white/10">
-                <p className="text-white/40 text-xs uppercase tracking-wider mb-2">Devise</p>
+                <p className="text-white/40 text-xs uppercase tracking-wider mb-2">{tCommon('currency')}</p>
                 <div className="flex gap-2">
                   {(["EUR", "MAD", "USD"] as Currency[]).map((c) => (
                     <button key={c} onClick={() => { setCurrency(c); setMobileOpen(false); }} className={`flex-1 py-2.5 rounded-lg text-sm font-medium transition-colors min-h-[44px] active:scale-[0.98] ${c === currency ? "bg-[#ffb000] text-black" : "bg-white/10 text-white/70 hover:bg-white/20"}`}>
@@ -399,7 +408,7 @@ export default function Header() {
               </div>
 
               <Link href="/contactez-nous" onClick={() => setMobileOpen(false)} className="mt-2 bg-[#ffb000] text-black text-sm font-bold py-3.5 rounded-lg text-center block min-h-[44px] flex items-center justify-center active:scale-[0.98]">
-                Réserver maintenant
+                {t('bookNow')}
               </Link>
 
               <div className="border-t border-white/10 mt-3 pt-3 flex flex-col gap-2 text-white/60 text-xs">
