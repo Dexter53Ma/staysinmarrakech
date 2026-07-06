@@ -8,7 +8,7 @@ const handleI18nRouting = createMiddleware(routing);
 export async function proxy(request: NextRequest) {
   // Run i18n routing first
   const i18nResponse = await handleI18nRouting(request);
-  if (i18nResponse) {
+  if (i18nResponse && i18nResponse.status >= 300 && i18nResponse.status < 400) {
     return i18nResponse;
   }
 
