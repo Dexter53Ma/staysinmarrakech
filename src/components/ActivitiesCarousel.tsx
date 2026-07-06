@@ -3,6 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
+import {Link} from "@/i18n/navigation";
 import {
   Icon,
   faArrowLeft,
@@ -88,7 +89,7 @@ export default function ActivitiesCarousel() {
             ))
           ) : (
             activities.map((activity) => (
-            <a
+            <Link
               key={activity.slug}
               href={`/service/${activity.slug}`}
               className="relative flex-none w-[70vw] sm:w-[260px] lg:w-[300px] h-[200px] sm:h-[220px] rounded-xl overflow-hidden snap-start group cursor-pointer block shadow-md hover:shadow-xl transition-all duration-300"
@@ -105,7 +106,7 @@ export default function ActivitiesCarousel() {
                   {activity.name}
                 </span>
               </div>
-            </a>
+            </Link>
           ))
         )}
         </div>

@@ -1,7 +1,7 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Image from "next/image";
-import Link from "next/link";
+import {Link} from "@/i18n/navigation";
 import { Icon, faStar } from "@/components/icons";
 
 const villas = [

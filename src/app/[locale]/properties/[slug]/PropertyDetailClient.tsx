@@ -2,8 +2,8 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useCsrf } from "@/hooks/useCsrf";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
+import {Link} from "@/i18n/navigation";
+import { useRouter } from "@/i18n/navigation";
 import {
   MapPin,
   Calendar,

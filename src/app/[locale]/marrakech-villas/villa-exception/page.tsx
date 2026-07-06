@@ -1,4 +1,5 @@
 import Image from "next/image";
+import {Link} from "@/i18n/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { Icon, faCrown, faGem } from "@/components/icons";
@@ -40,7 +41,7 @@ export default function VillaException() {
       <section className="max-w-[1200px] mx-auto px-4 py-12">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
           {villas.map((villa) => (
-            <a
+            <Link
               key={villa.slug}
               href={`/properties/${villa.slug}`}
               className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-2xl transition-all duration-500 hover:-translate-y-2"
@@ -83,7 +84,7 @@ export default function VillaException() {
                   </div>
                 </div>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </section>

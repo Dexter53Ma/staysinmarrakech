@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import {Link} from "@/i18n/navigation";
 import {
   Icon,
   faBed,
@@ -28,7 +29,7 @@ export default function VillaListingGrid({ villas }: { villas: Villa[] }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
       {villas.map((villa) => (
-        <a
+        <Link
           key={villa.name}
           href={villa.slug ? `/properties/${villa.slug}` : "#"}
           className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
@@ -106,7 +107,7 @@ export default function VillaListingGrid({ villas }: { villas: Villa[] }) {
               )}
             </div>
           </div>
-        </a>
+        </Link>
       ))}
     </div>
   );

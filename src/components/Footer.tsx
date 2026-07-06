@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useSettings } from "@/components/SettingsContext";
 import { useServices } from "@/components/ServicesContext";
+import {Link} from "@/i18n/navigation";
 import {
   Icon,
   faFacebookF,
@@ -78,15 +79,25 @@ export default function Footer() {
               <div className="flex flex-col">
                 {col.links.map((link) =>
                   link.href ? (
-                    <a
-                      key={link.label}
-                      href={link.href}
-                      className="text-sm text-gray-300 py-2 hover:text-white transition-colors min-h-[44px] flex items-center"
-                      target={link.href.startsWith("http") ? "_blank" : undefined}
-                      rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
-                    >
-                      {link.label}
-                    </a>
+                    link.href.startsWith("http") || link.href.startsWith("tel:") || link.href.startsWith("mailto:") ? (
+                      <a
+                        key={link.label}
+                        href={link.href}
+                        className="text-sm text-gray-300 py-2 hover:text-white transition-colors min-h-[44px] flex items-center"
+                        target={link.href.startsWith("http") ? "_blank" : undefined}
+                        rel={link.href.startsWith("http") ? "noopener noreferrer" : undefined}
+                      >
+                        {link.label}
+                      </a>
+                    ) : (
+                      <Link
+                        key={link.label}
+                        href={link.href}
+                        className="text-sm text-gray-300 py-2 hover:text-white transition-colors min-h-[44px] flex items-center"
+                      >
+                        {link.label}
+                      </Link>
+                    )
                   ) : (
                     <span
                       key={link.label}

@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useSettings } from "@/components/SettingsContext";
+import {Link} from "@/i18n/navigation";
 import Image from "next/image";
 import { Icon, faArrowRight } from "@/components/icons";
 
@@ -38,13 +39,13 @@ export default function LocationSection() {
         <p className="text-white/80 text-sm sm:text-base md:text-lg leading-relaxed mb-8 md:mb-10 max-w-[800px] mx-auto">
           {description}
         </p>
-        <a
+        <Link
           href={linkHref}
           className="inline-flex items-center gap-2 bg-[#0d47a1] hover:bg-[#0a3a82] text-white text-sm font-bold uppercase py-3.5 px-10 rounded-xl transition-all hover:shadow-lg hover:shadow-[#0d47a1]/25"
         >
           {linkText}
           <Icon icon={faArrowRight} className="text-xs" />
-        </a>
+        </Link>
       </div>
     </section>
   );
