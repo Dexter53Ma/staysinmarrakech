@@ -14,8 +14,8 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
 
   return (
     <div className="flex items-center justify-between px-2 py-4">
-      <p className="text-sm text-muted-foreground">
-        Page {page} sur {totalPages}
+      <p className="text-[13px] text-gray-500">
+        Page <span className="font-medium text-gray-700">{page}</span> sur <span className="font-medium text-gray-700">{totalPages}</span>
       </p>
       <div className="flex items-center gap-2">
         <Button
@@ -23,8 +23,9 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           size="sm"
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
+          className="h-8 px-3 text-[12px] font-medium rounded-lg border-gray-200/80"
         >
-          <ChevronLeft size={16} />
+          <ChevronLeft size={14} className="mr-1" />
           Précédent
         </Button>
         <Button
@@ -32,9 +33,10 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           size="sm"
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages}
+          className="h-8 px-3 text-[12px] font-medium rounded-lg border-gray-200/80"
         >
           Suivant
-          <ChevronRight size={16} />
+          <ChevronRight size={14} className="ml-1" />
         </Button>
       </div>
     </div>

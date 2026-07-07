@@ -14,8 +14,11 @@ interface PageData {
   id: string;
   slug: string;
   title: string;
+  titleEn: string | null;
   content: string;
+  contentEn: string | null;
   metaDesc: string | null;
+  metaDescriptionEn: string | null;
 }
 
 export default function AdminEditPage() {
@@ -28,10 +31,14 @@ export default function AdminEditPage() {
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState<string | null>(null);
+  const [locLang, setLocLang] = useState<"fr" | "en">("fr");
   const [form, setForm] = useState({
     title: "",
+    titleEn: "",
     content: "",
+    contentEn: "",
     metaDesc: "",
+    metaDescEn: "",
   });
 
   useEffect(() => {
@@ -46,8 +53,11 @@ export default function AdminEditPage() {
         setPage(data);
         setForm({
           title: data.title,
+          titleEn: data.titleEn || "",
           content: data.content,
+          contentEn: data.contentEn || "",
           metaDesc: data.metaDesc || "",
+          metaDescEn: data.metaDescriptionEn || "",
         });
       } catch {
         router.push("/admin/pages");
@@ -68,10 +78,16 @@ export default function AdminEditPage() {
     setError(null);
     setSuccess(null);
     try {
+      const body = {
+        ...form,
+        titleEn: form.titleEn || form.title,
+        contentEn: form.contentEn || form.content,
+        metaDescEn: form.metaDescEn || form.metaDesc,
+      };
       await fetch(`/api/pages/${slug}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify(body),
       });
       setSuccess("Page sauvegardée !");
     } catch {
@@ -111,36 +127,77 @@ export default function AdminEditPage() {
               {success}
             </div>
           )}
-          <div>
-            <Label htmlFor="title">Titre</Label>
-            <Input
-              id="title"
-              value={form.title}
-              onChange={(e) => setForm({ ...form, title: e.target.value })}
-              placeholder="Titre de la page"
-            />
+          <div className="flex gap-1 p-1 bg-gray-100 rounded-lg">
+            <button type="button" onClick={() => setLocLang("fr")} className={`flex-1 text-sm py-1.5 rounded-md transition-colors ${locLang === "fr" ? "bg-white shadow-sm font-medium" : "text-gray-500"}`}>FR</button>
+            <button type="button" onClick={() => setLocLang("en")} className={`flex-1 text-sm py-1.5 rounded-md transition-colors ${locLang === "en" ? "bg-white shadow-sm font-medium" : "text-gray-500"}`}>EN</button>
           </div>
-          <div>
-            <Label htmlFor="content">Contenu</Label>
-            <Textarea
-              id="content"
-              value={form.content}
-              onChange={(e) => setForm({ ...form, content: e.target.value })}
-              placeholder="Contenu de la page (HTML supporté)"
-              rows={15}
-              className="font-mono text-sm"
-            />
-          </div>
-          <div>
-            <Label htmlFor="metaDesc">Meta Description</Label>
-            <Textarea
-              id="metaDesc"
-              value={form.metaDesc}
-              onChange={(e) => setForm({ ...form, metaDesc: e.target.value })}
-              placeholder="Description pour le SEO"
-              rows={3}
-            />
-          </div>
+          {locLang === "fr" ? (
+            <>
+              <div>
+                <Label htmlFor="title">Titre</Label>
+                <Input
+                  id="title"
+                  value={form.title}
+                  onChange={(e) => setForm({ ...form, title: e.target.value })}
+                  placeholder="Titre de la page"
+                />
+              </div>
+              <div>
+                <Label htmlFor="content">Contenu</Label>
+                <Textarea
+                  id="content"
+                  value={form.content}
+                  onChange={(e) => setForm({ ...form, content: e.target.value })}
+                  placeholder="Contenu de la page (HTML supporté)"
+                  rows={15}
+                  className="font-mono text-sm"
+                />
+              </div>
+              <div>
+                <Label htmlFor="metaDesc">Meta Description</Label>
+                <Textarea
+                  id="metaDesc"
+                  value={form.metaDesc}
+                  onChange={(e) => setForm({ ...form, metaDesc: e.target.value })}
+                  placeholder="Description pour le SEO"
+                  rows={3}
+                />
+              </div>
+            </>
+          ) : (
+            <>
+              <div>
+                <Label htmlFor="titleEn">Title (EN)</Label>
+                <Input
+                  id="titleEn"
+                  value={form.titleEn}
+                  onChange={(e) => setForm({ ...form, titleEn: e.target.value })}
+                  placeholder="Page title"
+                />
+              </div>
+              <div>
+                <Label htmlFor="contentEn">Content (EN)</Label>
+                <Textarea
+                  id="contentEn"
+                  value={form.contentEn}
+                  onChange={(e) => setForm({ ...form, contentEn: e.target.value })}
+                  placeholder="Page content (HTML supported)"
+                  rows={15}
+                  className="font-mono text-sm"
+                />
+              </div>
+              <div>
+                <Label htmlFor="metaDescEn">Meta Description (EN)</Label>
+                <Textarea
+                  id="metaDescEn"
+                  value={form.metaDescEn}
+                  onChange={(e) => setForm({ ...form, metaDescEn: e.target.value })}
+                  placeholder="SEO description"
+                  rows={3}
+                />
+              </div>
+            </>
+          )}
           <div className="flex justify-end">
             <Button onClick={handleSave} disabled={saving}>
               <Save size={16} className="mr-1" />

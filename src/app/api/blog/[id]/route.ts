@@ -38,7 +38,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       return NextResponse.json({ error: v.error }, { status: 400 });
     }
 
-    const { title, excerpt, content, image, author, category, isPublished } = v.data;
+    const { title, excerpt, content, image, author, category, isPublished, titleEn, excerptEn, contentEn } = v.data;
 
     const existing = await prisma.blogPost.findUnique({ where: { id } });
     if (!existing) {
@@ -56,6 +56,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         category: category !== undefined ? category : existing.category,
         isPublished: isPublished ?? existing.isPublished,
         publishedAt: isPublished && !existing.isPublished ? new Date() : existing.publishedAt,
+        titleEn: titleEn !== undefined ? titleEn : existing.titleEn,
+        excerptEn: excerptEn !== undefined ? excerptEn : existing.excerptEn,
+        contentEn: contentEn !== undefined ? contentEn : existing.contentEn,
       },
     });
 

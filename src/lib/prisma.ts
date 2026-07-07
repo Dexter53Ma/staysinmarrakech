@@ -6,11 +6,13 @@ const baseDatabaseUrl = process.env.DATABASE_URL || "";
 
 const isProduction = process.env.NODE_ENV === "production";
 
-const databaseUrl =
-  baseDatabaseUrl +
-  (isProduction
-    ? (baseDatabaseUrl.includes("?") ? "&" : "?") + "connection_limit=2&pool_timeout=10"
-    : "");
+const databaseUrl = (() => {
+  if (!isProduction || !baseDatabaseUrl) return baseDatabaseUrl;
+  const url = new URL(baseDatabaseUrl);
+  if (!url.searchParams.has("connection_limit")) url.searchParams.set("connection_limit", "2");
+  if (!url.searchParams.has("pool_timeout")) url.searchParams.set("pool_timeout", "10");
+  return url.toString();
+})();
 
 export const prisma =
   globalForPrisma.prisma ||

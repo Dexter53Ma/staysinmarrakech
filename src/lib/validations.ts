@@ -75,6 +75,8 @@ function _testimonialSchema(_locale: string = 'fr') {
     rating: z.coerce.number().int().min(1).max(5),
     reviewText: z.string().min(10).max(5000),
     isApproved: z.boolean().optional(),
+    propertyNameEn: z.string().max(200).optional().nullable(),
+    reviewTextEn: z.string().max(5000).optional().nullable(),
   });
 }
 
@@ -87,6 +89,9 @@ function _heroSlideSchema(locale: string = 'fr') {
     buttonText: z.string().max(100).optional().nullable(),
     sortOrder: z.coerce.number().int().min(0).optional(),
     isActive: z.boolean().optional(),
+    titleEn: z.string().max(200).optional().nullable(),
+    subtitleEn: z.string().max(500).optional().nullable(),
+    buttonTextEn: z.string().max(100).optional().nullable(),
   });
 }
 
@@ -101,6 +106,9 @@ function _blogPostSchema(locale: string = 'fr') {
     category: z.string().max(100).optional().nullable(),
     isPublished: z.boolean().optional(),
     publishedAt: z.string().optional().nullable(),
+    titleEn: z.string().max(300).optional().nullable(),
+    excerptEn: z.string().max(1000).optional().nullable(),
+    contentEn: z.string().optional().nullable(),
   });
 }
 
@@ -118,6 +126,11 @@ function _serviceSchema(locale: string = 'fr') {
     priceUnit: z.string().max(50).optional().nullable(),
     isActive: z.boolean().optional(),
     sortOrder: z.coerce.number().int().min(0).optional(),
+    titleEn: z.string().max(200).optional().nullable(),
+    descriptionEn: z.string().max(2000).optional().nullable(),
+    longDescriptionEn: z.string().optional().nullable(),
+    metaDescriptionEn: z.string().max(500).optional().nullable(),
+    featuresEn: z.string().max(2000).optional().nullable(),
   });
 }
 
@@ -152,6 +165,10 @@ function _propertySchema(locale: string = 'fr') {
     features: z.array(z.string()).optional(),
     isFeatured: z.boolean().optional(),
     images: z.array(z.object({ url: z.string(), alt: z.string().optional() })).max(20, t(locale, 'maxImages')).optional(),
+    titleEn: z.string().max(200).optional().nullable(),
+    descriptionEn: z.string().max(5000).optional().nullable(),
+    quarterEn: z.string().max(100).optional().nullable(),
+    addressEn: z.string().max(500).optional().nullable(),
   });
 }
 
@@ -164,6 +181,9 @@ function _locationSchema(locale: string = 'fr') {
     image: z.string().max(500).optional().nullable(),
     isActive: z.boolean().optional(),
     sortOrder: z.coerce.number().int().min(0).optional(),
+    nameEn: z.string().max(200).optional().nullable(),
+    descriptionEn: z.string().max(5000).optional().nullable(),
+    metaDescriptionEn: z.string().max(500).optional().nullable(),
   });
 }
 
@@ -174,6 +194,9 @@ function _pageSchema(_locale: string = 'fr') {
     content: z.string().optional().nullable(),
     metaDescription: z.string().max(500).optional().nullable(),
     isPublished: z.boolean().optional(),
+    titleEn: z.string().max(300).optional().nullable(),
+    contentEn: z.string().optional().nullable(),
+    metaDescriptionEn: z.string().max(500).optional().nullable(),
   });
 }
 

@@ -32,6 +32,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         buttonText: v.data.buttonText !== undefined ? v.data.buttonText : existing.buttonText,
         sortOrder: v.data.sortOrder !== undefined ? v.data.sortOrder : existing.sortOrder,
         isActive: v.data.isActive !== undefined ? v.data.isActive : existing.isActive,
+        titleEn: v.data.titleEn !== undefined ? v.data.titleEn : existing.titleEn,
+        subtitleEn: v.data.subtitleEn !== undefined ? v.data.subtitleEn : existing.subtitleEn,
+        buttonTextEn: v.data.buttonTextEn !== undefined ? v.data.buttonTextEn : existing.buttonTextEn,
       },
     });
 

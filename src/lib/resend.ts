@@ -14,7 +14,7 @@ function getResend(): Resend {
 
 export const ADMIN_EMAIL = process.env.ADMIN_EMAIL || "contact@staysinmarrakech.com";
 
-const SITE_URL = () => process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
+const SITE_URL = () => process.env.NEXT_PUBLIC_SITE_URL || "https://staysinmarrakech.netlify.app";
 const LOGO_URL = () => `${SITE_URL()}/images/logo.png`;
 
 // IMPORTANT: "onboarding@resend.dev" is Resend's SANDBOX domain.

@@ -6,10 +6,8 @@ const CSRF_SECRET = process.env.CSRF_SECRET || crypto.randomUUID();
 const TOKEN_EXPIRY_MS = 5 * 60 * 1000; // 5 minutes
 const COOKIE_NAME = "csrf_token";
 
-if (!process.env.CSRF_SECRET) {
-  if (process.env.NODE_ENV === "production") {
-    console.warn("[CSRF] CSRF_SECRET not set. Using fallback random secret. Set CSRF_SECRET in production.");
-  }
+if (!process.env.CSRF_SECRET && process.env.NODE_ENV === "production") {
+  throw new Error("[CSRF] CSRF_SECRET is required in production. Set it in your environment variables.");
 }
 
 function hmac(data: string): string {
@@ -45,17 +43,7 @@ export async function validateCsrfToken(request: NextRequest): Promise<NextRespo
     return NextResponse.json({ error: "CSRF token manquant" }, { status: 403 });
   }
 
-  const headerToken = request.headers.get("x-csrf-token");
-  const bodyToken = (() => {
-    try {
-      const cloned = request.clone();
-      return cloned.body ? null : null; // body may already be consumed
-    } catch {
-      return null;
-    }
-  })();
-
-  const requestToken = headerToken || bodyToken;
+  const requestToken = request.headers.get("x-csrf-token");
 
   if (!requestToken) {
     return NextResponse.json({ error: "CSRF token manquant dans la requête" }, { status: 403 });

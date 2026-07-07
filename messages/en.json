@@ -35,6 +35,7 @@
     "about": "About",
     "followUs": "Follow us",
     "allRightsReserved": "All rights reserved",
+    "villaMarrakech": "Villa Marrakech",
     "services": "Services",
     "allServices": "View all services",
     "book": "Book",
@@ -152,7 +153,6 @@
     "title": "Our properties",
     "subtitle": "Discover our selection of luxury villas and properties in Marrakech",
     "noResults": "No property found",
-    "noResultsDesc": "Try modifying your filters",
     "resultsCount": "properties found",
     "bedrooms": "bedrooms",
     "bathrooms": "bath",
@@ -1133,6 +1133,7 @@
   },
   "faqs": {
     "title": "Frequently Asked Questions",
+    "subtitle": "Everything you need to know about our luxury villa rentals in Marrakech",
     "q1": "What is the average price of a luxury villa in Marrakech?",
     "a1": "Our luxury villas in Marrakech are available from 350€ per night. Prices vary depending on size, location, and amenities.",
     "q2": "What is the best time to rent a villa in Marrakech?",

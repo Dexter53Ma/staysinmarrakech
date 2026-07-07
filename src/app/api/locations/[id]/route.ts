@@ -43,6 +43,8 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         description: v.data.description !== undefined ? v.data.description : existing.description,
         image: v.data.image !== undefined ? v.data.image : existing.image,
         sortOrder: v.data.sortOrder !== undefined ? v.data.sortOrder : existing.sortOrder,
+        nameEn: v.data.nameEn !== undefined ? v.data.nameEn : existing.nameEn,
+        descriptionEn: v.data.descriptionEn !== undefined ? v.data.descriptionEn : existing.descriptionEn,
       },
     });
 

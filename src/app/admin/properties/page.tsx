@@ -131,7 +131,8 @@ export default function PropertiesPage() {
         action={{ label: "Nouvelle propriété", href: "/admin/properties/new", icon: Plus }}
       />
 
-      <div className="bg-white rounded-2xl border border-gray-100 overflow-hidden">
+      {/* Filters */}
+      <div className="bg-white rounded-xl border border-gray-200/60 overflow-hidden mb-4">
         <div className="p-4 border-b border-gray-100">
           <div className="flex flex-col sm:flex-row gap-3">
             <div className="relative flex-1">
@@ -140,13 +141,13 @@ export default function PropertiesPage() {
                 placeholder="Rechercher par titre..."
                 value={search}
                 onChange={(e) => { setSearch(e.target.value); setPage(1); }}
-                className="pl-9 bg-gray-50 border-gray-200"
+                className="pl-9 bg-gray-50/80 border-gray-200/60 text-[13px] h-9 rounded-lg focus:border-blue-400 focus:ring-blue-400/20"
               />
             </div>
             <select
               value={typeFilter}
               onChange={(e) => { setTypeFilter(e.target.value); setPage(1); }}
-              className="h-10 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm outline-none focus:border-gray-400 transition-colors duration-150"
+              className="h-9 rounded-lg border border-gray-200/60 bg-gray-50/80 px-3 text-[13px] text-gray-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/10 transition-all duration-200"
             >
               {PROPERTY_TYPES.map((t) => (
                 <option key={t.value} value={t.value}>{t.label}</option>
@@ -155,7 +156,7 @@ export default function PropertiesPage() {
             <select
               value={statusFilter}
               onChange={(e) => { setStatusFilter(e.target.value); setPage(1); }}
-              className="h-10 rounded-xl border border-gray-200 bg-gray-50 px-3 text-sm outline-none focus:border-gray-400 transition-colors duration-150"
+              className="h-9 rounded-lg border border-gray-200/60 bg-gray-50/80 px-3 text-[13px] text-gray-700 outline-none focus:border-blue-400 focus:ring-2 focus:ring-blue-400/10 transition-all duration-200"
             >
               {PROPERTY_STATUSES.map((s) => (
                 <option key={s.value} value={s.value}>{s.label}</option>
@@ -165,7 +166,7 @@ export default function PropertiesPage() {
         </div>
 
         {loading ? (
-          <div className="p-6">
+          <div className="p-5">
             <TableSkeleton rows={5} cols={6} />
           </div>
         ) : properties.length === 0 ? (
@@ -180,50 +181,50 @@ export default function PropertiesPage() {
             <div className="overflow-x-auto">
               <Table>
                 <TableHeader>
-                  <TableRow>
-                    <TableHead>Image</TableHead>
-                    <TableHead>Titre</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Statut</TableHead>
-                    <TableHead>Prix</TableHead>
-                    <TableHead>Vues</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
+                  <TableRow className="border-gray-100">
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Image</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Titre</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Type</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Statut</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Prix</TableHead>
+                    <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Vues</TableHead>
+                    <TableHead className="text-right text-[11px] font-semibold uppercase tracking-wider text-gray-500">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {properties.map((property) => (
-                    <TableRow key={property.id}>
+                    <TableRow key={property.id} className="border-gray-50 admin-table-row">
                       <TableCell>
-                        <div className="w-16 h-12 rounded-xl overflow-hidden bg-gray-100">
+                        <div className="w-14 h-10 rounded-lg overflow-hidden bg-gray-100">
                           {property.images[0] ? (
                             <Image
                               src={property.images[0].url}
                               alt={property.title}
-                              width={64}
-                              height={48}
+                              width={56}
+                              height={40}
                               unoptimized
                               className="w-full h-full object-cover"
                             />
                           ) : (
-                            <div className="w-full h-full flex items-center justify-center text-xs text-gray-400">
+                            <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-400">
                               —
                             </div>
                           )}
                         </div>
                       </TableCell>
-                      <TableCell className="font-medium">{property.title}</TableCell>
+                      <TableCell className="font-medium text-[13px] text-gray-900">{property.title}</TableCell>
                       <TableCell>
                         <StatusBadge status={property.type} />
                       </TableCell>
                       <TableCell>
                         <StatusBadge status={property.status} />
                       </TableCell>
-                      <TableCell className="text-sm font-medium tabular-nums">
+                      <TableCell className="text-[13px] font-semibold text-gray-700 admin-stat-value">
                         {formatPrice(property.price, property.currency)}
                       </TableCell>
                       <TableCell>
-                        <div className="flex items-center gap-1.5 text-sm text-gray-500 tabular-nums">
-                          <Eye className="size-3.5" />
+                        <div className="flex items-center gap-1.5 text-[13px] text-gray-500 admin-stat-value">
+                          <Eye className="size-3 text-gray-400" />
                           {property._count.views}
                         </div>
                       </TableCell>
@@ -231,13 +232,13 @@ export default function PropertiesPage() {
                         <div className="flex items-center justify-end gap-1">
                           <button
                             onClick={() => router.push(`/admin/properties/${property.id}/edit`)}
-                            className="p-2 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 active:bg-gray-200 active:scale-[0.95] transition-all duration-150"
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 active:bg-gray-200 active:scale-[0.95] transition-all duration-150"
                           >
                             <Edit className="size-4" />
                           </button>
                           <Dialog>
                             <DialogTrigger
-                              render={<button className="p-2 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 active:bg-red-100 active:scale-[0.95] transition-all duration-150" />}
+                              render={<button className="p-1.5 rounded-lg text-gray-400 hover:text-red-600 hover:bg-red-50 active:bg-red-100 active:scale-[0.95] transition-all duration-150" />}
                             >
                               <Trash2 className="size-4" />
                             </DialogTrigger>
@@ -249,11 +250,11 @@ export default function PropertiesPage() {
                                 </DialogDescription>
                               </DialogHeader>
                               <DialogFooter>
-                                <DialogClose render={<Button variant="outline" />}>
+                                <DialogClose render={<Button variant="outline" className="h-8 text-[12px] font-medium rounded-lg" />}>
                                   Annuler
                                 </DialogClose>
                                 <DialogClose
-                                  render={<Button variant="destructive" />}
+                                  render={<Button variant="destructive" className="h-8 text-[12px] font-medium rounded-lg" />}
                                   onClick={() => handleDelete(property.id)}
                                 >
                                   Supprimer

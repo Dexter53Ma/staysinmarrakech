@@ -30,8 +30,10 @@ import { Pagination } from "@/components/admin/Pagination";
 interface Location {
   id: string;
   name: string;
+  nameEn: string | null;
   slug: string;
   description: string | null;
+  descriptionEn: string | null;
   image: string | null;
   latitude: number | null;
   longitude: number | null;
@@ -49,9 +51,12 @@ export default function AdminLocationsPage() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [locLang, setLocLang] = useState<"fr" | "en">("fr");
   const [form, setForm] = useState({
     name: "",
+    nameEn: "",
     description: "",
+    descriptionEn: "",
     image: "",
     latitude: "",
     longitude: "",
@@ -78,15 +83,19 @@ export default function AdminLocationsPage() {
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ name: "", description: "", image: "", latitude: "", longitude: "" });
+    setLocLang("fr");
+    setForm({ name: "", nameEn: "", description: "", descriptionEn: "", image: "", latitude: "", longitude: "" });
     setDialogOpen(true);
   };
 
   const openEdit = (loc: Location) => {
     setEditing(loc);
+    setLocLang("fr");
     setForm({
       name: loc.name,
+      nameEn: loc.nameEn || "",
       description: loc.description || "",
+      descriptionEn: loc.descriptionEn || "",
       image: loc.image || "",
       latitude: loc.latitude?.toString() || "",
       longitude: loc.longitude?.toString() || "",
@@ -101,17 +110,22 @@ export default function AdminLocationsPage() {
     }
     setFormError(null);
     try {
+      const body = {
+        ...form,
+        nameEn: form.nameEn || form.name,
+        descriptionEn: form.descriptionEn || form.description,
+      };
       if (editing) {
         await fetch(`/api/locations/${editing.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify(body),
         });
       } else {
         await fetch("/api/locations", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify(body),
         });
       }
       setDialogOpen(false);
@@ -244,6 +258,55 @@ export default function AdminLocationsPage() {
               <div className="flex items-center gap-2 text-sm px-3 py-2.5 rounded-xl text-red-600 bg-red-50 border border-red-100">
                 {formError}
               </div>
+            )}
+            <div className="flex gap-1 p-1 bg-gray-100 rounded-lg">
+              <button type="button" onClick={() => setLocLang("fr")} className={`flex-1 text-sm py-1.5 rounded-md transition-colors ${locLang === "fr" ? "bg-white shadow-sm font-medium" : "text-gray-500"}`}>FR</button>
+              <button type="button" onClick={() => setLocLang("en")} className={`flex-1 text-sm py-1.5 rounded-md transition-colors ${locLang === "en" ? "bg-white shadow-sm font-medium" : "text-gray-500"}`}>EN</button>
+            </div>
+            {locLang === "fr" ? (
+              <>
+                <div>
+                  <Label htmlFor="name">Nom *</Label>
+                  <Input
+                    id="name"
+                    value={form.name}
+                    onChange={(e) => setForm({ ...form, name: e.target.value })}
+                    placeholder="Nom de la location"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="description">Description</Label>
+                  <Textarea
+                    id="description"
+                    value={form.description}
+                    onChange={(e) => setForm({ ...form, description: e.target.value })}
+                    placeholder="Description de la location"
+                    rows={3}
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <Label htmlFor="nameEn">Name (EN) *</Label>
+                  <Input
+                    id="nameEn"
+                    value={form.nameEn}
+                    onChange={(e) => setForm({ ...form, nameEn: e.target.value })}
+                    placeholder="Location name"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="descriptionEn">Description (EN)</Label>
+                  <Textarea
+                    id="descriptionEn"
+                    value={form.descriptionEn}
+                    onChange={(e) => setForm({ ...form, descriptionEn: e.target.value })}
+                    placeholder="Location description"
+                    rows={3}
+                  />
+                </div>
+              </>
             )}
             <div>
               <Label htmlFor="name">Nom *</Label>

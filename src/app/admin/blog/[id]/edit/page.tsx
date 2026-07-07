@@ -9,6 +9,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ArrowLeft } from "lucide-react";
 import Link from "next/link";
+import BilingualTabs from "@/components/BilingualTabs";
 
 export default function EditBlogPostPage() {
   const router = useRouter();
@@ -18,8 +19,11 @@ export default function EditBlogPostPage() {
   const [loading, setLoading] = useState(true);
   const [form, setForm] = useState({
     title: "",
+    titleEn: "",
     excerpt: "",
+    excerptEn: "",
     content: "",
+    contentEn: "",
     image: "",
     author: "Admin",
     category: "",
@@ -32,8 +36,11 @@ export default function EditBlogPostPage() {
       .then((data) => {
         setForm({
           title: data.title || "",
+          titleEn: data.titleEn || "",
           excerpt: data.excerpt || "",
+          excerptEn: data.excerptEn || "",
           content: data.content || "",
+          contentEn: data.contentEn || "",
           image: data.image || "",
           author: data.author || "Admin",
           category: data.category || "",
@@ -77,32 +84,26 @@ export default function EditBlogPostPage() {
 
       <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg border">
         <div className="space-y-2">
-          <Label htmlFor="title">Titre *</Label>
-          <Input
-            id="title"
-            value={form.title}
-            onChange={(e) => setForm({ ...form, title: e.target.value })}
-            required
+          <Label>Titre *</Label>
+          <BilingualTabs
+            frContent={<Input id="title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} required />}
+            enContent={<Input id="titleEn" value={form.titleEn} onChange={(e) => setForm({ ...form, titleEn: e.target.value })} placeholder="English title" />}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="excerpt">Extrait</Label>
-          <Input
-            id="excerpt"
-            value={form.excerpt}
-            onChange={(e) => setForm({ ...form, excerpt: e.target.value })}
+          <Label>Extrait</Label>
+          <BilingualTabs
+            frContent={<Input id="excerpt" value={form.excerpt} onChange={(e) => setForm({ ...form, excerpt: e.target.value })} />}
+            enContent={<Input id="excerptEn" value={form.excerptEn} onChange={(e) => setForm({ ...form, excerptEn: e.target.value })} placeholder="English excerpt" />}
           />
         </div>
 
         <div className="space-y-2">
-          <Label htmlFor="content">Contenu *</Label>
-          <Textarea
-            id="content"
-            rows={12}
-            value={form.content}
-            onChange={(e) => setForm({ ...form, content: e.target.value })}
-            required
+          <Label>Contenu *</Label>
+          <BilingualTabs
+            frContent={<Textarea id="content" rows={12} value={form.content} onChange={(e) => setForm({ ...form, content: e.target.value })} required />}
+            enContent={<Textarea id="contentEn" rows={12} value={form.contentEn} onChange={(e) => setForm({ ...form, contentEn: e.target.value })} placeholder="English content" />}
           />
         </div>
 

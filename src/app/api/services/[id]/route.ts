@@ -47,7 +47,7 @@ export async function PUT(
       return NextResponse.json({ error: v.error }, { status: 400 });
     }
 
-    const { title, description, longDescription, metaDescription, features, image, category, price, priceUnit, isActive, sortOrder } = v.data;
+    const { title, description, longDescription, metaDescription, features, image, category, price, priceUnit, isActive, sortOrder, titleEn, descriptionEn, longDescriptionEn, metaDescriptionEn, featuresEn } = v.data;
 
     const existing = await prisma.service.findUnique({ where: { id } });
     if (!existing) {
@@ -83,6 +83,11 @@ export async function PUT(
         priceUnit: priceUnit !== undefined ? priceUnit : existing.priceUnit,
         isActive: isActive !== undefined ? isActive : existing.isActive,
         sortOrder: sortOrder !== undefined ? sortOrder : existing.sortOrder,
+        titleEn: titleEn !== undefined ? titleEn : existing.titleEn,
+        descriptionEn: descriptionEn !== undefined ? descriptionEn : existing.descriptionEn,
+        longDescriptionEn: longDescriptionEn !== undefined ? longDescriptionEn : existing.longDescriptionEn,
+        metaDescriptionEn: metaDescriptionEn !== undefined ? metaDescriptionEn : existing.metaDescriptionEn,
+        featuresEn: featuresEn !== undefined ? featuresEn : existing.featuresEn,
       },
     });
 

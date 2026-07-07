@@ -12,8 +12,10 @@ export async function generateMetadata({params}: {params: Promise<{locale: strin
   const {locale} = await params;
   const t = await getTranslations({locale, namespace: 'seo'});
 
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://staysinmarrakech.netlify.app';
+
   return {
-    metadataBase: new URL('https://staysinmarrakech.netlify.app'),
+    metadataBase: new URL(siteUrl),
     title: {
       default: t('homepageTitle') + ' - StaysInMarrakech',
       template: '%s | StaysInMarrakech',
@@ -25,13 +27,13 @@ export async function generateMetadata({params}: {params: Promise<{locale: strin
     openGraph: {
       type: 'website',
       locale: locale === 'en' ? 'en_US' : 'fr_MA',
-      url: 'https://staysinmarrakech.netlify.app',
+      url: siteUrl,
       siteName: 'StaysInMarrakech',
       title: t('homepageTitle') + ' - StaysInMarrakech',
       description: t('homepageDesc'),
       images: [
         {
-          url: 'https://staysinmarrakech.netlify.app/seo/og-default.svg',
+          url: `${siteUrl}/seo/og-default.svg`,
           width: 1200,
           height: 630,
           alt: 'StaysInMarrakech - Luxury villas in Marrakech',
@@ -42,7 +44,7 @@ export async function generateMetadata({params}: {params: Promise<{locale: strin
       card: 'summary_large_image',
       title: t('homepageTitle') + ' - StaysInMarrakech',
       description: t('homepageDesc'),
-      images: ['https://staysinmarrakech.netlify.app/seo/og-default.svg'],
+      images: [`${siteUrl}/seo/og-default.svg`],
     },
     icons: {
       icon: '/seo/favicon.png',
@@ -59,10 +61,10 @@ export async function generateMetadata({params}: {params: Promise<{locale: strin
       },
     },
     alternates: {
-      canonical: 'https://staysinmarrakech.netlify.app',
+      canonical: siteUrl,
       languages: {
-        'fr': 'https://staysinmarrakech.netlify.app/fr',
-        'en': 'https://staysinmarrakech.netlify.app/en',
+        'fr': `${siteUrl}/fr`,
+        'en': `${siteUrl}/en`,
       },
     },
   };

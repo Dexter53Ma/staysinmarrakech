@@ -30,13 +30,15 @@ async function getHeroSlides() {
   }
 }
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://staysinmarrakech.netlify.app";
+
 const localBusinessSchema = {
   "@context": "https://schema.org",
   "@type": "RealEstateAgent",
-  "@id": "https://staysinmarrakech.netlify.app/#business",
+  "@id": `${SITE_URL}/#business`,
   name: "StaysInMarrakech",
   description: "Société spécialisée dans la location et la vente de villas de luxe à Marrakech",
-  url: "https://staysinmarrakech.netlify.app",
+  url: SITE_URL,
   telephone: "+212-6-21-18-94-96",
   email: "contact@staysinmarrakech.com",
   address: {
@@ -57,7 +59,7 @@ const localBusinessSchema = {
     { "@type": "Place", name: "Gueliz" },
   ],
   priceRange: "$$$$",
-  image: "https://staysinmarrakech.netlify.app/images/logo.png",
+  image: `${SITE_URL}/images/logo.png`,
   foundingDate: "2014",
   openingHoursSpecification: {
     "@type": "OpeningHoursSpecification",
@@ -72,10 +74,10 @@ const websiteSchema = {
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "StaysInMarrakech",
-  url: "https://staysinmarrakech.netlify.app",
+  url: SITE_URL,
   potentialAction: {
     "@type": "SearchAction",
-    target: "https://staysinmarrakech.netlify.app/properties?search={search_term_string}",
+    target: `${SITE_URL}/properties?search={search_term_string}`,
     "query-input": "required name=search_term_string",
   },
   inLanguage: "fr",

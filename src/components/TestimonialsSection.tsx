@@ -28,7 +28,7 @@ export default function TestimonialsSection() {
           data.filter((t: Testimonial) => t.isApproved).slice(0, 6)
         )
       )
-      .catch((e) => console.error("[TestimonialsSection] fetch error:", e));
+      .catch(() => setTestimonials([]));
   }, []);
 
   const isLoading = testimonials.length === 0;

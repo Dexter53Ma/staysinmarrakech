@@ -31,10 +31,13 @@ import { Pagination } from "@/components/admin/Pagination";
 interface HeroSlide {
   id: string;
   title: string;
+  titleEn: string | null;
   subtitle: string | null;
+  subtitleEn: string | null;
   image: string;
   link: string | null;
   buttonText: string | null;
+  buttonTextEn: string | null;
   sortOrder: number;
   isActive: boolean;
 }
@@ -50,12 +53,16 @@ export default function AdminHeroSlidesPage() {
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [deletingId, setDeletingId] = useState<string | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [locLang, setLocLang] = useState<"fr" | "en">("fr");
   const [form, setForm] = useState({
     title: "",
+    titleEn: "",
     subtitle: "",
+    subtitleEn: "",
     image: "",
     link: "",
     buttonText: "",
+    buttonTextEn: "",
   });
 
   const fetchSlides = useCallback(async () => {
@@ -134,22 +141,28 @@ export default function AdminHeroSlidesPage() {
     }
     setFormError(null);
     try {
+      const body = {
+        ...form,
+        titleEn: form.titleEn || form.title,
+        subtitleEn: form.subtitleEn || form.subtitle,
+        buttonTextEn: form.buttonTextEn || form.buttonText,
+      };
       if (editingSlide) {
         await fetch(`/api/hero-slides/${editingSlide.id}`, {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify(body),
         });
       } else {
         await fetch("/api/hero-slides", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(form),
+          body: JSON.stringify(body),
         });
       }
       setDialogOpen(false);
       setEditingSlide(null);
-      setForm({ title: "", subtitle: "", image: "", link: "", buttonText: "" });
+      setForm({ title: "", titleEn: "", subtitle: "", subtitleEn: "", image: "", link: "", buttonText: "", buttonTextEn: "" });
       fetchSlides();
     } catch {
       console.error("Erreur lors de la sauvegarde");
@@ -158,7 +171,17 @@ export default function AdminHeroSlidesPage() {
 
   const openEdit = (slide: HeroSlide) => {
     setEditingSlide(slide);
-    setForm({ title: slide.title, subtitle: slide.subtitle || "", image: slide.image, link: slide.link || "", buttonText: slide.buttonText || "" });
+    setLocLang("fr");
+    setForm({
+      title: slide.title,
+      titleEn: slide.titleEn || "",
+      subtitle: slide.subtitle || "",
+      subtitleEn: slide.subtitleEn || "",
+      image: slide.image,
+      link: slide.link || "",
+      buttonText: slide.buttonText || "",
+      buttonTextEn: slide.buttonTextEn || "",
+    });
     setDialogOpen(true);
   };
 
@@ -308,6 +331,71 @@ export default function AdminHeroSlidesPage() {
               <div className="flex items-center gap-2 text-sm px-3 py-2.5 rounded-xl text-red-600 bg-red-50 border border-red-100">
                 {formError}
               </div>
+            )}
+            <div className="flex gap-1 p-1 bg-gray-100 rounded-lg">
+              <button type="button" onClick={() => setLocLang("fr")} className={`flex-1 text-sm py-1.5 rounded-md transition-colors ${locLang === "fr" ? "bg-white shadow-sm font-medium" : "text-gray-500"}`}>FR</button>
+              <button type="button" onClick={() => setLocLang("en")} className={`flex-1 text-sm py-1.5 rounded-md transition-colors ${locLang === "en" ? "bg-white shadow-sm font-medium" : "text-gray-500"}`}>EN</button>
+            </div>
+            {locLang === "fr" ? (
+              <>
+                <div>
+                  <Label htmlFor="title">Titre *</Label>
+                  <Input
+                    id="title"
+                    value={form.title}
+                    onChange={(e) => setForm({ ...form, title: e.target.value })}
+                    placeholder="Titre du slide"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="subtitle">Sous-titre</Label>
+                  <Input
+                    id="subtitle"
+                    value={form.subtitle}
+                    onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
+                    placeholder="Sous-titre"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="buttonText">Texte du bouton</Label>
+                  <Input
+                    id="buttonText"
+                    value={form.buttonText}
+                    onChange={(e) => setForm({ ...form, buttonText: e.target.value })}
+                    placeholder="Découvrir"
+                  />
+                </div>
+              </>
+            ) : (
+              <>
+                <div>
+                  <Label htmlFor="titleEn">Title (EN) *</Label>
+                  <Input
+                    id="titleEn"
+                    value={form.titleEn}
+                    onChange={(e) => setForm({ ...form, titleEn: e.target.value })}
+                    placeholder="Slide title"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="subtitleEn">Subtitle (EN)</Label>
+                  <Input
+                    id="subtitleEn"
+                    value={form.subtitleEn}
+                    onChange={(e) => setForm({ ...form, subtitleEn: e.target.value })}
+                    placeholder="Subtitle"
+                  />
+                </div>
+                <div>
+                  <Label htmlFor="buttonTextEn">Button text (EN)</Label>
+                  <Input
+                    id="buttonTextEn"
+                    value={form.buttonTextEn}
+                    onChange={(e) => setForm({ ...form, buttonTextEn: e.target.value })}
+                    placeholder="Discover"
+                  />
+                </div>
+              </>
             )}
             <div>
               <Label htmlFor="title">Titre *</Label>

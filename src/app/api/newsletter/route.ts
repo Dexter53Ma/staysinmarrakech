@@ -6,6 +6,8 @@ import { parsePagination, paginatedResponse } from "@/lib/pagination";
 import { validateCsrfToken } from "@/lib/csrf";
 import { validate, newsletterSchema } from "@/lib/validations";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   const rl = await rateLimit(request, { limit: 3, windowMs: 60_000 });
   if (!rl.allowed) return rl.response!;

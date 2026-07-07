@@ -76,7 +76,7 @@ export const servicesData: Record<string, ServiceDetailData> = {
     description:
       "Déplacez-vous en toute sérénité avec nos services de transport de luxe. VTC, berlines, minibus... nous avons la solution pour tous vos déplacements à Marrakech.",
     longDescription:
-      "Que ce soit pour un transfert depuis l'aéroport Marrakech Ménara, une journée d'excursion dans l'Atlas ou simplement pour vous déplacer dans la ville, notre flotte de véhicules de luxe et nos chauffeurs professionnels vous garantissent un trajet confortable et ponctuel. Chaque véhicule est climatisé, spacieux et entretenu according aux normes les plus strictes.",
+      "Que ce soit pour un transfert depuis l'aéroport Marrakech Ménara, une journée d'excursion dans l'Atlas ou simplement pour vous déplacer dans la ville, notre flotte de véhicules de luxe et nos chauffeurs professionnels vous garantissent un trajet confortable et ponctuel. Chaque véhicule est climatisé, spacieux et entretenu selon les normes les plus strictes.",
     features: [
       "Flotte de véhicules premium (Mercedes, BMW, Audi)",
       "Chauffeurs professionnels et multilingues",
@@ -466,7 +466,7 @@ export const servicesData: Record<string, ServiceDetailData> = {
     description:
       "Prouvez vos talents de pilote sur notre circuit de karting professionnel. Émotions et vitesse pour petits et grands.",
     longDescription:
-      "Notre circuit de karting, conçu selon les normes FIA, offre des sensations de vitesse authentiques dans un environnement sécurisé. Karts 4 temps puissants, chicanes techniques et lignes droites rapides pour un parcours exigeant. Chronomètre professionnel pour défier vos amis et family. Les plus petits ont leurs propres karts junior sur un circuit adapté.",
+      "Notre circuit de karting, conçu selon les normes FIA, offre des sensations de vitesse authentiques dans un environnement sécurisé. Karts 4 temps puissants, chicanes techniques et lignes droites rapides pour un parcours exigeant. Chronomètre professionnel pour défier vos amis et votre famille. Les plus petits ont leurs propres karts junior sur un circuit adapté.",
     features: [
       "Circuit professionnel de 800m",
       "Karts seniors 4 temps (270cc)",
@@ -792,7 +792,7 @@ export default function ServiceDetail({ service }: { service: ServiceDetailData 
                   <span>Contactez-nous</span>
                 </Link>
                 <a
-                  href="https://wa.me/212600000000"
+                  href="https://wa.me/212621189496"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="flex items-center justify-center gap-2 w-full bg-[#25D366] hover:bg-[#1ebe57] text-white font-bold py-3.5 px-6 rounded-xl transition-all hover:shadow-lg text-sm mt-3"

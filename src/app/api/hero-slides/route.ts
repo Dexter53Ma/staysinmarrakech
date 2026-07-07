@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: v.error }, { status: 400 });
     }
 
-    const { title, subtitle, image, link, buttonText, sortOrder, isActive } = v.data;
+    const { title, subtitle, image, link, buttonText, sortOrder, isActive, titleEn, subtitleEn, buttonTextEn } = v.data;
 
     const slide = await prisma.heroSlide.create({
       data: {
@@ -52,6 +52,9 @@ export async function POST(request: NextRequest) {
         buttonText: buttonText || null,
         sortOrder: sortOrder ?? 0,
         isActive: isActive ?? true,
+        titleEn: titleEn || null,
+        subtitleEn: subtitleEn || null,
+        buttonTextEn: buttonTextEn || null,
       },
     });
 

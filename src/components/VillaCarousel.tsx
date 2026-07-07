@@ -76,7 +76,7 @@ export default function VillaCarousel() {
         }));
         setVillas(mapped);
       })
-      .catch((e) => console.error("[VillaCarousel] fetch error:", e));
+      .catch(() => setVillas([]));
   }, [t]);
 
   const toggleWishlist = (name: string) => {

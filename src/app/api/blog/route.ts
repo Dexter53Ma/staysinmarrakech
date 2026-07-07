@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/auth";
-import { generateSlug, ensureUniqueSlug, validateFields, apiError } from "@/lib/api-helpers";
+import { generateSlug, ensureUniqueSlug, apiError } from "@/lib/api-helpers";
 import { createSupabaseServer } from "@/lib/supabase-server";
 import { logAudit } from "@/lib/audit";
 import { parsePagination, paginatedResponse } from "@/lib/pagination";
@@ -68,7 +68,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: v.error }, { status: 400 });
     }
 
-    const { title, excerpt, content, image, author, category, isPublished } = v.data;
+    const { title, excerpt, content, image, author, category, isPublished, titleEn, excerptEn, contentEn } = v.data;
 
     let slug = generateSlug(title);
     slug = await ensureUniqueSlug(slug, (s) => prisma.blogPost.findUnique({ where: { slug: s }, select: { id: true } }));
@@ -83,6 +83,9 @@ export async function POST(request: NextRequest) {
         author: author || "Admin",
         category: category || null,
         isPublished: isPublished ?? false,
+        titleEn: titleEn || null,
+        excerptEn: excerptEn || null,
+        contentEn: contentEn || null,
         publishedAt: isPublished ? new Date() : null,
       },
     });

@@ -69,6 +69,11 @@ model Property {
 
   isFeatured    Boolean         @default(false) @map("is_featured")
 
+  titleEn       String?         @map("title_en")
+  descriptionEn String?         @db.Text @map("description_en")
+  quarterEn     String?         @map("quarter_en")
+  addressEn     String?         @map("address_en")
+
   createdAt     DateTime        @default(now()) @map("created_at")
   updatedAt     DateTime        @updatedAt @map("updated_at")
 
@@ -206,16 +211,18 @@ model BlogPost {
 // ─── Testimonials ───────────────────────────────────────
 
 model Testimonial {
-  id            String   @id @default(cuid())
-  guestName     String   @map("guest_name")
-  guestCountry  String?  @map("guest_country")
-  propertyName  String?  @map("property_name")
-  duration      String?  // "4 jours"
-  year          Int?
-  rating        Int?     // 1-5
-  reviewText    String?  @map("review_text") @db.Text
-  isApproved    Boolean  @default(false) @map("is_approved")
-  createdAt     DateTime @default(now()) @map("created_at")
+  id              String   @id @default(cuid())
+  guestName       String   @map("guest_name")
+  guestCountry    String?  @map("guest_country")
+  propertyName    String?  @map("property_name")
+  duration        String?  // "4 jours"
+  year            Int?
+  rating          Int?     // 1-5
+  reviewText      String?  @map("review_text") @db.Text
+  isApproved      Boolean  @default(false) @map("is_approved")
+  propertyNameEn  String?  @map("property_name_en")
+  reviewTextEn    String?  @map("review_text_en") @db.Text
+  createdAt       DateTime @default(now()) @map("created_at")
 
   @@map("testimonials")
 }

@@ -12,6 +12,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, Upload, X, GripVertical } from "lucide-react";
 import { FEATURE_KEYS, getFeaturesByCategory } from "@/lib/features";
+import BilingualTabs from "@/components/BilingualTabs";
 
 const PROPERTY_TYPES = [
   { value: "VILLA", label: "Villa" },
@@ -52,6 +53,8 @@ export default function NewPropertyPage() {
 
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [titleEn, setTitleEn] = useState("");
+  const [descriptionEn, setDescriptionEn] = useState("");
   const [type, setType] = useState("VILLA");
   const [status, setStatus] = useState("AVAILABLE");
   const [isFeatured, setIsFeatured] = useState(false);
@@ -65,6 +68,8 @@ export default function NewPropertyPage() {
   const [address, setAddress] = useState("");
   const [city, setCity] = useState("Marrakech");
   const [quarter, setQuarter] = useState("");
+  const [addressEn, setAddressEn] = useState("");
+  const [quarterEn, setQuarterEn] = useState("");
   const [latitude, setLatitude] = useState("");
   const [longitude, setLongitude] = useState("");
 
@@ -151,6 +156,8 @@ export default function NewPropertyPage() {
     const body = {
       title,
       description,
+      titleEn,
+      descriptionEn,
       type,
       status,
       isFeatured,
@@ -160,8 +167,10 @@ export default function NewPropertyPage() {
       cleaningFee: cleaningFee ? parseFloat(cleaningFee) : null,
       serviceFee: serviceFee ? parseFloat(serviceFee) : null,
       address,
+      addressEn,
       city,
       quarter: quarter || null,
+      quarterEn: quarterEn || null,
       latitude: latitude ? parseFloat(latitude) : null,
       longitude: longitude ? parseFloat(longitude) : null,
       bedrooms: parseInt(bedrooms) || 0,
@@ -216,14 +225,32 @@ export default function NewPropertyPage() {
             <CardTitle className="text-lg">Infos générales</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="title">Titre *</Label>
-              <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
-            </div>
-            <div>
-              <Label htmlFor="description">Description *</Label>
-              <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} required rows={4} />
-            </div>
+            <BilingualTabs
+              frContent={
+                <>
+                  <div>
+                    <Label htmlFor="title">Titre *</Label>
+                    <Input id="title" value={title} onChange={(e) => setTitle(e.target.value)} required />
+                  </div>
+                  <div>
+                    <Label htmlFor="description">Description *</Label>
+                    <Textarea id="description" value={description} onChange={(e) => setDescription(e.target.value)} required rows={4} />
+                  </div>
+                </>
+              }
+              enContent={
+                <>
+                  <div>
+                    <Label htmlFor="titleEn">English Title</Label>
+                    <Input id="titleEn" value={titleEn} onChange={(e) => setTitleEn(e.target.value)} placeholder="English title" />
+                  </div>
+                  <div>
+                    <Label htmlFor="descriptionEn">English Description</Label>
+                    <Textarea id="descriptionEn" value={descriptionEn} onChange={(e) => setDescriptionEn(e.target.value)} placeholder="English description" rows={4} />
+                  </div>
+                </>
+              }
+            />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="type">Type</Label>
@@ -288,19 +315,39 @@ export default function NewPropertyPage() {
             <CardTitle className="text-lg">Localisation</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div>
-              <Label htmlFor="address">Adresse *</Label>
-              <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} required />
-            </div>
+            <BilingualTabs
+              frContent={
+                <div>
+                  <Label htmlFor="address">Adresse *</Label>
+                  <Input id="address" value={address} onChange={(e) => setAddress(e.target.value)} required />
+                </div>
+              }
+              enContent={
+                <div>
+                  <Label htmlFor="addressEn">English Address</Label>
+                  <Input id="addressEn" value={addressEn} onChange={(e) => setAddressEn(e.target.value)} placeholder="English address" />
+                </div>
+              }
+            />
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
                 <Label htmlFor="city">Ville</Label>
                 <Input id="city" value={city} onChange={(e) => setCity(e.target.value)} />
               </div>
-              <div>
-                <Label htmlFor="quarter">Quartier</Label>
-                <Input id="quarter" value={quarter} onChange={(e) => setQuarter(e.target.value)} />
-              </div>
+              <BilingualTabs
+                frContent={
+                  <div>
+                    <Label htmlFor="quarter">Quartier</Label>
+                    <Input id="quarter" value={quarter} onChange={(e) => setQuarter(e.target.value)} />
+                  </div>
+                }
+                enContent={
+                  <div>
+                    <Label htmlFor="quarterEn">English Quarter</Label>
+                    <Input id="quarterEn" value={quarterEn} onChange={(e) => setQuarterEn(e.target.value)} placeholder="English quarter" />
+                  </div>
+                }
+              />
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>

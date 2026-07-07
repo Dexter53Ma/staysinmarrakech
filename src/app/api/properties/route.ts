@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdminApi } from "@/lib/auth";
-import { generateSlug, ensureUniqueSlug, validateFields, apiError } from "@/lib/api-helpers";
+import { generateSlug, ensureUniqueSlug, apiError } from "@/lib/api-helpers";
 import { logAudit } from "@/lib/audit";
 import { parsePagination, paginatedResponse } from "@/lib/pagination";
 import { validate, propertySchema } from "@/lib/validations";
@@ -64,6 +64,8 @@ export async function POST(request: NextRequest) {
         title: rawData.title,
         slug,
         description: rawData.description || "",
+        titleEn: rawData.titleEn || null,
+        descriptionEn: rawData.descriptionEn || null,
         type: (rawData.type || "VILLA") as "VILLA" | "RIAD" | "APARTMENT" | "HOUSE" | "LAND" | "COMMERCIAL",
         status: (rawData.status || "AVAILABLE") as "AVAILABLE" | "SOLD" | "RENTED" | "PENDING" | "MAINTENANCE",
         price: rawData.price ?? 0,
@@ -72,8 +74,10 @@ export async function POST(request: NextRequest) {
         cleaningFee: rawData.cleaningFee ?? undefined,
         serviceFee: rawData.serviceFee ?? undefined,
         address: rawData.address ?? "",
+        addressEn: rawData.addressEn || null,
         city: rawData.city ?? "Marrakech",
         quarter: rawData.quarter ?? undefined,
+        quarterEn: rawData.quarterEn || null,
         latitude: rawData.latitude ?? undefined,
         longitude: rawData.longitude ?? undefined,
         bedrooms: rawData.bedrooms ?? 0,

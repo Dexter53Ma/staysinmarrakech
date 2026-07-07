@@ -50,7 +50,7 @@ export async function requireApiAuth() {
       data: {
         email: user.email!,
         name: displayName,
-        role: "ADMIN",
+        role: "EDITOR",
         passwordHash: "supabase-managed",
       },
     });

@@ -79,7 +79,7 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
         Object.entries(data).forEach(([key, value]) => { map[key] = value || ""; });
         setRawSettings(map);
       })
-      .catch((e) => console.error("[SettingsContext] fetch error:", e));
+      .catch(() => setRawSettings({}));
   }, []);
 
   const getLocalizedValue = (valueFr: string | undefined, valueEn: string | undefined): string | undefined => {

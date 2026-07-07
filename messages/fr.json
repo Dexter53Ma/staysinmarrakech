@@ -33,6 +33,7 @@
     "aboutFallback": "StaysInMarrakech est une société spécialisée dans la location de villas de luxe et de prestige à Marrakech.",
     "locationSaleVillas": "location & vente villas",
     "servicesActivities": "services & activités",
+    "villaMarrakech": "Villa Marrakech",
     "agence": "L'agence",
     "temoignages": "Témoignages",
     "blog": "Blog",
@@ -152,7 +153,6 @@
     "title": "Nos propriétés",
     "subtitle": "Découvrez notre sélection de villas et propriétés de luxe à Marrakech",
     "noResults": "Aucune propriété trouvée",
-    "noResultsDesc": "Essayez de modifier vos filtres",
     "resultsCount": "propriétés trouvées",
     "bedrooms": "chambres",
     "propertyType": "Type de bien",
@@ -1132,6 +1132,7 @@
   },
   "faqs": {
     "title": "Questions fréquentes",
+    "subtitle": "Tout ce que vous devez savoir sur nos locations de villas de luxe à Marrakech",
     "q1": "Quel est le prix moyen d'une villa de luxe à Marrakech ?",
     "a1": "Nos villas de luxe à Marrakech sont disponibles à partir de 350€ par nuit. Les prix varient selon la taille, l'emplacement et les équipements.",
     "q2": "Quelle est la meilleure période pour louer une villa à Marrakech ?",

@@ -60,6 +60,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
     if (rawData.checkOutTime !== undefined) updateData.checkOutTime = rawData.checkOutTime || undefined;
     if (rawData.features !== undefined) updateData.features = rawData.features;
     if (rawData.isFeatured !== undefined) updateData.isFeatured = rawData.isFeatured;
+    if (rawData.titleEn !== undefined) updateData.titleEn = rawData.titleEn || null;
+    if (rawData.descriptionEn !== undefined) updateData.descriptionEn = rawData.descriptionEn || null;
+    if (rawData.quarterEn !== undefined) updateData.quarterEn = rawData.quarterEn || null;
+    if (rawData.addressEn !== undefined) updateData.addressEn = rawData.addressEn || null;
     if (images) {
       updateData.images = {
         deleteMany: {},

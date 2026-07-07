@@ -35,7 +35,7 @@ export default function QuartiersCarousel() {
           }))
         )
       )
-      .catch((e) => console.error("[QuartiersCarousel] fetch error:", e));
+      .catch(() => setQuartiers([]));
   }, []);
 
   const updateScrollButtons = () => {

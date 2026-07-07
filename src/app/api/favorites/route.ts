@@ -3,6 +3,8 @@ import { prisma } from "@/lib/prisma";
 import { rateLimit } from "@/lib/rate-limit";
 import { validateCsrfToken } from "@/lib/csrf";
 
+export const dynamic = "force-dynamic";
+
 export async function POST(request: NextRequest) {
   try {
     const { allowed, response } = await rateLimit(request, { limit: 20, windowMs: 60_000 });

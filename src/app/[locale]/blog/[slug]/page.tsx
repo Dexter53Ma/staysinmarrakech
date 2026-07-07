@@ -6,7 +6,7 @@ import BlogPostDetail from "@/components/BlogPostDetail";
 
 export const dynamic = "force-dynamic";
 
-const BASE_URL = "https://staysinmarrakech.netlify.app";
+const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://staysinmarrakech.netlify.app";
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;

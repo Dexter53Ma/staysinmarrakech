@@ -4,19 +4,9 @@ import { requireAdminApi } from "@/lib/auth";
 import { logAudit } from "@/lib/audit";
 import { parsePagination, paginatedResponse } from "@/lib/pagination";
 import { validate, locationSchema } from "@/lib/validations";
+import { generateSlug } from "@/lib/api-helpers";
 
 export const dynamic = "force-dynamic";
-
-function generateSlug(name: string): string {
-  return name
-    .toLowerCase()
-    .normalize("NFD")
-    .replace(/[\u0300-\u036f]/g, "")
-    .replace(/[^a-z0-9\s-]/g, "")
-    .replace(/\s+/g, "-")
-    .replace(/-+/g, "-")
-    .replace(/^-|-$/g, "");
-}
 
 export async function GET(request: NextRequest) {
   try {
@@ -53,7 +43,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: v.error }, { status: 400 });
     }
 
-    const { name, description, image, sortOrder } = v.data;
+    const { name, description, image, sortOrder, nameEn, descriptionEn } = v.data;
 
     let slug = generateSlug(name);
     const slugExists = await prisma.location.findUnique({ where: { slug } });
@@ -68,6 +58,8 @@ export async function POST(request: NextRequest) {
         description: description || null,
         image: image || null,
         sortOrder: sortOrder ?? 0,
+        nameEn: nameEn || null,
+        descriptionEn: descriptionEn || null,
       },
     });
 

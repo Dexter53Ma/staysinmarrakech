@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { requireAdminApi } from "@/lib/auth";
-import { generateSlug, ensureUniqueSlug, validateFields, apiError } from "@/lib/api-helpers";
+import { generateSlug, ensureUniqueSlug, apiError } from "@/lib/api-helpers";
 import { logAudit } from "@/lib/audit";
 import { parsePagination, paginatedResponse } from "@/lib/pagination";
 import { validate, serviceSchema } from "@/lib/validations";
@@ -43,7 +43,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: v.error }, { status: 400 });
     }
 
-    const { title, description, longDescription, metaDescription, features, image, category, price, priceUnit, isActive, sortOrder } = v.data;
+    const { title, description, longDescription, metaDescription, features, image, category, price, priceUnit, isActive, sortOrder, titleEn, descriptionEn, longDescriptionEn, metaDescriptionEn, featuresEn } = v.data;
 
     let slug = generateSlug(title);
     slug = await ensureUniqueSlug(slug, (s) => prisma.service.findUnique({ where: { slug: s }, select: { id: true } }));
@@ -61,6 +61,11 @@ export async function POST(request: NextRequest) {
         features: featuresJson,
         image: image || null,
         category: category || null,
+        titleEn: titleEn || null,
+        descriptionEn: descriptionEn || null,
+        longDescriptionEn: longDescriptionEn || null,
+        metaDescriptionEn: metaDescriptionEn || null,
+        featuresEn: featuresEn || null,
         price: price ?? null,
         priceUnit: priceUnit || null,
         isActive: isActive !== false,

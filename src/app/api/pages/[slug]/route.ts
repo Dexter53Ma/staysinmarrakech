@@ -41,6 +41,9 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         title: v.data.title ?? existing.title,
         content: v.data.content ?? existing.content,
         metaDesc: v.data.metaDescription !== undefined ? v.data.metaDescription : existing.metaDesc,
+        titleEn: v.data.titleEn !== undefined ? v.data.titleEn : existing.titleEn,
+        contentEn: v.data.contentEn !== undefined ? v.data.contentEn : existing.contentEn,
+        metaDescEn: v.data.metaDescriptionEn !== undefined ? v.data.metaDescriptionEn : existing.metaDescEn,
       },
     });
 
