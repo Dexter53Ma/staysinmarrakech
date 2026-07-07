@@ -88,6 +88,7 @@ export default function Header() {
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {
+      if (window.innerWidth < 1024) return;
       if (servicesRef.current && !servicesRef.current.contains(e.target as Node)) setServicesOpen(false);
       if (villasRef.current && !villasRef.current.contains(e.target as Node)) setVillasOpen(false);
     };
