@@ -314,12 +314,12 @@ export default function Header() {
                   <Icon icon={faChevronDown} className={`text-xs transition-transform ${villasOpen ? "rotate-180" : ""}`} />
                 </button>
                 {villasOpen && (
-                  <div className="pl-6 py-2 space-y-1">
+                  <div className="pl-6 py-2 space-y-1" onClick={(e) => e.stopPropagation()}>
                     {villaLinks.map((link) => (
-                      <a key={link.label} href={link.href} onClick={(e) => { e.stopPropagation(); setMobileOpen(false); }} className="flex items-center gap-2 text-white/70 text-sm py-2 hover:text-[#ffb000] transition-colors min-h-[44px]">
+                      <button key={link.label} type="button" onClick={() => { setMobileOpen(false); setVillasOpen(false); router.push(link.href); }} className="flex items-center gap-2 text-white/70 text-sm py-2 hover:text-[#ffb000] transition-colors min-h-[44px] w-full text-left">
                         <Icon icon={link.icon} className="text-[10px] text-[#ffb000]/60" />
                         {link.label}
-                      </a>
+                      </button>
                     ))}
                   </div>
                 )}
@@ -335,15 +335,15 @@ export default function Header() {
                   <Icon icon={faChevronDown} className={`text-xs transition-transform ${servicesOpen ? "rotate-180" : ""}`} />
                 </button>
                 {servicesOpen && (
-                  <div className="pl-6 py-2 space-y-1">
+                  <div className="pl-6 py-2 space-y-1" onClick={(e) => e.stopPropagation()}>
                     {services.slice(0, 10).map((s) => (
-                      <a key={s.slug} href={`/service/${s.slug}`} onClick={(e) => { e.stopPropagation(); setMobileOpen(false); }} className="text-white/70 text-sm py-2 hover:text-[#ffb000] transition-colors block min-h-[44px]">
+                      <button key={s.slug} type="button" onClick={() => { setMobileOpen(false); setServicesOpen(false); router.push(`/service/${s.slug}`); }} className="text-white/70 text-sm py-2 hover:text-[#ffb000] transition-colors block min-h-[44px] w-full text-left">
                         {s.title}
-                      </a>
+                      </button>
                     ))}
-                    <a href="/service" onClick={(e) => { e.stopPropagation(); setMobileOpen(false); }} className="text-[#ffb000] text-sm font-semibold py-2 block min-h-[44px]">
+                    <button type="button" onClick={() => { setMobileOpen(false); setServicesOpen(false); router.push('/service'); }} className="text-[#ffb000] text-sm font-semibold py-2 block min-h-[44px] w-full text-left">
                       {tCommon('viewAll')} →
-                    </a>
+                    </button>
                   </div>
                 )}
               </div>
