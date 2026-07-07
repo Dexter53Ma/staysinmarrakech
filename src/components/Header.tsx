@@ -315,10 +315,10 @@ export default function Header() {
                 {villasOpen && (
                   <div className="pl-6 py-2 space-y-1">
                     {villaLinks.map((link) => (
-                      <Link key={link.label} href={link.href} onClick={() => setMobileOpen(false)} className="flex items-center gap-2 text-white/70 text-sm py-2 hover:text-[#ffb000] transition-colors">
+                      <button key={link.label} onClick={() => { setMobileOpen(false); router.push(link.href); }} className="flex items-center gap-2 text-white/70 text-sm py-2 hover:text-[#ffb000] transition-colors w-full text-left">
                         <Icon icon={link.icon} className="text-[10px] text-[#ffb000]/60" />
                         {link.label}
-                      </Link>
+                      </button>
                     ))}
                   </div>
                 )}
@@ -336,13 +336,13 @@ export default function Header() {
                 {servicesOpen && (
                   <div className="pl-6 py-2 space-y-1">
                     {services.slice(0, 10).map((s) => (
-                      <Link key={s.slug} href={`/service/${s.slug}`} onClick={() => setMobileOpen(false)} className="text-white/70 text-sm py-1.5 hover:text-[#ffb000] transition-colors block">
+                      <button key={s.slug} onClick={() => { setMobileOpen(false); router.push(`/service/${s.slug}`); }} className="text-white/70 text-sm py-1.5 hover:text-[#ffb000] transition-colors block w-full text-left">
                         {s.title}
-                      </Link>
+                      </button>
                     ))}
-                    <Link href="/service" onClick={() => setMobileOpen(false)} className="text-[#ffb000] text-sm font-semibold py-1.5 block">
+                    <button onClick={() => { setMobileOpen(false); router.push('/service'); }} className="text-[#ffb000] text-sm font-semibold py-1.5 block w-full text-left">
                       {tCommon('viewAll')} →
-                    </Link>
+                    </button>
                   </div>
                 )}
               </div>
