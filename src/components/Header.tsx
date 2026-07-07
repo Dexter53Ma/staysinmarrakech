@@ -305,7 +305,7 @@ export default function Header() {
 
               {/* Villas */}
               <div>
-                <button onClick={() => setVillasOpen(!villasOpen)} className="flex items-center justify-between w-full text-white text-sm font-semibold uppercase py-3 border-b border-white/10 active:scale-[0.98]">
+                <button type="button" onClick={() => setVillasOpen(!villasOpen)} className="flex items-center justify-between w-full text-white text-sm font-semibold uppercase py-3 border-b border-white/10 active:scale-[0.98]">
                   <span className="flex items-center gap-2">
                     <Icon icon={faHome} className="text-[#ffb000] text-xs" />
                     Villas
@@ -315,10 +315,10 @@ export default function Header() {
                 {villasOpen && (
                   <div className="pl-6 py-2 space-y-1">
                     {villaLinks.map((link) => (
-                      <button key={link.label} onClick={() => { setMobileOpen(false); router.push(link.href); }} className="flex items-center gap-2 text-white/70 text-sm py-2 hover:text-[#ffb000] transition-colors w-full text-left">
+                      <a key={link.label} href={link.href} onClick={(e) => { e.stopPropagation(); setMobileOpen(false); }} className="flex items-center gap-2 text-white/70 text-sm py-2 hover:text-[#ffb000] transition-colors min-h-[44px]">
                         <Icon icon={link.icon} className="text-[10px] text-[#ffb000]/60" />
                         {link.label}
-                      </button>
+                      </a>
                     ))}
                   </div>
                 )}
@@ -326,7 +326,7 @@ export default function Header() {
 
               {/* Services */}
               <div>
-                <button onClick={() => setServicesOpen(!servicesOpen)} className="flex items-center justify-between w-full text-white text-sm font-semibold uppercase py-3 border-b border-white/10 active:scale-[0.98]">
+                <button type="button" onClick={() => setServicesOpen(!servicesOpen)} className="flex items-center justify-between w-full text-white text-sm font-semibold uppercase py-3 border-b border-white/10 active:scale-[0.98]">
                   <span className="flex items-center gap-2">
                     <Icon icon={faConciergeBell} className="text-[#ffb000] text-xs" />
                     Services
@@ -336,13 +336,13 @@ export default function Header() {
                 {servicesOpen && (
                   <div className="pl-6 py-2 space-y-1">
                     {services.slice(0, 10).map((s) => (
-                      <button key={s.slug} onClick={() => { setMobileOpen(false); router.push(`/service/${s.slug}`); }} className="text-white/70 text-sm py-1.5 hover:text-[#ffb000] transition-colors block w-full text-left">
+                      <a key={s.slug} href={`/service/${s.slug}`} onClick={(e) => { e.stopPropagation(); setMobileOpen(false); }} className="text-white/70 text-sm py-2 hover:text-[#ffb000] transition-colors block min-h-[44px]">
                         {s.title}
-                      </button>
+                      </a>
                     ))}
-                    <button onClick={() => { setMobileOpen(false); router.push('/service'); }} className="text-[#ffb000] text-sm font-semibold py-1.5 block w-full text-left">
+                    <a href="/service" onClick={(e) => { e.stopPropagation(); setMobileOpen(false); }} className="text-[#ffb000] text-sm font-semibold py-2 block min-h-[44px]">
                       {tCommon('viewAll')} →
-                    </button>
+                    </a>
                   </div>
                 )}
               </div>
