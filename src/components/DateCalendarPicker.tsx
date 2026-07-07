@@ -55,7 +55,7 @@ function CalendarGrid({
       </div>
       <div className="grid grid-cols-7 mb-1">
         {dayNames.map((d) => (
-          <div key={d} className="text-center text-[10px] font-bold text-gray-400 uppercase py-1">{d}</div>
+          <div key={d} className="text-center text-[10px] font-bold text-gray-500 uppercase py-1">{d}</div>
         ))}
       </div>
       <div className="grid grid-cols-7">
@@ -165,8 +165,8 @@ export default function DateCalendarPicker({
           <div className="flex items-center gap-3">
             <Icon icon={faCalendarAlt} className="text-[#0d47a1] shrink-0" />
             <div>
-              <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{label}</p>
-              <p className={`text-sm font-medium mt-0.5 ${displayValue ? "text-gray-800" : "text-gray-400"}`}>
+              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{label}</p>
+              <p className={`text-sm font-medium mt-0.5 ${displayValue ? "text-gray-800" : "text-gray-500"}`}>
                 {displayValue || placeholder}
               </p>
             </div>
@@ -193,8 +193,8 @@ export default function DateCalendarPicker({
       >
         <Icon icon={faCalendarAlt} className="text-[#0d47a1] text-sm shrink-0" />
         <div className="flex-1 min-w-0">
-          <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{label}</p>
-          <p className={`text-sm font-medium mt-0.5 ${displayValue ? "text-gray-800" : "text-gray-400"}`}>
+          <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{label}</p>
+          <p className={`text-sm font-medium mt-0.5 ${displayValue ? "text-gray-800" : "text-gray-500"}`}>
             {displayValue || placeholder}
           </p>
         </div>

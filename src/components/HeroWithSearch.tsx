@@ -110,10 +110,11 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
             <div className="flex items-center gap-3 px-5 py-3 rounded-full hover:bg-gray-50 transition-colors min-w-[160px]">
               <Icon icon={faHome} className="text-[#0d47a1] text-sm shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t("typeLabel")}</p>
+                <p id="type-label-desktop" className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{t("typeLabel")}</p>
                 <select
                   value={propertyType}
                   onChange={(e) => setPropertyType(e.target.value)}
+                  aria-labelledby="type-label-desktop"
                   className="w-full text-sm text-gray-800 outline-none bg-transparent font-medium mt-0.5 cursor-pointer"
                 >
                   <option value="ALL">{t("typeAll")}</option>
@@ -170,12 +171,12 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
             >
               <Icon icon={faUsers} className="text-[#0d47a1] text-sm shrink-0" />
               <div className="flex-1">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t("guestsLabel")}</p>
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{t("guestsLabel")}</p>
                 <p className="text-sm text-gray-800 font-medium mt-0.5">
                   {guests} {t("guestsLabel").toLowerCase()}{guests > 1 ? "s" : ""}
                 </p>
               </div>
-              <Icon icon={faChevronDown} className={`text-gray-400 text-[10px] transition-transform duration-200 ${showGuestPicker ? "rotate-180" : ""}`} />
+              <Icon icon={faChevronDown} className={`text-gray-500 text-[10px] transition-transform duration-200 ${showGuestPicker ? "rotate-180" : ""}`} />
 
               {showGuestPicker && (
                 <div className="absolute right-0 top-full mt-3 bg-white rounded-2xl shadow-2xl border border-gray-100 p-5 z-50 w-64" onClick={(e) => e.stopPropagation()}>
@@ -212,10 +213,11 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
             <div className="flex items-center gap-3 bg-gray-50 rounded-2xl px-4 py-3.5">
               <Icon icon={faHome} className="text-[#0d47a1] shrink-0" />
               <div className="flex-1 min-w-0">
-                <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t("typeLabel")}</p>
+                <p id="type-label-mobile" className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{t("typeLabel")}</p>
                 <select
                   value={propertyType}
                   onChange={(e) => setPropertyType(e.target.value)}
+                  aria-labelledby="type-label-mobile"
                   className="w-full text-sm text-gray-800 outline-none bg-transparent font-medium mt-0.5 cursor-pointer"
                 >
                   <option value="ALL">{t("typeAll")}</option>
@@ -260,7 +262,7 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
               <div className="flex items-center gap-3">
                 <Icon icon={faUsers} className="text-[#0d47a1] shrink-0" />
                 <div>
-                  <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider">{t("guestsLabel")}</p>
+                  <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider">{t("guestsLabel")}</p>
                   <p className="text-sm font-medium text-gray-800 mt-0.5">{guests} {t("guestsLabel").toLowerCase()}{guests > 1 ? "s" : ""}</p>
                 </div>
               </div>
@@ -299,7 +301,7 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
 
       {/* Scroll indicator */}
       <div className="absolute bottom-4 sm:bottom-6 left-1/2 -translate-x-1/2 z-10 animate-bounce">
-        <a href="#icons-section" className="w-11 h-11 flex items-center justify-center text-white/50 hover:text-white transition-colors">
+        <a href="#icons-section" aria-label="Scroll to content" className="w-11 h-11 flex items-center justify-center text-white/50 hover:text-white transition-colors">
           <Icon icon={faChevronDown} className="text-2xl" />
         </a>
       </div>

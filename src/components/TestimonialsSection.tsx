@@ -95,7 +95,7 @@ export default function TestimonialsSection() {
                 <p className="font-semibold text-[#34495e] text-sm">
                   {item.guestName}
                 </p>
-                <p className="text-gray-400 text-xs">
+                <p className="text-gray-500 text-xs">
                   {item.guestCountry && `${item.guestCountry} — `}
                   {item.propertyName && `${item.propertyName}`}
                   {item.duration && ` — ${item.duration}`}

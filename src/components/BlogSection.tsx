@@ -75,7 +75,7 @@ export default function BlogSection() {
                 />
               </div>
             ) : (
-              <div className="w-full h-[200px] bg-gray-200 flex items-center justify-center text-gray-400">
+              <div className="w-full h-[200px] bg-gray-200 flex items-center justify-center text-gray-500">
                 {t("noImage")}
               </div>
             )}

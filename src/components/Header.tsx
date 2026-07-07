@@ -130,17 +130,17 @@ export default function Header() {
           <div className="flex items-center gap-4">
             <div className="flex items-center gap-1">
               {settings.facebook && (
-                <a href={settings.facebook} target="_blank" rel="noopener noreferrer" className="w-11 h-11 flex items-center justify-center hover:text-[#ffb000] transition-colors">
+                <a href={settings.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-11 h-11 flex items-center justify-center hover:text-[#ffb000] transition-colors">
                   <Icon icon={faFacebookF} className="text-[10px]" />
                 </a>
               )}
               {settings.instagram && (
-                <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="w-11 h-11 flex items-center justify-center hover:text-[#ffb000] transition-colors">
+                <a href={settings.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-11 h-11 flex items-center justify-center hover:text-[#ffb000] transition-colors">
                   <Icon icon={faInstagram} className="text-[10px]" />
                 </a>
               )}
               {settings.linkedin && (
-                <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" className="w-11 h-11 flex items-center justify-center hover:text-[#ffb000] transition-colors">
+                <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-11 h-11 flex items-center justify-center hover:text-[#ffb000] transition-colors">
                   <Icon icon={faLinkedinIn} className="text-[10px]" />
                 </a>
               )}
@@ -408,17 +408,17 @@ export default function Header() {
               {/* Social Icons */}
               <div className="flex items-center gap-3 mt-2">
                 {settings.facebook && (
-                  <a href={settings.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
+                  <a href={settings.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
                     <Icon icon={faFacebookF} className="text-sm" />
                   </a>
                 )}
                 {settings.instagram && (
-                  <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
+                  <a href={settings.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
                     <Icon icon={faInstagram} className="text-sm" />
                   </a>
                 )}
                 {settings.linkedin && (
-                  <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
+                  <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
                     <Icon icon={faLinkedinIn} className="text-sm" />
                   </a>
                 )}
