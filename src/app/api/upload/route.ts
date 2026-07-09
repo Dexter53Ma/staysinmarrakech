@@ -9,12 +9,18 @@ const ALLOWED_TYPES = [
   "image/png",
   "image/webp",
   "image/gif",
+  "image/bmp",
+  "image/tiff",
+  "image/svg+xml",
+  "image/avif",
+  "image/heic",
+  "image/heif",
   "application/pdf",
 ];
 
-const COMPRESSIBLE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp"];
+const COMPRESSIBLE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/avif"];
 
-const MAX_SIZE = 10 * 1024 * 1024; // 10MB
+const MAX_SIZE = 100 * 1024 * 1024; // 100MB
 const MAX_WIDTH = 2000;
 const MAX_HEIGHT = 2000;
 const QUALITY = 80;
@@ -32,16 +38,16 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Aucun fichier fourni" }, { status: 400 });
     }
 
-    if (!ALLOWED_TYPES.includes(file.type)) {
+    if (!ALLOWED_TYPES.includes(file.type) && !file.type.startsWith("image/")) {
       return NextResponse.json(
-        { error: "Type de fichier non autorisé. Formats acceptés: JPEG, PNG, WebP, GIF, PDF" },
+        { error: "Type de fichier non autorisé. Formats acceptés: tous les types d'images, PDF" },
         { status: 400 }
       );
     }
 
     if (file.size > MAX_SIZE) {
       return NextResponse.json(
-        { error: "Fichier trop volumineux. Taille maximale: 10MB" },
+        { error: "Fichier trop volumineux. Taille maximale: 100MB" },
         { status: 400 }
       );
     }
@@ -56,16 +62,20 @@ export async function POST(request: NextRequest) {
     let contentType = file.type;
     let ext = file.name.split(".").pop() || "jpg";
 
-    if (COMPRESSIBLE_TYPES.includes(file.type)) {
-      const originalSize = buffer.length;
-      const compressed = await sharp(buffer)
-        .resize({ width: MAX_WIDTH, height: MAX_HEIGHT, fit: "inside", withoutEnlargement: true })
-        .webp({ quality: QUALITY })
-        .toBuffer();
-      buffer = Buffer.from(compressed);
-      contentType = "image/webp";
-      ext = "webp";
-      console.log(`Compressed: ${file.name} ${(originalSize / 1024).toFixed(0)}KB → ${(buffer.length / 1024).toFixed(0)}KB`);
+    if (file.type.startsWith("image/")) {
+      try {
+        const originalSize = buffer.length;
+        const compressed = await sharp(buffer)
+          .resize({ width: MAX_WIDTH, height: MAX_HEIGHT, fit: "inside", withoutEnlargement: true })
+          .webp({ quality: QUALITY })
+          .toBuffer();
+        buffer = Buffer.from(compressed);
+        contentType = "image/webp";
+        ext = "webp";
+        console.log(`Compressed: ${file.name} ${(originalSize / 1024).toFixed(0)}KB → ${(buffer.length / 1024).toFixed(0)}KB`);
+      } catch (sharpError) {
+        console.warn(`Could not compress ${file.name}, uploading as original:`, sharpError);
+      }
     }
 
     const filename = `${Date.now()}-${Math.random().toString(36).substring(2, 8)}.${ext}`;
