@@ -551,7 +551,7 @@ export default function EditPropertyPage() {
               <p className="text-sm text-muted-foreground">
                 {uploading ? "Upload en cours..." : images.length >= MAX_IMAGES ? "Maximum atteint" : "Glissez vos images ici ou cliquez pour parcourir"}
               </p>
-              <p className="text-xs text-muted-foreground mt-1">JPG, PNG, WebP — Max 10 Mo — {images.length}/{MAX_IMAGES} images</p>
+              <p className="text-xs text-muted-foreground mt-1">Tous les formats image — Max 100 Mo — {images.length}/{MAX_IMAGES} images</p>
             </div>
             <input
               ref={fileInputRef}
