@@ -175,7 +175,7 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
                 <div className="flex-1">
                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.08em]">{t("guestsLabel")}</p>
                   <p className="text-[13px] text-gray-800 font-semibold mt-0.5">
-                    {guests} {t("guestsLabel").toLowerCase()}{guests > 1 ? "s" : ""}
+                    {t("guestsCount", { count: guests })}
                   </p>
                 </div>
                 <Icon icon={faChevronDown} className={`text-gray-400 text-[10px] transition-transform duration-200 ${showGuestPicker ? "rotate-180" : ""}`} />
@@ -269,7 +269,7 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
                 <Icon icon={faUsers} className="text-[#0d47a1] shrink-0" />
                 <div>
                   <p className="text-[10px] font-bold text-gray-400 uppercase tracking-[0.08em]">{t("guestsLabel")}</p>
-                  <p className="text-[13px] font-semibold text-gray-800 mt-0.5">{guests} {t("guestsLabel").toLowerCase()}{guests > 1 ? "s" : ""}</p>
+                  <p className="text-[13px] font-semibold text-gray-800 mt-0.5">{t("guestsCount", { count: guests })}</p>
                 </div>
               </div>
               <div className="flex items-center gap-2.5">

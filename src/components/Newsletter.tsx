@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useTranslations } from "next-intl";
 import { Icon, faEnvelope, faCheck, faSpinner } from "@/components/icons";
 import { useCsrf } from "@/hooks/useCsrf";
@@ -11,6 +11,16 @@ export default function Newsletter() {
   const [message, setMessage] = useState("");
   const { csrfFetch } = useCsrf();
   const t = useTranslations("homepage");
+  const mountedRef = useRef(true);
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  useEffect(() => {
+    mountedRef.current = true;
+    return () => {
+      mountedRef.current = false;
+      if (timerRef.current) clearTimeout(timerRef.current);
+    };
+  }, []);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -23,19 +33,26 @@ export default function Newsletter() {
         body: JSON.stringify({ email }),
       });
       const data = await res.json();
-      if (res.ok) {
-        setStatus("success");
-        setMessage(data.message || t("subscribeSuccess"));
-        setEmail("");
-      } else {
-        setStatus("error");
-        setMessage(data.error || t("subscribeError"));
+      if (mountedRef.current) {
+        if (res.ok) {
+          setStatus("success");
+          setMessage(data.message || t("subscribeSuccess"));
+          setEmail("");
+        } else {
+          setStatus("error");
+          setMessage(data.error || t("subscribeError"));
+        }
       }
     } catch {
-      setStatus("error");
-      setMessage(t("subscribeNetworkError"));
+      if (mountedRef.current) {
+        setStatus("error");
+        setMessage(t("subscribeNetworkError"));
+      }
     }
-    setTimeout(() => setStatus("idle"), 5000);
+    if (timerRef.current) clearTimeout(timerRef.current);
+    timerRef.current = setTimeout(() => {
+      if (mountedRef.current) setStatus("idle");
+    }, 5000);
   }
 
   return (

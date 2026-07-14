@@ -36,7 +36,11 @@ export default function ActivitiesCarousel() {
               slug: s.slug,
             }))
         )
-      );
+      )
+      .catch((err) => {
+        console.error("Failed to load activities:", err);
+        setActivities([]);
+      });
   }, []);
 
   const updateScrollButtons = () => {

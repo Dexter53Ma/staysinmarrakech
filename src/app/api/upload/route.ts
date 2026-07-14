@@ -18,8 +18,6 @@ const ALLOWED_TYPES = [
   "application/pdf",
 ];
 
-const COMPRESSIBLE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/webp", "image/avif"];
-
 const MAX_SIZE = 100 * 1024 * 1024; // 100MB
 const MAX_WIDTH = 2000;
 const MAX_HEIGHT = 2000;

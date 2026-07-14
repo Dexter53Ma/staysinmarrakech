@@ -45,6 +45,7 @@ export default function FAQSection() {
           >
             <button
               onClick={() => setOpenIndex(openIndex === i ? null : i)}
+              aria-expanded={openIndex === i}
               className={`w-full flex items-center justify-between px-5 py-4 text-left transition-colors min-h-[48px] ${
                 openIndex === i ? "bg-[#0d47a1]/5" : "hover:bg-gray-50"
               }`}

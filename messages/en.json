@@ -63,6 +63,7 @@
     "guestsLabel": "Guests",
     "confirmLabel": "Confirm",
     "searchLabel": "Search",
+    "guestsCount": "{count} {count, plural, one {guest} other {guests}}",
     "chooseLabel": "Choose",
     "discoverTitle": "Discover our selection of luxury villas in Marrakech",
     "discoverSubtitle": "A selection of the finest villas for an exceptional stay",
@@ -1224,5 +1225,23 @@
     "villasAvailable": "villas available",
     "quartiers": "neighborhoods",
     "service247": "24/7 Service"
+  },
+  "lightbox": {
+    "close": "Close",
+    "prevImage": "Previous image",
+    "nextImage": "Next image"
+  },
+  "wishlist": {
+    "title": "My selection",
+    "villaCount": "{count} {count, plural, one {villa} other {villas}} in your selection",
+    "emptyTitle": "No villas selected",
+    "emptyDesc": "You haven't added any villas to your selection yet. Browse our villas and add your favourites!",
+    "discoverVillas": "Discover our villas",
+    "loading": "Loading...",
+    "removeFromSelection": "Remove from selection",
+    "bedrooms": "bedrooms",
+    "pax": "guests",
+    "viewVilla": "View villa",
+    "emptySubtitle": "Find your favourite villas here"
   }
 }

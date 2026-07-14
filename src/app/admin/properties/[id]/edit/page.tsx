@@ -11,7 +11,7 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
 import { ArrowLeft, Upload, X, GripVertical } from "lucide-react";
-import { FEATURES, FEATURE_KEYS, getFeaturesByCategory } from "@/lib/features";
+import { FEATURE_KEYS, getFeaturesByCategory } from "@/lib/features";
 import BilingualTabs from "@/components/BilingualTabs";
 
 const PROPERTY_TYPES = [

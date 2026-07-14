@@ -6,8 +6,12 @@ import Footer from "@/components/Footer";
 export async function generateMetadata({params}: {params: Promise<{locale: string}>}): Promise<Metadata> {
   const {locale} = await params;
   const t = await getTranslations({locale, namespace: 'legal'});
+  const description = locale === 'en'
+    ? "Legal notices: publisher, host, intellectual property, data protection and cookies for StaysInMarrakech."
+    : "Mentions légales : éditeur, hébergeur, propriété intellectuelle, protection des données et cookies de StaysInMarrakech.";
   return {
     title: t('mentionsLegales'),
+    description,
   };
 }
 

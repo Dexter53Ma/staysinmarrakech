@@ -64,7 +64,7 @@ export default function ContactPage() {
     { icon: faPhone, label: t("telephone"), value: phone1, href: `tel:${phone1.replace(/[^0-9+]/g, "")}` },
     ...(phone2 ? [{ icon: faPhone, label: t("telephone") + " 2", value: phone2, href: `tel:${phone2.replace(/[^0-9+]/g, "")}` }] : []),
     { icon: faEnvelope, label: t("emailLabel"), value: email, href: `mailto:${email}` },
-    { icon: faCalendarAlt, label: t("hours"), value: "7j/7 — 9h à 20h" },
+    { icon: faCalendarAlt, label: t("hours"), value: t("openingHours") },
   ];
 
   return (
@@ -136,7 +136,7 @@ export default function ContactPage() {
             </div>
 
             <div className="bg-white rounded-lg p-6 shadow-sm">
-              <h2 className="text-xl font-semibold text-[#34495e] mb-6">Nos coordonnées</h2>
+              <h2 className="text-xl font-semibold text-[#34495e] mb-6">{t("ourDetails")}</h2>
               <div className="flex flex-col gap-5">
                 {contactInfo.map((item, i) => (
                   <div key={i} className="flex items-start gap-4">

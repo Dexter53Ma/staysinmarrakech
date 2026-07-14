@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import {Link} from "@/i18n/navigation";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
@@ -20,6 +21,7 @@ interface WishlistVilla {
 const STORAGE_KEY = "villa-wishlist";
 
 export default function WishlistPage() {
+  const t = useTranslations("wishlist");
   const [wishlist, setWishlist] = useState<WishlistVilla[]>([]);
   const [loaded, setLoaded] = useState(false);
 
@@ -63,12 +65,12 @@ export default function WishlistPage() {
           <div className="absolute inset-0 bg-black/50" />
           <div className="relative z-10 text-center px-4">
             <h1 className="text-white text-3xl md:text-4xl font-bold uppercase tracking-wide mb-3">
-              Ma sélection
+              {t("title")}
             </h1>
             <p className="text-white/80 text-lg">
               {wishlist.length > 0
-                ? `${wishlist.length} villa${wishlist.length > 1 ? "s" : ""} dans votre sélection`
-                : "Retrouvez vos villas favorites ici"}
+                ? t("villaCount", { count: wishlist.length })
+                : t("emptySubtitle")}
             </p>
           </div>
         </section>
@@ -76,22 +78,22 @@ export default function WishlistPage() {
         <section className="max-w-[1140px] mx-auto px-4 py-12">
           {!loaded ? (
             <div className="text-center py-20">
-              <p className="text-[#34495e]">Chargement...</p>
+              <p className="text-[#34495e]">{t("loading")}</p>
             </div>
           ) : wishlist.length === 0 ? (
             <div className="text-center py-20">
               <Icon icon={faHeart} className="text-5xl text-gray-300 mb-6" />
               <h2 className="text-xl font-semibold text-[#34495e] mb-3">
-                Aucune villa sélectionnée
+                {t("emptyTitle")}
               </h2>
               <p className="text-[#34495e]/70 mb-6 max-w-md mx-auto">
-                Vous n&apos;avez pas encore de villas dans votre sélection. Parcourez nos villas et ajoutez vos favorites !
+                {t("emptyDesc")}
               </p>
               <Link
                 href="/marrakech-villas/location-villa-marrakech"
                 className="inline-block bg-[#0d47a1] text-white px-8 py-3 rounded hover:bg-[#0a3a82] transition-colors font-medium uppercase text-sm tracking-wide"
               >
-                Découvrir nos villas
+                {t("discoverVillas")}
               </Link>
             </div>
           ) : (
@@ -112,7 +114,7 @@ export default function WishlistPage() {
                     <button
                       onClick={() => removeFromWishlist(villa.slug)}
                       className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center text-red-500 hover:bg-white hover:text-red-600 transition-colors shadow"
-                      aria-label="Retirer de la sélection"
+                      aria-label={t("removeFromSelection")}
                     >
                       <Icon icon={faTimes} className="text-sm" />
                     </button>
@@ -125,8 +127,8 @@ export default function WishlistPage() {
                       {villa.quartier}
                     </p>
                     <div className="flex items-center gap-4 text-xs text-[#34495e]">
-                      <span>{villa.chambres} chambres</span>
-                      <span>{villa.pax} pax</span>
+                      <span>{villa.chambres} {t("bedrooms")}</span>
+                      <span>{villa.pax} {t("pax")}</span>
                     </div>
                     <div className="flex flex-wrap gap-1.5 mt-3">
                       {villa.features.slice(0, 3).map((f) => (
@@ -142,7 +144,7 @@ export default function WishlistPage() {
                       href={`/villa/${villa.slug}`}
                       className="block mt-4 text-center bg-[#0d47a1] text-white py-2 rounded text-sm font-medium hover:bg-[#0a3a82] transition-colors"
                     >
-                      Voir la villa
+                      {t("viewVilla")}
                     </a>
                   </div>
                 </div>

@@ -11,8 +11,12 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({params}: {params: Promise<{locale: string}>}): Promise<Metadata> {
   const {locale} = await params;
   const t = await getTranslations({locale, namespace: 'seo'});
+  const description = locale === 'en'
+    ? "Read our articles about Marrakech: travel tips, luxury villas, local activities and events."
+    : "Lisez nos articles sur Marrakech : conseils de voyage, villas de luxe, activités locales et événements.";
   return {
     title: t('blogTitle'),
+    description,
   };
 }
 

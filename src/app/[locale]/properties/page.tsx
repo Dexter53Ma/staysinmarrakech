@@ -1,12 +1,17 @@
 import { prisma } from "@/lib/prisma";
 import PropertiesPageClient from "./PropertiesPageClient";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
-export const metadata = {
-  title: "Propriétés à Marrakech",
-  description: "Découvrez nos villas et propriétés de luxe à Marrakech. Filtrez par prix, nombre de chambres, quartier et plus. Service de conciergerie premium.",
-};
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  const title = locale === "en" ? "Properties in Marrakech" : "Propriétés à Marrakech";
+  const description = locale === "en"
+    ? "Discover our selection of luxury villas and properties in Marrakech for rent and sale. Filter by price, bedrooms, neighborhood and more. Premium concierge service."
+    : "Découvrez nos villas et propriétés de luxe à Marrakech. Filtrez par prix, nombre de chambres, quartier et plus. Service de conciergerie premium.";
+  return { title, description };
+}
 
 const ITEMS_PER_PAGE = 12;
 

@@ -38,7 +38,7 @@ export default function PropertyGrid({
   totalPages,
   onPageChange,
 }: PropertyGridProps) {
-  const { convert, currency, symbol } = useCurrency();
+  const { convert, symbol } = useCurrency();
   const t = useTranslations("properties");
   const locale = useLocale();
   const localeStr = locale === "en" ? "en-US" : "fr-FR";

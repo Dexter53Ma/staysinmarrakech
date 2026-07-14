@@ -2,7 +2,6 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useCsrf } from "@/hooks/useCsrf";
-import {Link} from "@/i18n/navigation";
 import { useRouter } from "@/i18n/navigation";
 import {
   MapPin,
@@ -37,16 +36,6 @@ interface PropertyDetailClientProps {
   similarProperties: SimilarProperty[];
 }
 
-function getSessionId(): string {
-  if (typeof window === "undefined") return "";
-  let id = localStorage.getItem("session-id");
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem("session-id", id);
-  }
-  return id;
-}
-
 function isDateRangeOverlapping(start1: Date, end1: Date, start2: Date, end2: Date): boolean {
   return start1 < end2 && start2 < end1;
 }
@@ -60,7 +49,7 @@ export default function PropertyDetailClient({
 }: PropertyDetailClientProps) {
   const router = useRouter();
   const { csrfFetch } = useCsrf();
-  const { convert, currency: userCurrency, symbol } = useCurrency();
+  const { convert, symbol } = useCurrency();
   const t = useTranslations("properties");
   const locale = useLocale();
   const localeStr = locale === "en" ? "en-US" : "fr-FR";

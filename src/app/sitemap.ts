@@ -5,15 +5,65 @@ export const dynamic = "force-dynamic";
 
 const BASE_URL = process.env.NEXT_PUBLIC_SITE_URL || "https://staysinmarrakech.netlify.app";
 
+const locales = ["fr", "en"] as const;
+
+const staticPaths = [
+  "/",
+  "/properties",
+  "/marrakech-villas/location-villa-marrakech",
+  "/marrakech-villas/vente-villa-marrakech",
+  "/marrakech-villas/villa-de-luxe",
+  "/marrakech-villas/villa-exception",
+  "/service",
+  "/blog",
+  "/testimonials",
+  "/contactez-nous",
+  "/agence",
+  "/mentions-legales",
+  "/politique-de-confidentialite",
+  "/locations/palmeraie",
+  "/locations/gueliz",
+  "/locations/route-ourika",
+  "/locations/amelkis",
+  "/locations/targa",
+];
+
+const pathPriority: Record<string, { changeFrequency: MetadataRoute.Sitemap[0]["changeFrequency"]; priority: number }> = {
+  "/": { changeFrequency: "daily", priority: 1.0 },
+  "/properties": { changeFrequency: "daily", priority: 0.9 },
+  "/marrakech-villas/location-villa-marrakech": { changeFrequency: "daily", priority: 0.9 },
+  "/marrakech-villas/vente-villa-marrakech": { changeFrequency: "daily", priority: 0.8 },
+  "/marrakech-villas/villa-de-luxe": { changeFrequency: "weekly", priority: 0.7 },
+  "/marrakech-villas/villa-exception": { changeFrequency: "weekly", priority: 0.7 },
+  "/service": { changeFrequency: "weekly", priority: 0.8 },
+  "/blog": { changeFrequency: "weekly", priority: 0.7 },
+  "/testimonials": { changeFrequency: "monthly", priority: 0.5 },
+  "/contactez-nous": { changeFrequency: "monthly", priority: 0.6 },
+  "/agence": { changeFrequency: "monthly", priority: 0.5 },
+  "/mentions-legales": { changeFrequency: "yearly", priority: 0.2 },
+  "/politique-de-confidentialite": { changeFrequency: "yearly", priority: 0.2 },
+  "/locations/palmeraie": { changeFrequency: "weekly", priority: 0.8 },
+  "/locations/gueliz": { changeFrequency: "weekly", priority: 0.8 },
+  "/locations/route-ourika": { changeFrequency: "weekly", priority: 0.8 },
+  "/locations/amelkis": { changeFrequency: "weekly", priority: 0.8 },
+  "/locations/targa": { changeFrequency: "weekly", priority: 0.8 },
+};
+
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+  const now = new Date();
+
   if (!process.env.DATABASE_URL) {
-    const staticPages: MetadataRoute.Sitemap = [
-      { url: BASE_URL, lastModified: new Date(), changeFrequency: "daily", priority: 1.0 },
-      { url: `${BASE_URL}/properties`, lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
-      { url: `${BASE_URL}/service`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-      { url: `${BASE_URL}/blog`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
-      { url: `${BASE_URL}/contactez-nous`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
-    ];
+    const staticPages: MetadataRoute.Sitemap = staticPaths.flatMap((path) =>
+      locales.map((locale) => {
+        const meta = pathPriority[path];
+        return {
+          url: `${BASE_URL}/${locale}${path === "/" ? "" : path}`,
+          lastModified: now,
+          changeFrequency: meta.changeFrequency,
+          priority: meta.priority,
+        };
+      })
+    );
     return staticPages;
   }
 
@@ -33,47 +83,44 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     }),
   ]);
 
-  const staticPages: MetadataRoute.Sitemap = [
-    { url: BASE_URL, lastModified: new Date(), changeFrequency: "daily", priority: 1.0 },
-    { url: `${BASE_URL}/properties`, lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
-    { url: `${BASE_URL}/marrakech-villas/location-villa-marrakech`, lastModified: new Date(), changeFrequency: "daily", priority: 0.9 },
-    { url: `${BASE_URL}/marrakech-villas/vente-villa-marrakech`, lastModified: new Date(), changeFrequency: "daily", priority: 0.8 },
-    { url: `${BASE_URL}/marrakech-villas/villa-de-luxe`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
-    { url: `${BASE_URL}/marrakech-villas/villa-exception`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
-    { url: `${BASE_URL}/service`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE_URL}/blog`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
-    { url: `${BASE_URL}/testimonials`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
-    { url: `${BASE_URL}/contactez-nous`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
-    { url: `${BASE_URL}/agence`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.5 },
-    { url: `${BASE_URL}/mentions-legales`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.2 },
-    { url: `${BASE_URL}/politique-de-confidentialite`, lastModified: new Date(), changeFrequency: "yearly", priority: 0.2 },
-    { url: `${BASE_URL}/locations/palmeraie`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE_URL}/locations/gueliz`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE_URL}/locations/route-ourika`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE_URL}/locations/amelkis`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-    { url: `${BASE_URL}/locations/targa`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
-  ];
+  const staticPages: MetadataRoute.Sitemap = staticPaths.flatMap((path) =>
+    locales.map((locale) => {
+      const meta = pathPriority[path];
+      return {
+        url: `${BASE_URL}/${locale}${path === "/" ? "" : path}`,
+        lastModified: now,
+        changeFrequency: meta.changeFrequency,
+        priority: meta.priority,
+      };
+    })
+  );
 
-  const propertyPages: MetadataRoute.Sitemap = properties.map((p) => ({
-    url: `${BASE_URL}/properties/${p.slug}`,
-    lastModified: p.updatedAt,
-    changeFrequency: "weekly" as const,
-    priority: 0.8,
-  }));
+  const propertyPages: MetadataRoute.Sitemap = properties.flatMap((p) =>
+    locales.map((locale) => ({
+      url: `${BASE_URL}/${locale}/properties/${p.slug}`,
+      lastModified: p.updatedAt,
+      changeFrequency: "weekly" as const,
+      priority: 0.8,
+    }))
+  );
 
-  const blogPages: MetadataRoute.Sitemap = blogPosts.map((p) => ({
-    url: `${BASE_URL}/blog/${p.slug}`,
-    lastModified: p.updatedAt,
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
+  const blogPages: MetadataRoute.Sitemap = blogPosts.flatMap((p) =>
+    locales.map((locale) => ({
+      url: `${BASE_URL}/${locale}/blog/${p.slug}`,
+      lastModified: p.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }))
+  );
 
-  const servicePages: MetadataRoute.Sitemap = services.map((s) => ({
-    url: `${BASE_URL}/service/${s.slug}`,
-    lastModified: s.updatedAt,
-    changeFrequency: "monthly" as const,
-    priority: 0.6,
-  }));
+  const servicePages: MetadataRoute.Sitemap = services.flatMap((s) =>
+    locales.map((locale) => ({
+      url: `${BASE_URL}/${locale}/service/${s.slug}`,
+      lastModified: s.updatedAt,
+      changeFrequency: "monthly" as const,
+      priority: 0.6,
+    }))
+  );
 
   return [...staticPages, ...propertyPages, ...blogPages, ...servicePages];
 }

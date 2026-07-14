@@ -1,7 +1,7 @@
 import { prisma } from "@/lib/prisma";
 import { NextRequest, NextResponse } from "next/server";
 import { requireAdminApi } from "@/lib/auth";
-import { generateSlug, ensureUniqueSlug, validateFields, apiError } from "@/lib/api-helpers";
+import { generateSlug, ensureUniqueSlug, apiError } from "@/lib/api-helpers";
 import { validate, pageSchema } from "@/lib/validations";
 
 export const dynamic = "force-dynamic";

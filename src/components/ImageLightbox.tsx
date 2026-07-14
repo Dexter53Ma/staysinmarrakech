@@ -1,7 +1,8 @@
 "use client";
 
-import { useEffect, useCallback, useRef, useState } from "react";
+import { useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
+import { useTranslations } from "next-intl";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
 import type { PropertyImage } from "@/types";
 
@@ -13,6 +14,7 @@ interface ImageLightboxProps {
 }
 
 export default function ImageLightbox({ images, selectedIndex, onClose, onNavigate }: ImageLightboxProps) {
+  const t = useTranslations("lightbox");
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
 
@@ -55,12 +57,17 @@ export default function ImageLightbox({ images, selectedIndex, onClose, onNaviga
   };
 
   return (
-    <div className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center">
+    <div
+      className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
+      role="dialog"
+      aria-modal="true"
+      aria-label="Image lightbox"
+    >
       {/* Close button */}
       <button
         onClick={onClose}
         className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-        aria-label="Fermer"
+        aria-label={t("close")}
       >
         <X className="size-5" />
       </button>
@@ -70,7 +77,7 @@ export default function ImageLightbox({ images, selectedIndex, onClose, onNaviga
         <button
           onClick={goPrev}
           className="absolute left-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors hidden sm:flex"
-          aria-label="Image précédente"
+          aria-label={t("prevImage")}
         >
           <ChevronLeft className="size-5" />
         </button>
@@ -81,7 +88,7 @@ export default function ImageLightbox({ images, selectedIndex, onClose, onNaviga
         <button
           onClick={goNext}
           className="absolute right-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors hidden sm:flex"
-          aria-label="Image suivante"
+          aria-label={t("nextImage")}
         >
           <ChevronRight className="size-5" />
         </button>

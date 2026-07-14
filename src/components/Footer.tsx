@@ -14,7 +14,6 @@ import {
 
 export default function Footer() {
   const t = useTranslations("navigation");
-  const tCommon = useTranslations("common");
   const settings = useSettings();
   const { services } = useServices();
 

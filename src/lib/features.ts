@@ -103,7 +103,7 @@ export const FEATURE_CATEGORIES: FeatureCategory[] = [
 ];
 
 export function getFeaturesByCategory(): Record<FeatureCategory, { key: string; label: string }[]> {
-  const result: Record<FeatureCategory, { key: string; label: string }[]> = {} as any;
+  const result = {} as Record<FeatureCategory, { key: string; label: string }[]>;
   for (const cat of FEATURE_CATEGORIES) {
     result[cat] = [];
   }

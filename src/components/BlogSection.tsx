@@ -23,7 +23,11 @@ export default function BlogSection() {
       .then((r) => r.json())
       .then((data) =>
         setPosts(data.filter((p: Post & { isPublished: boolean }) => p.isPublished).slice(0, 3))
-      );
+      )
+      .catch((err) => {
+        console.error("Failed to load blog posts:", err);
+        setPosts([]);
+      });
   }, []);
 
   const isLoading = posts.length === 0;

@@ -70,7 +70,7 @@ const localBusinessSchema = {
   sameAs: [],
 };
 
-const websiteSchema = {
+const getWebsiteSchema = (locale: string) => ({
   "@context": "https://schema.org",
   "@type": "WebSite",
   name: "StaysInMarrakech",
@@ -80,8 +80,8 @@ const websiteSchema = {
     target: `${SITE_URL}/properties?search={search_term_string}`,
     "query-input": "required name=search_term_string",
   },
-  inLanguage: "fr",
-};
+  inLanguage: locale === "en" ? "en" : "fr",
+});
 
 const faqSchema = {
   "@context": "https://schema.org",
@@ -96,8 +96,10 @@ const faqSchema = {
   })),
 };
 
-export default async function Home() {
+export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
+  const { locale } = await params;
   const heroSlides = await getHeroSlides();
+  const websiteSchema = getWebsiteSchema(locale);
 
   return (
     <div className="flex flex-col min-h-screen">
