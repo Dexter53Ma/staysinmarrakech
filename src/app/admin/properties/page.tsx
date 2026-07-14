@@ -144,7 +144,7 @@ export default function PropertiesPage() {
     }
     setSelectedIds([]);
     setBulkLoading(false);
-    fetchProperties();
+    setRefreshKey((k) => k + 1);
   };
 
   const handleExportCSV = () => {
