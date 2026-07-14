@@ -116,14 +116,15 @@ export default function LoginPage() {
               <div className="relative group">
                 <div className="absolute -inset-4 bg-gradient-to-br from-[#0d47a1]/30 to-[#ffb000]/30 rounded-3xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
                 <div className="relative w-28 h-28 sm:w-32 sm:h-32 md:w-36 md:h-36 rounded-3xl bg-gradient-to-br from-[#0B1120] via-[#111827] to-[#1a2332] flex items-center justify-center shadow-2xl shadow-[#0B1120]/40 ring-2 ring-white/10 group-hover:ring-white/20 group-hover:scale-105 transition-all duration-300">
-                  <Image
-                    src="/images/logo.png"
-                    alt="StaysInMarrakech"
-                    width={100}
-                    height={100}
-                    className="object-contain w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28"
-                    priority
-                  />
+                  <div className="relative w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28">
+                    <Image
+                      src="/images/logo.png"
+                      alt="StaysInMarrakech"
+                      fill
+                      className="object-contain"
+                      priority
+                    />
+                  </div>
                 </div>
               </div>
             </div>
@@ -258,14 +259,15 @@ export default function LoginPage() {
             mounted ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3"
           }`}
         >
-          <Image
-            src="/images/logo.png"
-            alt="StaysInMarrakech"
-            width={24}
-            height={24}
-            className="object-contain sm:w-7 sm:h-7"
-            priority
-          />
+          <div className="relative w-6 h-6 sm:w-7 sm:h-7">
+            <Image
+              src="/images/logo.png"
+              alt="StaysInMarrakech"
+              fill
+              className="object-contain"
+              priority
+            />
+          </div>
           <span className="font-bold text-gray-700 text-xs sm:text-sm tracking-tight">StaysInMarrakech</span>
         </div>
       </div>

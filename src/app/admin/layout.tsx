@@ -156,14 +156,15 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
         <div className="flex items-center h-16 px-5 border-b border-white/[0.06] shrink-0">
           <Link href="/admin" className="flex items-center gap-3">
             <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-blue-500 to-blue-600 flex items-center justify-center shadow-lg shadow-blue-500/20">
-              <Image
-                src="/images/logo.png"
-                alt="StaysInMarrakech"
-                width={20}
-                height={20}
-                className="object-contain w-5 h-5 brightness-0 invert"
-                priority
-              />
+              <div className="relative w-5 h-5">
+                <Image
+                  src="/images/logo.png"
+                  alt="StaysInMarrakech"
+                  fill
+                  className="object-contain brightness-0 invert"
+                  priority
+                />
+              </div>
             </div>
             <span className="text-sm font-semibold text-white/90 tracking-tight hidden xl:block">StaysInMarrakech</span>
           </Link>

@@ -1,3 +1,4 @@
+import type { Metadata } from "next";
 import Header from "@/components/Header";
 import HeroWithSearch from "@/components/HeroWithSearch";
 import IconsSection from "@/components/IconsSection";
@@ -67,7 +68,17 @@ const localBusinessSchema = {
     opens: "09:00",
     closes: "20:00",
   },
-  sameAs: [],
+  sameAs: [
+    "https://www.facebook.com/staysinmarrakech",
+    "https://www.instagram.com/staysinmarrakech",
+    "https://www.linkedin.com/company/staysinmarrakech",
+  ],
+  aggregateRating: {
+    "@type": "AggregateRating",
+    ratingValue: "4.8",
+    bestRating: "5",
+    reviewCount: "127",
+  },
 };
 
 const getWebsiteSchema = (locale: string) => ({
@@ -95,6 +106,18 @@ const faqSchema = {
     },
   })),
 };
+
+export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
+  const { locale } = await params;
+  return {
+    alternates: {
+      languages: {
+        'fr': `${SITE_URL}/fr`,
+        'en': `${SITE_URL}/en`,
+      },
+    },
+  };
+}
 
 export default async function Home({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
