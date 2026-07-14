@@ -23,6 +23,8 @@ interface EmailTemplate {
   updatedAt: string;
 }
 
+const TEMPLATE_KEYS = ["booking_confirmation", "booking_rejection", "contact_reply"] as const;
+
 const TEMPLATE_LABELS: Record<string, string> = {
   booking_confirmation: "Confirmation de réservation",
   booking_rejection: "Refus de réservation",
@@ -30,8 +32,8 @@ const TEMPLATE_LABELS: Record<string, string> = {
 };
 
 const TEMPLATE_DESCRIPTIONS: Record<string, string> = {
-  booking_confirmation: "Envoyé lorsque une réservation est acceptée",
-  booking_rejection: "Envoyé lorsque une réservation est refusée",
+  booking_confirmation: "Envoyé lorsqu'une réservation est acceptée",
+  booking_rejection: "Envoyé lorsqu'une réservation est refusée",
   contact_reply: "Réponse automatique aux messages de contact",
 };
 
@@ -45,8 +47,17 @@ const AVAILABLE_VARIABLES = [
   { name: "site_url", desc: "URL du site" },
 ];
 
+function getEmptyTemplates(): EmailTemplate[] {
+  return TEMPLATE_KEYS.map((key) => ({
+    name: key,
+    subject: "",
+    body: "",
+    updatedAt: "",
+  }));
+}
+
 export default function AdminEmailTemplatesPage() {
-  const [templates, setTemplates] = useState<EmailTemplate[]>([]);
+  const [templates, setTemplates] = useState<EmailTemplate[]>(getEmptyTemplates());
   const [loading, setLoading] = useState(true);
   const [editingTemplate, setEditingTemplate] = useState<EmailTemplate | null>(null);
   const [editSubject, setEditSubject] = useState("");
@@ -59,8 +70,15 @@ export default function AdminEmailTemplatesPage() {
   const fetchTemplates = useCallback(async () => {
     try {
       const res = await fetch("/api/email-templates");
+      if (!res.ok) throw new Error("API error");
       const data = await res.json();
-      setTemplates(data);
+      if (Array.isArray(data)) {
+        const merged = getEmptyTemplates().map((empty) => {
+          const saved = data.find((t: EmailTemplate) => t.name === empty.name);
+          return saved ? { ...empty, ...saved } : empty;
+        });
+        setTemplates(merged);
+      }
     } catch {
       console.error("Erreur lors du chargement des templates");
     } finally {
@@ -231,7 +249,7 @@ export default function AdminEmailTemplatesPage() {
                   className="flex items-center gap-1.5 text-xs text-gray-500 hover:text-gray-700 transition-colors"
                 >
                   {showPreview ? <EyeOff className="size-3.5" /> : <Eye className="size-3.5" />}
-                  {showPreview ? "Masquer l&apos;aperçu" : "Aperçu"}
+                  {showPreview ? "Masquer aperçu" : "Aperçu"}
                 </button>
               </div>
               <textarea
