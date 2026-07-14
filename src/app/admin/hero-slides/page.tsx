@@ -398,24 +398,6 @@ export default function AdminHeroSlidesPage() {
               </>
             )}
             <div>
-              <Label htmlFor="title">Titre *</Label>
-              <Input
-                id="title"
-                value={form.title}
-                onChange={(e) => setForm({ ...form, title: e.target.value })}
-                placeholder="Titre du slide"
-              />
-            </div>
-            <div>
-              <Label htmlFor="subtitle">Sous-titre</Label>
-              <Input
-                id="subtitle"
-                value={form.subtitle}
-                onChange={(e) => setForm({ ...form, subtitle: e.target.value })}
-                placeholder="Sous-titre"
-              />
-            </div>
-            <div>
               <Label htmlFor="image">URL de l&apos;image *</Label>
               <Input
                 id="image"

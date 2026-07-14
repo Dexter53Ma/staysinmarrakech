@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useCallback } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import {
   Table,
@@ -62,23 +62,7 @@ export default function AdminBookingsPage() {
   const [total, setTotal] = useState(0);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [bulkLoading, setBulkLoading] = useState(false);
-
-  const fetchBookings = useCallback(async () => {
-    setLoading(true);
-    try {
-      const params = new URLSearchParams({ page: page.toString(), limit: "20" });
-      if (filter !== "ALL") params.set("status", filter);
-      const res = await fetch(`/api/bookings?${params}`);
-      const data = await res.json();
-      setBookings(data.data || []);
-      setTotalPages(data.pagination?.totalPages || 1);
-      setTotal(data.pagination?.total || 0);
-    } catch {
-      setBookings([]);
-    } finally {
-      setLoading(false);
-    }
-  }, [filter, page]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -102,7 +86,7 @@ export default function AdminBookingsPage() {
     };
     load();
     return () => { cancelled = true; };
-  }, [filter, page]);
+  }, [filter, page, refreshKey]);
 
   const handleStatusChange = async (id: string, status: string) => {
     setActionLoading(id);
@@ -113,7 +97,7 @@ export default function AdminBookingsPage() {
         body: JSON.stringify({ status }),
       });
       if (res.ok) {
-        fetchBookings();
+        setRefreshKey((k) => k + 1);
         setDetailBooking(null);
       }
     } finally {
@@ -144,7 +128,7 @@ export default function AdminBookingsPage() {
     }
     setSelectedIds([]);
     setBulkLoading(false);
-    fetchBookings();
+    setRefreshKey((k) => k + 1);
   };
 
   const handleBulkConfirm = async () => {
@@ -158,7 +142,7 @@ export default function AdminBookingsPage() {
     }
     setSelectedIds([]);
     setBulkLoading(false);
-    fetchBookings();
+    setRefreshKey((k) => k + 1);
   };
 
   const handleBulkReject = async () => {
@@ -172,7 +156,7 @@ export default function AdminBookingsPage() {
     }
     setSelectedIds([]);
     setBulkLoading(false);
-    fetchBookings();
+    setRefreshKey((k) => k + 1);
   };
 
   const handleExportCSV = () => {
@@ -198,7 +182,7 @@ export default function AdminBookingsPage() {
         title="Réservations"
         description={`${total} réservation${total > 1 ? "s" : ""}`}
         breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Réservations" }]}
-        action={{ label: "Rafraîchir", onClick: fetchBookings, icon: RefreshCw }}
+        action={{ label: "Rafraîchir", onClick: () => setRefreshKey((k) => k + 1), icon: RefreshCw }}
       />
 
       {/* Calendar link */}

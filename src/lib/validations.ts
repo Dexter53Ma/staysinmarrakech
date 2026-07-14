@@ -193,10 +193,12 @@ function _pageSchema() {
     slug: z.string().max(300).optional().nullable(),
     content: z.string().optional().nullable(),
     metaDescription: z.string().max(500).optional().nullable(),
+    metaDesc: z.string().max(500).optional().nullable(),
     isPublished: z.boolean().optional(),
     titleEn: z.string().max(300).optional().nullable(),
     contentEn: z.string().optional().nullable(),
     metaDescriptionEn: z.string().max(500).optional().nullable(),
+    metaDescEn: z.string().max(500).optional().nullable(),
   });
 }
 

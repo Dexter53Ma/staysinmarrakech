@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
@@ -80,21 +80,7 @@ export default function PropertiesPage() {
   const [duplicating, setDuplicating] = useState(false);
   const [selectedIds, setSelectedIds] = useState<string[]>([]);
   const [bulkLoading, setBulkLoading] = useState(false);
-
-  const fetchProperties = useCallback(async () => {
-    setLoading(true);
-    const params = new URLSearchParams({ page: page.toString(), limit: "10" });
-    if (typeFilter !== "ALL") params.set("type", typeFilter);
-    if (statusFilter !== "ALL") params.set("status", statusFilter);
-    if (search) params.set("search", search);
-
-    const res = await fetch(`/api/properties?${params}`);
-    const data = await res.json();
-    setProperties(data.data || []);
-    setTotal(data.pagination?.total || 0);
-    setTotalPages(data.pagination?.totalPages || 1);
-    setLoading(false);
-  }, [page, typeFilter, statusFilter, search]);
+  const [refreshKey, setRefreshKey] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
@@ -116,11 +102,11 @@ export default function PropertiesPage() {
     };
     load();
     return () => { cancelled = true; };
-  }, [page, typeFilter, statusFilter, search]);
+  }, [page, typeFilter, statusFilter, search, refreshKey]);
 
   const handleDelete = async (id: string) => {
     await fetch(`/api/properties/${id}`, { method: "DELETE" });
-    fetchProperties();
+    setRefreshKey((k) => k + 1);
   };
 
   const handleDuplicate = async (id: string) => {
@@ -133,7 +119,7 @@ export default function PropertiesPage() {
     setDuplicating(false);
     setDuplicateTarget(null);
     if (res.ok) {
-      fetchProperties();
+      setRefreshKey((k) => k + 1);
     }
   };
 

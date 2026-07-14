@@ -10,7 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { ArrowLeft, Upload, X, GripVertical } from "lucide-react";
+import { ArrowLeft, Upload, X, GripVertical, ChevronUp, ChevronDown } from "lucide-react";
 import { FEATURE_KEYS, getFeaturesByCategory } from "@/lib/features";
 import BilingualTabs from "@/components/BilingualTabs";
 
@@ -122,6 +122,10 @@ export default function NewPropertyPage() {
       })
     );
     const successful = results.filter(Boolean) as { file: File; url: string; alt: string }[];
+    const failed = results.filter((r) => r === null).length;
+    if (failed > 0) {
+      setError(`${failed} image(s) ont échoué lors de l'upload`);
+    }
     setImages((prev) => [...prev, ...successful]);
     setUploading(false);
   };
@@ -496,7 +500,12 @@ export default function NewPropertyPage() {
                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-1">
                       {index > 0 && (
                         <button type="button" onClick={() => moveImage(index, "up")} className="p-1 bg-white/20 rounded hover:bg-white/30">
-                          <GripVertical className="size-4 text-white" />
+                          <ChevronUp className="size-4 text-white" />
+                        </button>
+                      )}
+                      {index < images.length - 1 && (
+                        <button type="button" onClick={() => moveImage(index, "down")} className="p-1 bg-white/20 rounded hover:bg-white/30">
+                          <ChevronDown className="size-4 text-white" />
                         </button>
                       )}
                       <button type="button" onClick={() => removeImage(index)} className="p-1 bg-red-500/60 rounded hover:bg-red-500/80">

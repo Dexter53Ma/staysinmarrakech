@@ -309,25 +309,6 @@ export default function AdminLocationsPage() {
               </>
             )}
             <div>
-              <Label htmlFor="name">Nom *</Label>
-              <Input
-                id="name"
-                value={form.name}
-                onChange={(e) => setForm({ ...form, name: e.target.value })}
-                placeholder="Nom de la location"
-              />
-            </div>
-            <div>
-              <Label htmlFor="description">Description</Label>
-              <Textarea
-                id="description"
-                value={form.description}
-                onChange={(e) => setForm({ ...form, description: e.target.value })}
-                placeholder="Description de la location"
-                rows={3}
-              />
-            </div>
-            <div>
               <Label htmlFor="image">URL de l&apos;image</Label>
               <Input
                 id="image"

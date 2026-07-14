@@ -35,7 +35,7 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: v.error }, { status: 400 });
     }
 
-    const { title, content, metaDescription: metaDesc, titleEn, contentEn, metaDescriptionEn } = v.data;
+    const { title, content, metaDescription: metaDesc, metaDesc: metaDescAlt, titleEn, contentEn, metaDescriptionEn, metaDescEn } = v.data;
 
     let slug = generateSlug(title);
     slug = await ensureUniqueSlug(slug, (s) => prisma.staticPage.findUnique({ where: { slug: s }, select: { id: true } }));
@@ -45,10 +45,10 @@ export async function POST(request: NextRequest) {
         slug,
         title,
         content: content || "",
-        metaDesc: metaDesc || null,
+        metaDesc: metaDesc || metaDescAlt || null,
         titleEn: titleEn || null,
         contentEn: contentEn || null,
-        metaDescEn: metaDescriptionEn || null,
+        metaDescEn: metaDescriptionEn || metaDescEn || null,
       },
     });
 
