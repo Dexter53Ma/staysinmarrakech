@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useCallback, useRef } from "react";
+import { useEffect, useCallback, useRef, useState } from "react";
 import Image from "next/image";
 import { useTranslations } from "next-intl";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
@@ -17,6 +17,17 @@ export default function ImageLightbox({ images, selectedIndex, onClose, onNaviga
   const t = useTranslations("lightbox");
   const touchStartX = useRef(0);
   const touchEndX = useRef(0);
+  const [isVisible, setIsVisible] = useState(false);
+  const thumbContainerRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    requestAnimationFrame(() => setIsVisible(true));
+  }, []);
+
+  const handleClose = useCallback(() => {
+    setIsVisible(false);
+    setTimeout(onClose, 300);
+  }, [onClose]);
 
   const goNext = useCallback(() => {
     if (selectedIndex < images.length - 1) onNavigate(selectedIndex + 1);
@@ -28,7 +39,7 @@ export default function ImageLightbox({ images, selectedIndex, onClose, onNaviga
 
   useEffect(() => {
     const handleKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") onClose();
+      if (e.key === "Escape") handleClose();
       if (e.key === "ArrowRight") goNext();
       if (e.key === "ArrowLeft") goPrev();
     };
@@ -38,7 +49,7 @@ export default function ImageLightbox({ images, selectedIndex, onClose, onNaviga
       document.removeEventListener("keydown", handleKey);
       document.body.style.overflow = "";
     };
-  }, [onClose, goNext, goPrev]);
+  }, [handleClose, goNext, goPrev]);
 
   const handleTouchStart = (e: React.TouchEvent) => {
     touchStartX.current = e.touches[0].clientX;
@@ -56,68 +67,109 @@ export default function ImageLightbox({ images, selectedIndex, onClose, onNaviga
     }
   };
 
+  useEffect(() => {
+    if (thumbContainerRef.current) {
+      const thumb = thumbContainerRef.current.children[selectedIndex] as HTMLElement;
+      if (thumb) {
+        thumb.scrollIntoView({ behavior: "smooth", block: "nearest", inline: "center" });
+      }
+    }
+  }, [selectedIndex]);
+
   return (
     <div
-      className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center"
+      className={`fixed inset-0 z-[100] bg-black/98 flex flex-col transition-opacity duration-300 ${isVisible ? "opacity-100" : "opacity-0"}`}
       role="dialog"
       aria-modal="true"
       aria-label="Image lightbox"
     >
-      {/* Close button */}
-      <button
-        onClick={onClose}
-        className="absolute top-4 right-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
-        aria-label={t("close")}
-      >
-        <X className="size-5" />
-      </button>
-
-      {/* Previous arrow */}
-      {selectedIndex > 0 && (
+      {/* Top bar */}
+      <div className="flex items-center justify-between px-4 py-3 shrink-0">
+        <div className="text-white/70 text-sm font-medium">
+          {selectedIndex + 1} / {images.length}
+        </div>
         <button
-          onClick={goPrev}
-          className="absolute left-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors hidden sm:flex"
-          aria-label={t("prevImage")}
+          onClick={handleClose}
+          className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors"
+          aria-label={t("close")}
         >
-          <ChevronLeft className="size-5" />
+          <X className="size-5" />
         </button>
-      )}
+      </div>
 
-      {/* Next arrow */}
-      {selectedIndex < images.length - 1 && (
-        <button
-          onClick={goNext}
-          className="absolute right-4 z-10 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 flex items-center justify-center text-white transition-colors hidden sm:flex"
-          aria-label={t("nextImage")}
-        >
-          <ChevronRight className="size-5" />
-        </button>
-      )}
-
-      {/* Image */}
+      {/* Main image area */}
       <div
-        className="w-full h-full flex items-center justify-center p-4 sm:p-12"
+        className="flex-1 flex items-center justify-center px-4 sm:px-16 pb-4 relative min-h-0"
         onTouchStart={handleTouchStart}
         onTouchMove={handleTouchMove}
         onTouchEnd={handleTouchEnd}
       >
+        {/* Previous arrow */}
+        {selectedIndex > 0 && (
+          <button
+            onClick={goPrev}
+            className="absolute left-2 sm:left-4 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all duration-200 hover:scale-110"
+            aria-label={t("prevImage")}
+          >
+            <ChevronLeft className="size-6" />
+          </button>
+        )}
+
+        {/* Next arrow */}
+        {selectedIndex < images.length - 1 && (
+          <button
+            onClick={goNext}
+            className="absolute right-2 sm:right-4 z-10 w-12 h-12 rounded-full bg-white/10 hover:bg-white/20 backdrop-blur-sm flex items-center justify-center text-white transition-all duration-200 hover:scale-110"
+            aria-label={t("nextImage")}
+          >
+            <ChevronRight className="size-6" />
+          </button>
+        )}
+
+        {/* Image */}
         {images[selectedIndex] && (
           <Image
             src={images[selectedIndex].url}
             alt={images[selectedIndex].alt || `Image ${selectedIndex + 1}`}
-            width={1200}
-            height={800}
+            width={1400}
+            height={900}
             unoptimized
-            className="max-w-full max-h-[85vh] object-contain"
+            className="max-w-full max-h-full object-contain transition-opacity duration-300"
             priority
           />
         )}
       </div>
 
-      {/* Counter */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 text-white/70 text-sm font-medium">
-        {selectedIndex + 1} / {images.length}
-      </div>
+      {/* Thumbnail strip */}
+      {images.length > 1 && (
+        <div className="shrink-0 px-4 pb-4 pt-2">
+          <div
+            ref={thumbContainerRef}
+            className="flex gap-2 justify-center overflow-x-auto scrollbar-hide max-w-full"
+          >
+            {images.map((img, i) => (
+              <button
+                key={img.id}
+                onClick={() => onNavigate(i)}
+                className={`relative w-16 h-12 md:w-20 md:h-14 rounded-lg overflow-hidden shrink-0 transition-all duration-200 ${
+                  i === selectedIndex
+                    ? "ring-2 ring-white opacity-100 scale-105"
+                    : "opacity-50 hover:opacity-80 hover:ring-1 hover:ring-white/50"
+                }`}
+              >
+                <Image
+                  src={img.url}
+                  alt={img.alt || `Image ${i + 1}`}
+                  fill
+                  unoptimized
+                  className="object-cover"
+                  sizes="80px"
+                />
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 }

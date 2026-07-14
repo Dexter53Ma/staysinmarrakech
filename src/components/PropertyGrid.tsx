@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import {Link} from "@/i18n/navigation";
-import { Eye, BedDouble, Bath, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
+import { Eye, BedDouble, Bath, MapPin, ChevronLeft, ChevronRight, Heart, Camera } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { PropertyListItem, TYPE_COLORS } from "@/types";
 import { useCurrency } from "@/components/CurrencyContext";
@@ -64,16 +64,17 @@ export default function PropertyGrid({
           <Link
             key={property.id}
             href={`/properties/${property.slug}`}
-            className="group bg-white rounded-xl overflow-hidden shadow-sm hover:shadow-lg transition-all duration-300 border border-gray-100"
+            className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 hover:border-gray-200"
           >
-            <div className="relative h-56 overflow-hidden">
+            {/* Image Section */}
+            <div className="relative h-60 overflow-hidden">
               {property.images[0] ? (
                 <Image
                   src={property.images[0].url}
                   alt={property.images[0].alt || property.title}
                   fill
                   unoptimized={property.images[0].url.startsWith("http")}
-                  className="object-cover group-hover:scale-105 transition-transform duration-500"
+                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                 />
               ) : (
@@ -81,31 +82,55 @@ export default function PropertyGrid({
                   {t("noImage")}
                 </div>
               )}
+
+              {/* Gradient overlay */}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent pointer-events-none" />
+
+              {/* Type badge */}
               <div className="absolute top-3 left-3 flex gap-2">
                 <span
-                  className={`text-xs font-medium px-2.5 py-1 rounded-full ${TYPE_COLORS[property.type] || "bg-gray-100 text-gray-800"}`}
+                  className={`text-xs font-semibold px-3 py-1.5 rounded-full backdrop-blur-sm ${TYPE_COLORS[property.type] || "bg-gray-100 text-gray-800"}`}
                 >
                   {t(TYPE_KEYS[property.type] || "Villa")}
                 </span>
                 {property.status !== "AVAILABLE" && (
-                  <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-orange-100 text-orange-800">
+                  <span className="text-xs font-semibold px-3 py-1.5 rounded-full bg-orange-500/90 backdrop-blur-sm text-white">
                     {t(STATUS_KEYS[property.status] || property.status)}
                   </span>
                 )}
               </div>
-              <div className="absolute bottom-3 right-3 bg-white/90 backdrop-blur-sm text-gray-700 text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1">
-                <Eye className="size-3" />
-                {property._count?.views ?? 0}
+
+              {/* Wishlist button */}
+              <button
+                onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
+                className="absolute top-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md group/heart"
+              >
+                <Heart className="size-4 text-gray-600 group-hover/heart:text-red-500 transition-colors" />
+              </button>
+
+              {/* Image count & views */}
+              <div className="absolute bottom-3 left-3 right-3 flex items-center justify-between">
+                {property.images.length > 1 && (
+                  <div className="bg-black/60 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1.5">
+                    <Camera className="size-3" />
+                    {property.images.length}
+                  </div>
+                )}
+                <div className="bg-black/60 backdrop-blur-md text-white text-xs font-medium px-2.5 py-1 rounded-full flex items-center gap-1.5 ml-auto">
+                  <Eye className="size-3" />
+                  {property._count?.views ?? 0}
+                </div>
               </div>
             </div>
 
+            {/* Content Section */}
             <div className="p-4">
-              <h3 className="font-bold text-gray-900 group-hover:text-[#0d47a1] transition-colors line-clamp-1">
+              <h3 className="font-bold text-gray-900 group-hover:text-[#0d47a1] transition-colors line-clamp-1 text-base">
                 {property.title}
               </h3>
 
-              <div className="flex items-center gap-1 text-gray-500 text-sm mt-1">
-                <MapPin className="size-3.5 shrink-0" />
+              <div className="flex items-center gap-1 text-gray-500 text-sm mt-1.5">
+                <MapPin className="size-3.5 shrink-0 text-gray-400" />
                 <span className="line-clamp-1">
                   {property.address}, {property.city}
                   {property.quarter ? ` - ${property.quarter}` : ""}
@@ -113,11 +138,11 @@ export default function PropertyGrid({
               </div>
 
               <div className="flex items-center gap-4 mt-3 text-sm text-gray-600">
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1.5">
                   <BedDouble className="size-4 text-gray-400" />
                   {property.bedrooms} {t("bedrooms")}
                 </span>
-                <span className="flex items-center gap-1">
+                <span className="flex items-center gap-1.5">
                   <Bath className="size-4 text-gray-400" />
                   {property.bathrooms} {t("bathrooms")}
                 </span>
@@ -128,7 +153,7 @@ export default function PropertyGrid({
                   {convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}
                 </span>
                 {property.pricePeriod && (
-                  <span className="text-xs text-gray-400">
+                  <span className="text-xs text-gray-400 font-medium">
                     {t("perNight")}
                   </span>
                 )}
