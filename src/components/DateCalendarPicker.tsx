@@ -43,13 +43,13 @@ function CalendarGrid({
   };
 
   return (
-    <div className="bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-gray-100 p-5 w-full max-w-[320px]" onClick={(e) => e.stopPropagation()}>
+    <div className="bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.05)] p-5 w-[320px]" onClick={(e) => e.stopPropagation()}>
       <div className="flex items-center justify-between mb-4">
-        <button type="button" onClick={() => setViewDate(new Date(year, month - 1, 1))} className="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors active:scale-95">
+        <button type="button" onClick={() => setViewDate(new Date(year, month - 1, 1))} className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors active:scale-95">
           <Icon icon={faArrowLeft} className="text-gray-500 text-xs" />
         </button>
         <p className="text-sm font-bold text-gray-800">{monthNames[month]} {year}</p>
-        <button type="button" onClick={() => setViewDate(new Date(year, month + 1, 1))} className="w-10 h-10 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors active:scale-95">
+        <button type="button" onClick={() => setViewDate(new Date(year, month + 1, 1))} className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors active:scale-95">
           <Icon icon={faArrowRight} className="text-gray-500 text-xs" />
         </button>
       </div>
@@ -58,7 +58,7 @@ function CalendarGrid({
           <div key={d} className="text-center text-[10px] font-bold text-gray-400 uppercase tracking-[0.08em] py-1">{d}</div>
         ))}
       </div>
-      <div className="grid grid-cols-7 gap-0.5">
+      <div className="grid grid-cols-7 gap-[3px]">
         {cells.map((day, i) => {
           if (day === null) return <div key={`empty-${i}`} />;
           const d = new Date(year, month, day);
@@ -83,7 +83,7 @@ function CalendarGrid({
           );
         })}
       </div>
-      <div className="mt-4 pt-3 border-t border-gray-100 text-center">
+      <div className="mt-3 pt-3 border-t border-gray-100 text-center">
         <button
           type="button"
           onClick={() => {
@@ -207,7 +207,7 @@ export default function DateCalendarPicker({
               {calendarPanel}
             </div>
           </div>
-          <div className="absolute left-1/2 -translate-x-1/2 bottom-full mb-3 z-50 hidden md:block" onClick={(e) => e.stopPropagation()}>
+          <div className="absolute left-0 top-full mt-2 z-50 hidden md:block" onClick={(e) => e.stopPropagation()}>
             {calendarPanel}
           </div>
         </>
