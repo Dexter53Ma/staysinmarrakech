@@ -49,7 +49,33 @@ export async function POST(request: NextRequest) {
   if (auth.error) return auth.error;
   try {
     const body = await request.json();
-    const v = validate(propertySchema, body);
+    const { sourceId, ...rest } = body;
+
+    if (sourceId) {
+      const source = await prisma.property.findUnique({ where: { id: sourceId } });
+      if (!source) return apiError("Propriété source introuvable");
+
+      const newTitle = source.title + " (Copie)";
+      let slug = generateSlug(newTitle);
+      slug = await ensureUniqueSlug(slug, (s) => prisma.property.findUnique({ where: { slug: s }, select: { id: true } }));
+
+      const { id: _id, createdAt: _c, updatedAt: _u, slug: _s, images: _imgs, bookings: _b, favorites: _f, views: _v, contactInquiries: _ci, ...fields } = source as Record<string, unknown>;
+      const cloned = await prisma.property.create({
+        data: {
+          ...(fields as object),
+          title: newTitle,
+          slug,
+          features: source.features ?? [],
+        } as Parameters<typeof prisma.property.create>[0]["data"],
+        include: { images: true },
+      });
+
+      await logAudit(auth.dbUser?.id || null, "create", "property", cloned.id, { title: cloned.title, clonedFrom: sourceId });
+
+      return NextResponse.json(cloned, { status: 201 });
+    }
+
+    const v = validate(propertySchema, rest);
     if (!v.success) {
       return NextResponse.json({ error: v.error }, { status: 400 });
     }

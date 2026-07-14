@@ -14,9 +14,11 @@ export async function GET(request: NextRequest) {
   if (auth.error) return auth.error;
   try {
     const { searchParams } = new URL(request.url);
+    const search = searchParams.get("search");
     const { page, limit, skip } = parsePagination(searchParams);
 
-    const where = {};
+    const where: Record<string, unknown> = {};
+    if (search) where.name = { contains: search, mode: "insensitive" };
     const [contacts, total] = await Promise.all([
       prisma.contactInquiry.findMany({
         where,

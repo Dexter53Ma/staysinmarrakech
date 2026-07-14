@@ -24,6 +24,7 @@ import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
 import { Pagination } from "@/components/admin/Pagination";
 import { CheckCircle, XCircle, Eye, RefreshCw, CalendarDays } from "lucide-react";
+import { BulkActions } from "@/components/admin";
 
 interface Booking {
   id: string;
@@ -59,6 +60,8 @@ export default function AdminBookingsPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [total, setTotal] = useState(0);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [bulkLoading, setBulkLoading] = useState(false);
 
   const fetchBookings = useCallback(async () => {
     setLoading(true);
@@ -120,6 +123,75 @@ export default function AdminBookingsPage() {
 
   const formatDate = (d: string) => new Date(d).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" });
 
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === bookings.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(bookings.map((b) => b.id));
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    setBulkLoading(true);
+    for (const id of selectedIds) {
+      await fetch(`/api/bookings/${id}`, { method: "DELETE" });
+    }
+    setSelectedIds([]);
+    setBulkLoading(false);
+    fetchBookings();
+  };
+
+  const handleBulkConfirm = async () => {
+    setBulkLoading(true);
+    for (const id of selectedIds) {
+      await fetch(`/api/bookings/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "CONFIRMED" }),
+      });
+    }
+    setSelectedIds([]);
+    setBulkLoading(false);
+    fetchBookings();
+  };
+
+  const handleBulkReject = async () => {
+    setBulkLoading(true);
+    for (const id of selectedIds) {
+      await fetch(`/api/bookings/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ status: "REJECTED" }),
+      });
+    }
+    setSelectedIds([]);
+    setBulkLoading(false);
+    fetchBookings();
+  };
+
+  const handleExportCSV = () => {
+    const rows = bookings.filter((b) => selectedIds.includes(b.id));
+    const header = "Client,Email,Propriété,Arrivée,Départ,Statut,Prix";
+    const csvRows = rows.map(
+      (b) =>
+        `"${b.guestName}","${b.guestEmail}","${b.property.title}","${formatDate(b.checkIn)}","${formatDate(b.checkOut)}","${b.status}","${b.totalPrice ?? ""}"`
+    );
+    const csv = [header, ...csvRows].join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "reservations.csv";
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div>
       <AdminPageHeader
@@ -128,6 +200,17 @@ export default function AdminBookingsPage() {
         breadcrumbs={[{ label: "Admin", href: "/admin" }, { label: "Réservations" }]}
         action={{ label: "Rafraîchir", onClick: fetchBookings, icon: RefreshCw }}
       />
+
+      {/* Calendar link */}
+      <div className="mb-4">
+        <a
+          href="/admin/bookings/calendar"
+          className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[12px] font-semibold border border-gray-200/60 bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-800 active:bg-gray-100 active:scale-[0.97] transition-all duration-150"
+        >
+          <CalendarDays size={14} />
+          Calendrier
+        </a>
+      </div>
 
       {/* Filter tabs */}
       <div className="flex gap-1.5 flex-wrap mb-6">
@@ -163,6 +246,14 @@ export default function AdminBookingsPage() {
             <Table>
               <TableHeader>
                 <TableRow className="border-gray-100">
+                  <TableHead className="w-10">
+                    <input
+                      type="checkbox"
+                      checked={selectedIds.length === bookings.length && bookings.length > 0}
+                      onChange={toggleSelectAll}
+                      className="size-3.5 rounded border-gray-300 accent-blue-600 cursor-pointer"
+                    />
+                  </TableHead>
                   <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Client</TableHead>
                   <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Propriété</TableHead>
                   <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Arrivée</TableHead>
@@ -174,6 +265,14 @@ export default function AdminBookingsPage() {
               <TableBody>
                 {bookings.map((b) => (
                   <TableRow key={b.id} className="border-gray-50 admin-table-row">
+                    <TableCell>
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.includes(b.id)}
+                        onChange={() => toggleSelect(b.id)}
+                        className="size-3.5 rounded border-gray-300 accent-blue-600 cursor-pointer"
+                      />
+                    </TableCell>
                     <TableCell>
                       <p className="font-medium text-[13px] text-gray-900">{b.guestName}</p>
                       <p className="text-[11px] text-gray-500">{b.guestEmail}</p>
@@ -224,6 +323,17 @@ export default function AdminBookingsPage() {
       </div>
 
       <Pagination page={page} totalPages={totalPages} onPageChange={setPage} />
+
+      <BulkActions
+        selected={selectedIds}
+        onClear={() => setSelectedIds([])}
+        entityType="booking"
+        onDelete={handleBulkDelete}
+        onExport={handleExportCSV}
+        onConfirm={handleBulkConfirm}
+        onReject={handleBulkReject}
+        loading={bulkLoading}
+      />
 
       {/* Detail dialog */}
       <Dialog open={!!detailBooking} onOpenChange={(open) => !open && setDetailBooking(null)}>

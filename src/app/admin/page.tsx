@@ -11,8 +11,11 @@ import {
   FileText,
   ArrowUpRight,
   Building2,
+  History,
 } from "lucide-react";
 import Link from "next/link";
+import { AnalyticsCharts } from "@/components/admin/AnalyticsCharts";
+import { ActivityFeed } from "@/components/admin/ActivityFeed";
 
 export const dynamic = "force-dynamic";
 
@@ -76,6 +79,8 @@ export default async function AdminDashboard() {
   let recentContacts: any[] = [];
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   let propertyTypeBreakdown: any[] = [];
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  let recentActivity: any[] = [];
   let dbConnected = true;
 
   try {
@@ -90,6 +95,7 @@ export default async function AdminDashboard() {
       _popularProperties,
       _recentContacts,
       _propertyTypeBreakdown,
+      _recentActivity,
     ] = await Promise.all([
       prisma.property.count(),
       prisma.property.count({ where: { status: "AVAILABLE" } }),
@@ -117,6 +123,11 @@ export default async function AdminDashboard() {
         _count: { type: true },
         orderBy: { _count: { type: "desc" } },
       }),
+      prisma.auditLog.findMany({
+        take: 10,
+        orderBy: { createdAt: "desc" },
+        include: { user: { select: { name: true } } },
+      }),
     ]);
     totalProperties = _totalProperties;
     activeListings = _activeListings;
@@ -128,6 +139,7 @@ export default async function AdminDashboard() {
     popularProperties = _popularProperties;
     recentContacts = _recentContacts;
     propertyTypeBreakdown = _propertyTypeBreakdown;
+    recentActivity = _recentActivity;
   } catch {
     dbConnected = false;
   }
@@ -309,6 +321,9 @@ export default async function AdminDashboard() {
         ))}
       </div>
 
+      {/* Analytics charts */}
+      <AnalyticsCharts />
+
       {/* Quick actions */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {quickActions.map((action) => (
@@ -326,6 +341,33 @@ export default async function AdminDashboard() {
             </div>
           </Link>
         ))}
+      </div>
+
+      {/* Recent activity */}
+      <div className="bg-white rounded-xl border border-gray-200/60 overflow-hidden">
+        <div className="flex items-center justify-between px-5 py-3.5 border-b border-gray-100">
+          <div className="flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-gray-50 flex items-center justify-center">
+              <History className="size-3.5 text-gray-600" />
+            </div>
+            <h2 className="font-semibold text-[13px] text-gray-900">Activité récente</h2>
+          </div>
+          <Link
+            href="/admin/audit-log"
+            className="flex items-center gap-1 text-[11px] font-medium text-gray-400 hover:text-blue-600 transition-colors duration-150"
+          >
+            Tout voir
+            <ArrowRight className="size-3" />
+          </Link>
+        </div>
+        <ActivityFeed
+          items={recentActivity.map((log) => ({
+            action: log.action,
+            entity: log.entity,
+            createdAt: log.createdAt,
+            user: log.user?.name || undefined,
+          }))}
+        />
       </div>
 
       {/* Main content grid */}

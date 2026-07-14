@@ -13,6 +13,7 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const published = searchParams.get("published");
+    const search = searchParams.get("search");
     const { page, limit, skip, hasPagination } = parsePagination(searchParams);
 
     // Check if user is admin — admins can see unpublished posts
@@ -34,10 +35,9 @@ export async function GET(request: NextRequest) {
     } else if (published === "false" && isAdmin) {
       where.isPublished = false;
     } else if (!isAdmin) {
-      // Public: only show published posts
       where.isPublished = true;
     }
-    // If admin and no published param: show all (no filter)
+    if (search) where.title = { contains: search, mode: "insensitive" };
 
     const [posts, total] = await Promise.all([
       prisma.blogPost.findMany({

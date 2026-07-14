@@ -11,9 +11,11 @@ export const dynamic = "force-dynamic";
 export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
+    const search = searchParams.get("search");
     const { page, limit, skip, hasPagination } = parsePagination(searchParams);
 
-    const where = {};
+    const where: Record<string, unknown> = {};
+    if (search) where.title = { contains: search, mode: "insensitive" };
     const [services, total] = await Promise.all([
       prisma.service.findMany({
         where,

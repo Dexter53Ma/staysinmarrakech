@@ -15,9 +15,12 @@ export async function GET(request: NextRequest) {
   try {
     const { searchParams } = new URL(request.url);
     const status = searchParams.get("status");
+    const search = searchParams.get("search");
     const { page, limit, skip } = parsePagination(searchParams);
 
-    const where = status && status !== "ALL" ? { status: status as "PENDING" | "CONFIRMED" | "REJECTED" | "CANCELLED" } : {};
+    const where: Record<string, unknown> = {};
+    if (status && status !== "ALL") where.status = status;
+    if (search) where.guestName = { contains: search, mode: "insensitive" };
 
     const [bookings, total] = await Promise.all([
       prisma.booking.findMany({

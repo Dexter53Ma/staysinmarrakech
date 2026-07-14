@@ -28,7 +28,8 @@ import { StatusBadge } from "@/components/admin";
 import { EmptyState } from "@/components/admin";
 import { TableSkeleton } from "@/components/admin";
 import { Pagination } from "@/components/admin/Pagination";
-import { Plus, Search, Edit, Trash2, Eye, Home } from "lucide-react";
+import { Plus, Search, Edit, Trash2, Eye, Home, Copy } from "lucide-react";
+import { BulkActions } from "@/components/admin";
 
 interface PropertyImage {
   url: string;
@@ -75,6 +76,10 @@ export default function PropertiesPage() {
   const [typeFilter, setTypeFilter] = useState("ALL");
   const [statusFilter, setStatusFilter] = useState("ALL");
   const [loading, setLoading] = useState(true);
+  const [duplicateTarget, setDuplicateTarget] = useState<Property | null>(null);
+  const [duplicating, setDuplicating] = useState(false);
+  const [selectedIds, setSelectedIds] = useState<string[]>([]);
+  const [bulkLoading, setBulkLoading] = useState(false);
 
   const fetchProperties = useCallback(async () => {
     setLoading(true);
@@ -116,6 +121,61 @@ export default function PropertiesPage() {
   const handleDelete = async (id: string) => {
     await fetch(`/api/properties/${id}`, { method: "DELETE" });
     fetchProperties();
+  };
+
+  const handleDuplicate = async (id: string) => {
+    setDuplicating(true);
+    const res = await fetch("/api/properties", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ sourceId: id }),
+    });
+    setDuplicating(false);
+    setDuplicateTarget(null);
+    if (res.ok) {
+      fetchProperties();
+    }
+  };
+
+  const toggleSelect = (id: string) => {
+    setSelectedIds((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
+  };
+
+  const toggleSelectAll = () => {
+    if (selectedIds.length === properties.length) {
+      setSelectedIds([]);
+    } else {
+      setSelectedIds(properties.map((p) => p.id));
+    }
+  };
+
+  const handleBulkDelete = async () => {
+    setBulkLoading(true);
+    for (const id of selectedIds) {
+      await fetch(`/api/properties/${id}`, { method: "DELETE" });
+    }
+    setSelectedIds([]);
+    setBulkLoading(false);
+    fetchProperties();
+  };
+
+  const handleExportCSV = () => {
+    const rows = properties.filter((p) => selectedIds.includes(p.id));
+    const header = "Titre,Type,Statut,Prix,Vues,Adresse";
+    const csvRows = rows.map(
+      (p) =>
+        `"${p.title}","${p.type}","${p.status}","${formatPrice(p.price, p.currency)}","${p._count.views}",""`
+    );
+    const csv = [header, ...csvRows].join("\n");
+    const blob = new Blob(["\uFEFF" + csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "proprietes.csv";
+    a.click();
+    URL.revokeObjectURL(url);
   };
 
   const formatPrice = (price: number, currency: string) => {
@@ -182,6 +242,14 @@ export default function PropertiesPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="border-gray-100">
+                    <TableHead className="w-10">
+                      <input
+                        type="checkbox"
+                        checked={selectedIds.length === properties.length && properties.length > 0}
+                        onChange={toggleSelectAll}
+                        className="size-3.5 rounded border-gray-300 accent-blue-600 cursor-pointer"
+                      />
+                    </TableHead>
                     <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Image</TableHead>
                     <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Titre</TableHead>
                     <TableHead className="text-[11px] font-semibold uppercase tracking-wider text-gray-500">Type</TableHead>
@@ -195,6 +263,14 @@ export default function PropertiesPage() {
                   {properties.map((property) => (
                     <TableRow key={property.id} className="border-gray-50 admin-table-row">
                       <TableCell>
+                        <input
+                          type="checkbox"
+                          checked={selectedIds.includes(property.id)}
+                          onChange={() => toggleSelect(property.id)}
+                          className="size-3.5 rounded border-gray-300 accent-blue-600 cursor-pointer"
+                        />
+                      </TableCell>
+                      <TableCell>
                         <div className="w-14 h-10 rounded-lg overflow-hidden bg-gray-100">
                           {property.images[0] ? (
                             <Image
@@ -205,11 +281,11 @@ export default function PropertiesPage() {
                               unoptimized
                               className="w-full h-full object-cover"
                             />
-                          ) : (
+                           ) : (
                             <div className="w-full h-full flex items-center justify-center text-[10px] text-gray-400">
                               —
                             </div>
-                          )}
+                           )}
                         </div>
                       </TableCell>
                       <TableCell className="font-medium text-[13px] text-gray-900">{property.title}</TableCell>
@@ -235,6 +311,12 @@ export default function PropertiesPage() {
                             className="p-1.5 rounded-lg text-gray-400 hover:text-gray-600 hover:bg-gray-100 active:bg-gray-200 active:scale-[0.95] transition-all duration-150"
                           >
                             <Edit className="size-4" />
+                          </button>
+                          <button
+                            onClick={() => setDuplicateTarget(property)}
+                            className="p-1.5 rounded-lg text-gray-400 hover:text-blue-600 hover:bg-blue-50 active:bg-blue-100 active:scale-[0.95] transition-all duration-150"
+                          >
+                            <Copy className="size-4" />
                           </button>
                           <Dialog>
                             <DialogTrigger
@@ -276,6 +358,41 @@ export default function PropertiesPage() {
           </>
         )}
       </div>
+
+      {duplicateTarget && (
+        <Dialog open={!!duplicateTarget} onOpenChange={(open) => !open && setDuplicateTarget(null)}>
+          <DialogContent>
+            <DialogHeader>
+              <DialogTitle>Dupliquer la propriété</DialogTitle>
+              <DialogDescription>
+                Créer une copie de &quot;{duplicateTarget.title}&quot; sans les images ni les réservations.
+              </DialogDescription>
+            </DialogHeader>
+            <DialogFooter>
+              <DialogClose render={<Button variant="outline" className="h-8 text-[12px] font-medium rounded-lg" />}>
+                Annuler
+              </DialogClose>
+              <Button
+                variant="default"
+                className="h-8 text-[12px] font-medium rounded-lg"
+                onClick={() => handleDuplicate(duplicateTarget.id)}
+                disabled={duplicating}
+              >
+                {duplicating ? "Duplication..." : "Dupliquer"}
+              </Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+      )}
+
+      <BulkActions
+        selected={selectedIds}
+        onClear={() => setSelectedIds([])}
+        entityType="property"
+        onDelete={handleBulkDelete}
+        onExport={handleExportCSV}
+        loading={bulkLoading}
+      />
     </div>
   );
 }

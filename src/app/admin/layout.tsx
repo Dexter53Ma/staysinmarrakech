@@ -26,6 +26,7 @@ import {
   ExternalLink,
   Search,
 } from "lucide-react";
+import CommandPalette from "@/components/admin/CommandPalette";
 
 interface NavItem {
   label: string;
@@ -45,6 +46,7 @@ const NAV_SECTIONS: { title?: string; items: NavItem[] }[] = [
     items: [
       { label: "Propriétés", href: "/admin/properties", icon: Home },
       { label: "Réservations", href: "/admin/bookings", icon: CalendarDays },
+      { label: "Calendrier", href: "/admin/bookings/calendar", icon: CalendarDays },
       { label: "Services", href: "/admin/services", icon: Wrench },
       { label: "Blog", href: "/admin/blog", icon: FileText },
     ],
@@ -65,6 +67,7 @@ const NAV_SECTIONS: { title?: string; items: NavItem[] }[] = [
       { label: "Notifications", href: "/admin/notifications", icon: Bell },
       { label: "Newsletter", href: "/admin/newsletter", icon: Mail },
       { label: "Paramètres", href: "/admin/settings", icon: Settings },
+      { label: "Templates email", href: "/admin/email-templates", icon: Mail },
       { label: "Journal", href: "/admin/audit-log", icon: History },
     ],
   },
@@ -84,12 +87,14 @@ const PAGE_TITLES: Record<string, string> = {
   "/admin/notifications": "Notifications",
   "/admin/newsletter": "Newsletter",
   "/admin/settings": "Paramètres",
+  "/admin/email-templates": "Templates email",
   "/admin/audit-log": "Journal",
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [authorized, setAuthorized] = useState(false);
+  const [commandOpen, setCommandOpen] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
@@ -107,6 +112,17 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
       }
     });
   }, [pathname, router]);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+        e.preventDefault();
+        setCommandOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, []);
 
   if (pathname === "/admin/login") {
     return <>{children}</>;
@@ -265,9 +281,12 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           <div className="hidden md:flex items-center flex-1 max-w-sm mx-8">
             <div className="relative w-full group">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 size-4 text-gray-400 group-focus-within:text-blue-500 transition-colors duration-200" />
-              <div className="w-full h-9 pl-9 pr-4 rounded-lg bg-gray-50/80 border border-gray-200/60 text-sm text-gray-400 flex items-center cursor-default select-none hover:border-gray-300/60 hover:bg-gray-50 transition-all duration-200">
-                Rechercher...
-              </div>
+              <button
+                onClick={() => setCommandOpen(true)}
+                className="w-full h-9 pl-9 pr-4 rounded-lg bg-gray-50/80 border border-gray-200/60 text-sm text-gray-400 flex items-center cursor-pointer hover:border-gray-300/60 hover:bg-gray-50 transition-all duration-200"
+              >
+                Rechercher... ⌘K
+              </button>
               <kbd className="absolute right-3 top-1/2 -translate-y-1/2 text-[10px] font-medium text-gray-300 bg-white border border-gray-200/60 rounded px-1.5 py-0.5 leading-none hidden lg:flex items-center gap-0.5">
                 <span className="text-[9px]">⌘</span>K
               </kbd>
@@ -297,6 +316,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
           {children}
         </main>
       </div>
+      <CommandPalette open={commandOpen} onOpenChange={setCommandOpen} />
     </div>
   );
 }
