@@ -177,6 +177,7 @@ export default function AdminLayout({ children }: { children: React.ReactNode })
                   src="/images/logo.png"
                   alt="StaysInMarrakech"
                   fill
+                  sizes="20px"
                   className="object-contain brightness-0 invert"
                   priority
                 />

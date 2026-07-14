@@ -121,6 +121,7 @@ export default function LoginPage() {
                       src="/images/logo.png"
                       alt="StaysInMarrakech"
                       fill
+                      sizes="128px"
                       className="object-contain"
                       priority
                     />
@@ -264,6 +265,7 @@ export default function LoginPage() {
               src="/images/logo.png"
               alt="StaysInMarrakech"
               fill
+              sizes="28px"
               className="object-contain"
               priority
             />

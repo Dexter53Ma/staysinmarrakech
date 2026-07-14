@@ -33,6 +33,7 @@ export default async function RootLayout({
     <html
       lang={lang}
       className={`${raleway.variable} h-full antialiased`}
+      data-scroll-behavior="smooth"
     >
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
