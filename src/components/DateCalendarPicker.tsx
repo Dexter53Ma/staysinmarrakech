@@ -45,11 +45,11 @@ function CalendarGrid({
   return (
     <div className="bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.12),0_0_0_1px_rgba(0,0,0,0.05)] p-5 w-[320px]" onClick={(e) => e.stopPropagation()}>
       <div className="flex items-center justify-between mb-4">
-        <button type="button" onClick={() => setViewDate(new Date(year, month - 1, 1))} className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors active:scale-95">
+        <button type="button" onClick={() => setViewDate(new Date(year, month - 1, 1))} className="w-11 h-11 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors active:scale-95">
           <Icon icon={faArrowLeft} className="text-gray-500 text-xs" />
         </button>
         <p className="text-sm font-bold text-gray-800">{monthNames[month]} {year}</p>
-        <button type="button" onClick={() => setViewDate(new Date(year, month + 1, 1))} className="w-9 h-9 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors active:scale-95">
+        <button type="button" onClick={() => setViewDate(new Date(year, month + 1, 1))} className="w-11 h-11 rounded-full hover:bg-gray-100 flex items-center justify-center transition-colors active:scale-95">
           <Icon icon={faArrowRight} className="text-gray-500 text-xs" />
         </button>
       </div>

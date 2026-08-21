@@ -10,6 +10,11 @@ import {
   Send,
   ArrowLeft,
   Eye,
+  MessageCircle,
+  ShieldCheck,
+  Bell,
+  CreditCard,
+  Tag,
 } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import Header from "@/components/Header";
@@ -27,6 +32,7 @@ import PropertyMap from "./components/PropertyMap";
 import PropertyTestimonials from "./components/PropertyTestimonials";
 import SimilarPropertiesGrid from "./components/SimilarPropertiesGrid";
 import AvailabilityCalendar from "./components/AvailabilityCalendar";
+import ServiceSelector from "@/components/ServiceSelector";
 
 interface PropertyDetailClientProps {
   property: PropertyData;
@@ -65,6 +71,14 @@ export default function PropertyDetailClient({
   const [showRangeCalendar, setShowRangeCalendar] = useState(true);
   const [showBookingPanel, setShowBookingPanel] = useState(false);
   const [isDesktop, setIsDesktop] = useState(false);
+  const [notifyEmail, setNotifyEmail] = useState("");
+  const [notifySubmitting, setNotifySubmitting] = useState(false);
+  const [notifyMessage, setNotifyMessage] = useState<{ type: "success" | "error"; text: string } | null>(null);
+  const [showNotifyForm, setShowNotifyForm] = useState(false);
+  const [nightlyPrices, setNightlyPrices] = useState<{ date: string; price: number; basePrice: number; reason: string | null }[]>([]);
+  const [dynamicPricing, setDynamicPricing] = useState<{ total: number; nights: number } | null>(null);
+  const [paying, setPaying] = useState(false);
+  const [selectedServices, setSelectedServices] = useState<{ serviceId: string; serviceName: string; serviceNameEn?: string; quantity: number; price: number; notes: string }[]>([]);
 
   useEffect(() => {
     const check = () => setIsDesktop(window.innerWidth >= 640);
@@ -92,13 +106,44 @@ export default function PropertyDetailClient({
   }, [checkIn, checkOut]);
 
   const pricing = useMemo(() => {
+    if (dynamicPricing && dynamicPricing.total > 0) {
+      const cleaning = property.cleaningFee || 0;
+      const service = property.serviceFee || 0;
+      const servicesTotal = selectedServices.reduce((sum, s) => sum + s.price * s.quantity, 0);
+      const total = dynamicPricing.total + cleaning + service + servicesTotal;
+      return { nightlyRate: property.price, subtotal: dynamicPricing.total, cleaning, service, servicesTotal, total, isDynamic: true };
+    }
     const nightlyRate = property.price;
     const subtotal = nightlyRate * nights;
     const cleaning = property.cleaningFee || 0;
     const service = property.serviceFee || 0;
-    const total = subtotal + cleaning + service;
-    return { nightlyRate, subtotal, cleaning, service, total };
-  }, [property.price, nights, property.cleaningFee, property.serviceFee]);
+    const servicesTotal = selectedServices.reduce((sum, s) => sum + s.price * s.quantity, 0);
+    const total = subtotal + cleaning + service + servicesTotal;
+    return { nightlyRate, subtotal, cleaning, service, servicesTotal, total, isDynamic: false };
+  }, [property.price, nights, property.cleaningFee, property.serviceFee, selectedServices, dynamicPricing]);
+
+  useEffect(() => {
+    if (!checkIn || !checkOut || nights <= 0) {
+      setNightlyPrices([]);
+      setDynamicPricing(null);
+      return;
+    }
+    let cancelled = false;
+    fetch("/api/prices", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ propertyId: property.id, checkIn: checkIn.toISOString(), checkOut: checkOut.toISOString() }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (!cancelled && data.nightlyBreakdown) {
+          setNightlyPrices(data.nightlyBreakdown);
+          setDynamicPricing({ total: data.total, nights: data.nights });
+        }
+      })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [checkIn, checkOut, nights, property.id]);
 
   useEffect(() => {
     csrfFetch("/api/views", {
@@ -139,6 +184,7 @@ export default function PropertyDetailClient({
           checkOut: checkOut.toISOString(),
           guestsCount: guestCount,
           message: formData.message,
+          services: selectedServices.length > 0 ? selectedServices : undefined,
         }),
       });
       if (res.ok) {
@@ -147,6 +193,7 @@ export default function PropertyDetailClient({
         setCheckIn(undefined);
         setCheckOut(undefined);
         setGuestCount(1);
+        setSelectedServices([]);
         setBookingStep(1);
         setShowRangeCalendar(true);
       } else {
@@ -157,6 +204,47 @@ export default function PropertyDetailClient({
       setSubmitMessage({ type: "error", text: t("sendError") });
     } finally {
       setSubmitting(false);
+    }
+  };
+
+  const isDateRangeUnavailable = useMemo(() => {
+    if (!checkIn || !checkOut) return false;
+    const current = new Date(checkIn);
+    const end = new Date(checkOut);
+    while (current < end) {
+      if (isDateBooked(current)) return true;
+      current.setDate(current.getDate() + 1);
+    }
+    return false;
+  }, [checkIn, checkOut, isDateBooked]);
+
+  const handleNotifySubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!checkIn || !checkOut || !notifyEmail) return;
+    setNotifySubmitting(true);
+    setNotifyMessage(null);
+    try {
+      const res = await fetch("/api/notifications/availability", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: notifyEmail,
+          propertyId: property.id,
+          desiredStart: checkIn.toISOString(),
+          desiredEnd: checkOut.toISOString(),
+        }),
+      });
+      if (res.ok) {
+        setNotifyMessage({ type: "success", text: t("waitlist.successMsg") });
+        setNotifyEmail("");
+        setShowNotifyForm(false);
+      } else {
+        setNotifyMessage({ type: "error", text: "Erreur" });
+      }
+    } catch {
+      setNotifyMessage({ type: "error", text: "Erreur réseau" });
+    } finally {
+      setNotifySubmitting(false);
     }
   };
 
@@ -217,7 +305,68 @@ export default function PropertyDetailClient({
             )}
 
             {property.pricePeriod !== "sale" && (
-              <AvailabilityCalendar bookedDates={bookedDates} isDateBooked={isDateBooked} />
+              <AvailabilityCalendar bookedDates={bookedDates} isDateBooked={isDateBooked} nightlyPrices={nightlyPrices} currency={property.currency} />
+            )}
+
+            {property.pricePeriod !== "sale" && checkIn && checkOut && isDateRangeUnavailable && (
+              <div className="bg-amber-50 border border-amber-200 rounded-2xl p-6">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="size-10 rounded-xl bg-amber-100 flex items-center justify-center">
+                    <Bell className="size-5 text-amber-600" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-gray-900">{t("waitlist.title")}</h3>
+                    <p className="text-sm text-gray-500">{t("waitlist.description")}</p>
+                  </div>
+                </div>
+                {!showNotifyForm ? (
+                  <button
+                    onClick={() => setShowNotifyForm(true)}
+                    className="bg-amber-600 text-white px-5 py-2.5 rounded-xl font-semibold text-sm hover:bg-amber-700 active:scale-[0.98] transition-all flex items-center gap-2"
+                  >
+                    <Bell className="size-4" />
+                    {t("waitlist.title")}
+                  </button>
+                ) : (
+                  <form onSubmit={handleNotifySubmit} className="space-y-3">
+                    <input
+                      type="email"
+                      required
+                      value={notifyEmail}
+                      onChange={(e) => setNotifyEmail(e.target.value)}
+                      placeholder={t("waitlist.emailLabel")}
+                      className="w-full h-11 rounded-xl border border-amber-300 px-4 text-sm outline-none focus:border-amber-500 focus:ring-2 focus:ring-amber-500/10 transition-all bg-white placeholder:text-gray-400"
+                    />
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => { setShowNotifyForm(false); setNotifyMessage(null); }}
+                        className="px-4 py-2.5 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors"
+                      >
+                        {t("waitlist.cancel")}
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={notifySubmitting}
+                        className="flex-1 bg-amber-600 text-white py-2.5 rounded-xl font-semibold text-sm hover:bg-amber-700 transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 active:scale-[0.98]"
+                      >
+                        {notifySubmitting ? (
+                          <span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
+                        ) : (
+                          <Bell className="size-4" />
+                        )}
+                        {t("waitlist.submitBtn")}
+                      </button>
+                    </div>
+                    {notifyMessage && (
+                      <div className={`flex items-center gap-2 p-3 rounded-xl text-sm font-medium ${notifyMessage.type === "success" ? "bg-green-50 text-green-700 border border-green-200" : "bg-red-50 text-red-700 border border-red-200"}`}>
+                        {notifyMessage.type === "success" ? <Check className="size-4 shrink-0" /> : <span className="shrink-0">!</span>}
+                        {notifyMessage.text}
+                      </div>
+                    )}
+                  </form>
+                )}
+              </div>
             )}
 
             {property.latitude && property.longitude && (
@@ -225,6 +374,30 @@ export default function PropertyDetailClient({
             )}
 
             <PropertyTestimonials testimonials={testimonials} />
+
+            <div className="bg-gray-50 rounded-2xl p-6">
+              <div className="flex items-center gap-3 mb-4">
+                <div className="size-10 rounded-xl bg-[#0d47a1]/10 flex items-center justify-center">
+                  <ShieldCheck className="size-5 text-[#0d47a1]" />
+                </div>
+                <h2 className="text-xl font-bold text-gray-900">{t("cancellation.title")}</h2>
+              </div>
+              <div className="space-y-3">
+                <div className="flex items-start gap-3">
+                  <div className="size-2 rounded-full bg-green-500 mt-2 shrink-0" />
+                  <p className="text-gray-600 text-sm">{t("cancellation.freeCancellation")}</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="size-2 rounded-full bg-yellow-500 mt-2 shrink-0" />
+                  <p className="text-gray-600 text-sm">{t("cancellation.partialRefund")}</p>
+                </div>
+                <div className="flex items-start gap-3">
+                  <div className="size-2 rounded-full bg-red-500 mt-2 shrink-0" />
+                  <p className="text-gray-600 text-sm">{t("cancellation.noRefund")}</p>
+                </div>
+              </div>
+            </div>
+
             <SimilarPropertiesGrid properties={similarProperties} />
           </div>
         </div>
@@ -241,6 +414,15 @@ export default function PropertyDetailClient({
               </p>
               <p className="text-xs text-gray-500">{t("salePrice")}</p>
             </div>
+            <a
+              href={`https://wa.me/212621189496?text=${encodeURIComponent(`Bonjour, je suis intéressé par ${property.title}. Prix: ${convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} ${symbol}. Pouvons-nous en discuter?`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#25D366] text-white px-4 py-3 rounded-xl font-semibold text-sm hover:bg-[#1ebe57] active:scale-[0.98] transition-all shadow-lg shadow-[#25D366]/25 shrink-0 flex items-center gap-2"
+            >
+              <MessageCircle className="size-4" />
+              <span className="hidden sm:inline">{t("whatsapp.inquiry")}</span>
+            </a>
             <a
               href={`/contactez-nous?property=${property.slug}`}
               className="bg-[#0d47a1] text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-[#0a3a82] active:scale-[0.98] transition-all shadow-lg shadow-[#0d47a1]/25 shrink-0"
@@ -268,11 +450,20 @@ export default function PropertyDetailClient({
                 <p className="text-xs text-gray-400">{t("selectDates")}</p>
               )}
             </div>
+            <a
+              href={`https://wa.me/212621189496?text=${encodeURIComponent(`Bonjour, je suis intéressé par ${property.title}. Prix: ${convert(property.price, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} ${symbol}/${property.pricePeriod === "nightly" ? "nuit" : property.pricePeriod === "weekly" ? "semaine" : "mois"}. Pouvons-nous en discuter?`)}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="bg-[#25D366] text-white px-4 py-3 rounded-xl font-semibold text-sm hover:bg-[#1ebe57] active:scale-[0.98] transition-all shadow-lg shadow-[#25D366]/25 shrink-0 flex items-center gap-2"
+            >
+              <MessageCircle className="size-4" />
+              <span className="hidden sm:inline">{t("whatsapp.inquiry")}</span>
+            </a>
             <button
               onClick={() => {
                 if (!checkIn || !checkOut) { setBookingStep(1); setShowBookingPanel(true); }
                 else if (!formData.guestName || !formData.guestEmail) { setBookingStep(2); setShowBookingPanel(true); }
-                else { setBookingStep(3); setShowBookingPanel(true); }
+                else { setBookingStep(4); setShowBookingPanel(true); }
               }}
               className="bg-[#0d47a1] text-white px-6 py-3 rounded-xl font-semibold text-sm hover:bg-[#0a3a82] active:scale-[0.98] transition-all shadow-lg shadow-[#0d47a1]/25 shrink-0"
             >
@@ -299,7 +490,7 @@ export default function PropertyDetailClient({
 
             <div className="px-5 pt-4 pb-2 shrink-0">
               <div className="flex items-center gap-3">
-                {[1, 2, 3].map((s) => (
+                {[1, 2, 3, 4].map((s) => (
                   <div key={s} className="flex items-center gap-3 flex-1">
                     <div className={`flex items-center justify-center size-8 rounded-full text-sm font-semibold transition-all duration-300 ${
                       bookingStep === s ? "bg-[#0d47a1] text-white scale-110 shadow-md shadow-[#0d47a1]/30"
@@ -308,14 +499,15 @@ export default function PropertyDetailClient({
                     }`}>
                       {bookingStep > s ? <Check className="size-4" /> : s}
                     </div>
-                    {s < 3 && <div className={`flex-1 h-0.5 rounded-full transition-all duration-500 ${bookingStep > s ? "bg-[#0d47a1]" : "bg-gray-100"}`} />}
+                    {s < 4 && <div className={`flex-1 h-0.5 rounded-full transition-all duration-500 ${bookingStep > s ? "bg-[#0d47a1]" : "bg-gray-100"}`} />}
                   </div>
                 ))}
               </div>
               <div className="flex justify-between mt-2">
                 <span className={`text-xs font-medium ${bookingStep >= 1 ? "text-[#0d47a1]" : "text-gray-400"}`}>{t("dates")}</span>
                 <span className={`text-xs font-medium ${bookingStep >= 2 ? "text-[#0d47a1]" : "text-gray-400"}`}>{t("info")}</span>
-                <span className={`text-xs font-medium ${bookingStep >= 3 ? "text-[#0d47a1]" : "text-gray-400"}`}>{t("confirm")}</span>
+                <span className={`text-xs font-medium ${bookingStep >= 3 ? "text-[#0d47a1]" : "text-gray-400"}`}>{t("servicesStep")}</span>
+                <span className={`text-xs font-medium ${bookingStep >= 4 ? "text-[#0d47a1]" : "text-gray-400"}`}>{t("confirm")}</span>
               </div>
             </div>
 
@@ -397,6 +589,20 @@ export default function PropertyDetailClient({
 
                 {bookingStep === 3 && (
                   <div className="space-y-4 animate-fadeIn">
+                    <div>
+                      <h3 className="font-bold text-gray-900">{t("servicesTitle")}</h3>
+                      <p className="text-sm text-gray-500 mt-0.5">{t("servicesDescription")}</p>
+                    </div>
+                    <ServiceSelector selected={selectedServices} onChange={setSelectedServices} />
+                    <div className="flex gap-2 pt-1">
+                      <button type="button" onClick={() => setBookingStep(2)} className="px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">{t("back")}</button>
+                      <button type="button" onClick={() => setBookingStep(4)} className="flex-1 bg-[#0d47a1] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#0a3a82] transition-all duration-200 active:scale-[0.98]">{t("continue")}</button>
+                    </div>
+                  </div>
+                )}
+
+                {bookingStep === 4 && (
+                  <div className="space-y-4 animate-fadeIn">
                     <div className="bg-gray-50 rounded-xl p-4 space-y-3">
                       <div className="flex items-center gap-3">
                         <div className="size-10 rounded-lg bg-[#0d47a1]/10 flex items-center justify-center"><Calendar className="size-5 text-[#0d47a1]" /></div>
@@ -415,16 +621,82 @@ export default function PropertyDetailClient({
                       </div>
                     </div>
                     <div className="space-y-2.5 text-sm">
-                      <div className="flex justify-between text-gray-600"><span>{convert(pricing.nightlyRate, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol} × {nights} {t("nights")}</span><span className="font-medium text-gray-900">{convert(pricing.subtotal, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</span></div>
+                      {pricing.isDynamic && nightlyPrices.filter((np) => np.reason).length > 0 && (
+                        <div className="flex items-center gap-2 bg-amber-50 rounded-lg px-3 py-2 mb-1">
+                          <Tag className="size-3 text-amber-600" />
+                          <span className="text-amber-700 text-xs font-medium">Tarifs saisonniers appliqués</span>
+                        </div>
+                      )}
+                      <div className="flex justify-between text-gray-600"><span>{convert(pricing.subtotal, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</span><span className="font-medium text-gray-900">{convert(pricing.subtotal, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</span></div>
                       {pricing.cleaning > 0 && <div className="flex justify-between text-gray-600"><span>{t("cleaningFee")}</span><span className="font-medium text-gray-900">{convert(pricing.cleaning, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</span></div>}
                       {pricing.service > 0 && <div className="flex justify-between text-gray-600"><span>{t("serviceFee")}</span><span className="font-medium text-gray-900">{convert(pricing.service, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</span></div>}
+                      {selectedServices.length > 0 && (
+                        <>
+                          <div className="h-px bg-gray-200" />
+                          <p className="text-xs font-semibold text-gray-500 uppercase tracking-wider">{t("selectedServices")}</p>
+                          {selectedServices.map((s) => (
+                            <div key={s.serviceId} className="flex justify-between text-gray-600">
+                              <span>{locale === "en" ? (s.serviceNameEn || s.serviceName) : s.serviceName} × {s.quantity}</span>
+                              <span className="font-medium text-gray-900">{convert(s.price * s.quantity, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</span>
+                            </div>
+                          ))}
+                          <div className="flex justify-between text-gray-600"><span>{t("serviceTotal")}</span><span className="font-medium text-[#0d47a1]">{convert(pricing.servicesTotal, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</span></div>
+                        </>
+                      )}
                       <div className="h-px bg-gray-200" />
                       <div className="flex justify-between font-bold text-gray-900 text-base pt-0.5"><span>{t("total")}</span><span>{convert(pricing.total, property.currency as "EUR" | "MAD" | "USD").toLocaleString(localeStr)} {symbol}</span></div>
                     </div>
                     <div className="flex gap-2">
-                      <button type="button" onClick={() => setBookingStep(2)} className="px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">{t("back")}</button>
+                      <button type="button" onClick={() => setBookingStep(3)} className="px-4 py-3 rounded-xl border border-gray-200 text-sm font-medium text-gray-600 hover:bg-gray-50 transition-colors">{t("back")}</button>
                       <button type="submit" disabled={submitting} className="flex-1 bg-[#0d47a1] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#0a3a82] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 active:scale-[0.98]">
                         {submitting ? (<><span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />{t("sending")}</>) : (<><Send className="size-4" />{t("confirmRequest")}</>)}
+                      </button>
+                      <button
+                        type="button"
+                        disabled={submitting || paying}
+                        onClick={async () => {
+                          setPaying(true);
+                          try {
+                            const res = await csrfFetch("/api/bookings", {
+                              method: "POST",
+                              headers: { "Content-Type": "application/json" },
+                              body: JSON.stringify({
+                                propertyId: property.id,
+                                guestName: formData.guestName,
+                                guestEmail: formData.guestEmail,
+                                guestPhone: formData.guestPhone,
+                                checkIn: checkIn!.toISOString(),
+                                checkOut: checkOut!.toISOString(),
+                                guestsCount: guestCount,
+                                message: formData.message,
+                              }),
+                            });
+                            if (res.ok) {
+                              const booking = await res.json();
+                              const payRes = await csrfFetch("/api/payments/checkout", {
+                                method: "POST",
+                                headers: { "Content-Type": "application/json" },
+                                body: JSON.stringify({ bookingId: booking.id }),
+                              });
+                              if (payRes.ok) {
+                                const { url } = await payRes.json();
+                                if (url) window.location.href = url;
+                              } else {
+                                setSubmitMessage({ type: "error", text: "Erreur de paiement" });
+                              }
+                            } else {
+                              const data = await res.json();
+                              setSubmitMessage({ type: "error", text: data.error || t("sendError") });
+                            }
+                          } catch {
+                            setSubmitMessage({ type: "error", text: t("sendError") });
+                          } finally {
+                            setPaying(false);
+                          }
+                        }}
+                        className="flex-1 bg-[#25D366] text-white py-3 rounded-xl font-semibold text-sm hover:bg-[#1ebe57] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed flex items-center justify-center gap-2 active:scale-[0.98]"
+                      >
+                        {paying ? (<><span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />Paiement...</>) : (<><CreditCard className="size-4" />Payer maintenant</>)}
                       </button>
                     </div>
                     {submitMessage && (

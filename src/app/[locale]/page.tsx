@@ -13,6 +13,7 @@ import BlogSection from "@/components/BlogSection";
 import TestimonialsSection from "@/components/TestimonialsSection";
 import HomepageContent from "@/components/HomepageContent";
 import FAQSection from "@/components/FAQSection";
+import InstagramFeed from "@/components/InstagramFeed";
 import Footer from "@/components/Footer";
 import { faqs } from "@/lib/faqs";
 import { prisma } from "@/lib/prisma";
@@ -111,6 +112,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const { locale } = await params;
   return {
     alternates: {
+      canonical: `${SITE_URL}/${locale}`,
       languages: {
         'fr': `${SITE_URL}/fr`,
         'en': `${SITE_URL}/en`,
@@ -151,6 +153,7 @@ export default async function Home({ params }: { params: Promise<{ locale: strin
         <Newsletter />
         <BlogSection />
         <HomepageContent />
+        <InstagramFeed />
         <TestimonialsSection />
         <FAQSection />
       </main>

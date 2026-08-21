@@ -26,62 +26,47 @@ export default async function PolitiqueConfidentialite({params}: {params: Promis
           <h1 className="text-3xl font-bold text-[#0d47a1] mb-8">{t('privacyPolicy')}</h1>
 
           <div className="prose prose-gray max-w-none space-y-6 text-sm leading-relaxed text-gray-700">
-            <p><em>Dernière mise à jour : 28 juin 2026</em></p>
+            <p><em>{t('lastUpdated')}</em></p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">1. Responsable du traitement</h2>
-            <p>
-              Le responsable du traitement des données personnelles est StaysInMarrakech, situé Résidence Farah, Camp Mangin, Gueliz, 40000 Marrakech, Maroc.
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('controllerTitle')}</h2>
+            <p>{t('controllerContent')}</p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">2. Données collectées</h2>
-            <p>Nous collectons les données suivantes via nos formulaires :</p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('collectedTitle')}</h2>
+            <p>{t('collectedIntro')}</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li>Nom et prénom</li>
-              <li>Adresse email</li>
-              <li>Numéro de téléphone (optionnel)</li>
-              <li>Message et demandes spéciales</li>
-              <li>Dates de séjour et nombre de voyageurs</li>
+              {t.raw('collectedItems').map((item: string, i: number) => (
+                <li key={i}>{item}</li>
+              ))}
             </ul>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">3. Finalité du traitement</h2>
-            <p>Vos données sont collectées pour :</p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('purposeTitle')}</h2>
+            <p>{t('purposeIntro')}</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li>Traiter vos demandes de réservation</li>
-              <li>Vous recontacter dans le cadre de votre séjour</li>
-              <li>Améliorer nos services</li>
+              {t.raw('purposeItems').map((item: string, i: number) => (
+                <li key={i}>{item}</li>
+              ))}
             </ul>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">4. Base légale</h2>
-            <p>
-              Le traitement de vos données est fondé sur votre consentement (formulaire de contact) et l&apos;exécution d&apos;une mesure précontractuelle (demande de réservation).
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('legalBasisTitle')}</h2>
+            <p>{t('legalBasisContent')}</p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">5. Durée de conservation</h2>
-            <p>
-              Vos données sont conservées pendant une durée maximale de 3 ans à compter du dernier contact. Les données relatives à des transactions sont conservées conformément aux obligations légales comptables.
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('retentionTitle')}</h2>
+            <p>{t('retentionContent')}</p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">6. Vos droits</h2>
-            <p>Conformément au RGPD et à la loi marocaine 09-08, vous disposez des droits suivants :</p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('rightsTitle')}</h2>
+            <p>{t('rightsIntro')}</p>
             <ul className="list-disc pl-6 space-y-1">
-              <li><strong>Droit d&apos;accès</strong> : obtenir une copie de vos données</li>
-              <li><strong>Droit de rectification</strong> : corriger des données inexactes</li>
-              <li><strong>Droit de suppression</strong> : demander la suppression de vos données</li>
-              <li><strong>Droit d&apos;opposition</strong> : vous opposer au traitement</li>
+              {t.raw('rightsItems').map((item: string, i: number) => (
+                <li key={i}>{item}</li>
+              ))}
             </ul>
-            <p>
-              Pour exercer vos droits, contactez-nous à : contact@staysinmarrakech.com
-            </p>
+            <p>{t('rightsContact')}</p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">7. Sécurité</h2>
-            <p>
-              Nous mettons en œuvre les mesures techniques et organisationnelles nécessaires pour protéger vos données contre tout accès non autorisé, perte ou altération.
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('securityTitle')}</h2>
+            <p>{t('securityContent')}</p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">8. Contact</h2>
-            <p>
-              Pour toute question relative à la protection de vos données personnelles, contactez-nous à : contact@staysinmarrakech.com
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('contactTitle')}</h2>
+            <p>{t('contactContent')}</p>
           </div>
         </section>
       </main>

@@ -4,7 +4,9 @@ import {getTranslations, getMessages} from 'next-intl/server';
 import {SettingsProvider} from '@/components/SettingsContext';
 import {ServicesProvider} from '@/components/ServicesContext';
 import {CurrencyProvider} from '@/components/CurrencyContext';
+import {ComparisonProvider} from '@/components/ComparisonContext';
 import FloatingContact from '@/components/FloatingContact';
+import WhatsAppButton from '@/components/WhatsAppButton';
 import BackToTop from '@/components/BackToTop';
 import ErrorBoundary from '@/components/ErrorBoundary';
 
@@ -90,11 +92,14 @@ export default async function LocaleLayout({
       <SettingsProvider>
         <ServicesProvider>
           <CurrencyProvider>
-            <div id="main-content" className="flex-1 flex flex-col">
-              <ErrorBoundary>{children}</ErrorBoundary>
-            </div>
-            <FloatingContact />
-            <BackToTop />
+            <ComparisonProvider>
+              <div id="main-content" className="flex-1 flex flex-col">
+                <ErrorBoundary>{children}</ErrorBoundary>
+              </div>
+              <FloatingContact />
+              <WhatsAppButton />
+              <BackToTop />
+            </ComparisonProvider>
           </CurrencyProvider>
         </ServicesProvider>
       </SettingsProvider>

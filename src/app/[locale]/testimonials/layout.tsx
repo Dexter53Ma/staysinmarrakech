@@ -1,14 +1,36 @@
-import type { Metadata } from "next";
+import type {Metadata} from 'next';
+import {getTranslations} from 'next-intl/server';
 
-export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }): Promise<Metadata> {
-  const { locale } = await params;
-  const title = locale === "en" ? "Client testimonials" : "Témoignages des clients";
-  const description = locale === "en"
-    ? "Read what our clients say about their luxury villa experience in Marrakech with StaysInMarrakech."
-    : "Découvrez ce que disent nos clients de leur expérience villa de luxe à Marrakech avec StaysInMarrakech.";
-  return { title, description };
+export async function generateMetadata({params}: {params: Promise<{locale: string}>}): Promise<Metadata> {
+  const {locale} = await params;
+  const t = await getTranslations({locale, namespace: 'seo'});
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://staysinmarrakech.netlify.app';
+  return {
+    title: t('testimonialsTitle'),
+    description: t('homepageDesc'),
+    alternates: {
+      canonical: `${siteUrl}/${locale}/testimonials`,
+      languages: {
+        'fr': `${siteUrl}/fr/testimonials`,
+        'en': `${siteUrl}/en/testimonials`,
+      },
+    },
+    openGraph: {
+      title: t('testimonialsTitle'),
+      description: t('homepageDesc'),
+      url: `${siteUrl}/${locale}/testimonials`,
+      siteName: 'StaysInMarrakech',
+      locale: locale === 'fr' ? 'fr_MA' : 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('testimonialsTitle'),
+      description: t('homepageDesc'),
+    },
+  };
 }
 
-export default function TestimonialsLayout({ children }: { children: React.ReactNode }) {
-  return <>{children}</>;
+export default function TestimonialsLayout({children}: {children: React.ReactNode}) {
+  return children;
 }

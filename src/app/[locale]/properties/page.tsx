@@ -10,7 +10,31 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
   const description = locale === "en"
     ? "Discover our selection of luxury villas and properties in Marrakech for rent and sale. Filter by price, bedrooms, neighborhood and more. Premium concierge service."
     : "Découvrez nos villas et propriétés de luxe à Marrakech. Filtrez par prix, nombre de chambres, quartier et plus. Service de conciergerie premium.";
-  return { title, description };
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://staysinmarrakech.netlify.app';
+  return {
+    title,
+    description,
+    alternates: {
+      canonical: `${siteUrl}/${locale}/properties`,
+      languages: {
+        'fr': `${siteUrl}/fr/properties`,
+        'en': `${siteUrl}/en/properties`,
+      },
+    },
+    openGraph: {
+      title,
+      description,
+      url: `${siteUrl}/${locale}/properties`,
+      siteName: 'StaysInMarrakech',
+      locale: locale === 'fr' ? 'fr_MA' : 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title,
+      description,
+    },
+  };
 }
 
 const ITEMS_PER_PAGE = 12;

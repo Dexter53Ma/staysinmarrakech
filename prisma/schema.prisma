@@ -10,16 +10,16 @@ datasource db {
 // ─── Auth ───────────────────────────────────────────────
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  passwordHash  String    @map("password_hash")
-  name          String
-  role          UserRole  @default(ADMIN)
-  avatarUrl     String?   @map("avatar_url")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  id           String   @id @default(cuid())
+  email        String   @unique
+  passwordHash String   @map("password_hash")
+  name         String
+  role         UserRole @default(ADMIN)
+  avatarUrl    String?  @map("avatar_url")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
-  auditLogs     AuditLog[]
+  auditLogs AuditLog[]
 
   @@map("users")
 }
@@ -32,56 +32,58 @@ enum UserRole {
 // ─── Properties ─────────────────────────────────────────
 
 model Property {
-  id            String          @id @default(cuid())
-  title         String
-  slug          String          @unique
-  description   String          @db.Text
-  type          PropertyType
-  status        PropertyStatus  @default(AVAILABLE)
+  id          String         @id @default(cuid())
+  title       String
+  slug        String         @unique
+  description String         @db.Text
+  type        PropertyType
+  status      PropertyStatus @default(AVAILABLE)
 
-  price         Float
-  currency      String          @default("EUR")
-  pricePeriod   String?         @map("price_period") // nightly, weekly, monthly, yearly, sale
+  price       Float
+  currency    String  @default("EUR")
+  pricePeriod String? @map("price_period") // nightly, weekly, monthly, yearly, sale
 
-  address       String
-  city          String          @default("Marrakech")
-  quarter       String?
-  latitude      Float?
-  longitude     Float?
+  address   String
+  city      String  @default("Marrakech")
+  quarter   String?
+  latitude  Float?
+  longitude Float?
 
-  bedrooms      Int             @default(0)
-  bathrooms     Int             @default(0)
-  garages       Int             @default(0)
-  maxGuests     Int?            @map("max_guests")
+  bedrooms  Int  @default(0)
+  bathrooms Int  @default(0)
+  garages   Int  @default(0)
+  maxGuests Int? @map("max_guests")
 
-  plotArea      Float?          @map("plot_area") // m²
-  builtArea     Float?          @map("built_area") // m²
-  yearBuilt     Int?            @map("year_built")
+  plotArea  Float? @map("plot_area") // m²
+  builtArea Float? @map("built_area") // m²
+  yearBuilt Int?   @map("year_built")
 
-  features      Json            @default("[]") // ["pool","garden","wifi","ac","gym"...]
-  cleaningFee   Float?          @map("cleaning_fee")
-  serviceFee    Float?          @map("service_fee")
+  features    Json   @default("[]") // ["pool","garden","wifi","ac","gym"...]
+  cleaningFee Float? @map("cleaning_fee")
+  serviceFee  Float? @map("service_fee")
 
-  minStay       Int?            @map("min_stay") // nights
-  maxStay       Int?            @map("max_stay") // nights
-  checkInTime   String?         @map("check_in_time") // "15:00"
-  checkOutTime  String?         @map("check_out_time") // "11:00"
+  minStay      Int?    @map("min_stay") // nights
+  maxStay      Int?    @map("max_stay") // nights
+  checkInTime  String? @map("check_in_time") // "15:00"
+  checkOutTime String? @map("check_out_time") // "11:00"
 
-  isFeatured    Boolean         @default(false) @map("is_featured")
+  isFeatured Boolean @default(false) @map("is_featured")
 
-  titleEn       String?         @map("title_en")
-  descriptionEn String?         @db.Text @map("description_en")
-  quarterEn     String?         @map("quarter_en")
-  addressEn     String?         @map("address_en")
+  titleEn       String? @map("title_en")
+  descriptionEn String? @map("description_en") @db.Text
+  quarterEn     String? @map("quarter_en")
+  addressEn     String? @map("address_en")
 
-  createdAt     DateTime        @default(now()) @map("created_at")
-  updatedAt     DateTime        @updatedAt @map("updated_at")
+  createdAt DateTime @default(now()) @map("created_at")
+  updatedAt DateTime @updatedAt @map("updated_at")
 
-  images        PropertyImage[]
-  bookings      Booking[]
-  favorites     Favorite[]
-  views         PropertyView[]
-  contactInquiries ContactInquiry[]
+  images                    PropertyImage[]
+  bookings                  Booking[]
+  favorites                 Favorite[]
+  views                     PropertyView[]
+  contactInquiries          ContactInquiry[]
+  availabilityNotifications AvailabilityNotification[]
+  priceOverrides            PriceOverride[]
 
   @@map("properties")
 }
@@ -104,27 +106,27 @@ enum PropertyStatus {
 }
 
 model PropertyImage {
-  id          String   @id @default(cuid())
-  propertyId  String   @map("property_id")
-  url         String
-  alt         String?
-  isPrimary   Boolean  @default(false) @map("is_primary")
-  sortOrder   Int      @default(0) @map("sort_order")
-  createdAt   DateTime @default(now()) @map("created_at")
+  id         String   @id @default(cuid())
+  propertyId String   @map("property_id")
+  url        String
+  alt        String?
+  isPrimary  Boolean  @default(false) @map("is_primary")
+  sortOrder  Int      @default(0) @map("sort_order")
+  createdAt  DateTime @default(now()) @map("created_at")
 
-  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
   @@map("property_images")
 }
 
 model PropertyView {
-  id          String   @id @default(cuid())
-  propertyId  String   @map("property_id")
-  viewerIp    String?  @map("viewer_ip")
-  userAgent   String?  @map("user_agent")
-  createdAt   DateTime @default(now()) @map("created_at")
+  id         String   @id @default(cuid())
+  propertyId String   @map("property_id")
+  viewerIp   String?  @map("viewer_ip")
+  userAgent  String?  @map("user_agent")
+  createdAt  DateTime @default(now()) @map("created_at")
 
-  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
   @@map("property_views")
 }
@@ -132,22 +134,28 @@ model PropertyView {
 // ─── Bookings ───────────────────────────────────────────
 
 model Booking {
-  id            String        @id @default(cuid())
-  propertyId    String        @map("property_id")
-  guestName     String        @map("guest_name")
-  guestEmail    String        @map("guest_email")
-  guestPhone    String?       @map("guest_phone")
-  checkIn       DateTime      @map("check_in")
-  checkOut      DateTime      @map("check_out")
-  guestsCount   Int           @map("guests_count")
-  totalPrice    Float?        @map("total_price")
-  status        BookingStatus @default(PENDING)
-  message       String?       @db.Text
-  adminNotes    String?       @map("admin_notes") @db.Text
-  createdAt     DateTime      @default(now()) @map("created_at")
-  updatedAt     DateTime      @updatedAt @map("updated_at")
+  id               String        @id @default(cuid())
+  propertyId       String        @map("property_id")
+  guestName        String        @map("guest_name")
+  guestEmail       String        @map("guest_email")
+  guestPhone       String?       @map("guest_phone")
+  checkIn          DateTime      @map("check_in")
+  checkOut         DateTime      @map("check_out")
+  guestsCount      Int           @map("guests_count")
+  totalPrice       Float?        @map("total_price")
+  status           BookingStatus @default(PENDING)
+  message          String?       @db.Text
+  adminNotes       String?       @map("admin_notes") @db.Text
+  referenceCode    String?       @unique @map("reference_code")
+  confirmationSent Boolean       @default(false) @map("confirmation_sent")
+  preArrivalSent   Boolean       @default(false) @map("pre_arrival_sent")
+  reviewSent       Boolean       @default(false) @map("review_sent")
+  createdAt        DateTime      @default(now()) @map("created_at")
+  updatedAt        DateTime      @updatedAt @map("updated_at")
 
-  property      Property      @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  bookingServices BookingService[]
 
   @@map("bookings")
 }
@@ -159,29 +167,46 @@ enum BookingStatus {
   CANCELLED
 }
 
+model BookingService {
+  id        String  @id @default(cuid())
+  bookingId String
+  serviceId String
+  quantity  Int     @default(1)
+  price     Float
+  notes     String?
+
+  booking Booking @relation(fields: [bookingId], references: [id], onDelete: Cascade)
+  service Service @relation(fields: [serviceId], references: [id])
+
+  @@unique([bookingId, serviceId])
+  @@map("booking_services")
+}
+
 // ─── Services ───────────────────────────────────────────
 
 model Service {
-  id                String    @id @default(cuid())
+  id                String   @id @default(cuid())
   title             String
-  slug              String    @unique
-  description       String    @db.Text
-  titleEn           String?   @map("title_en")
-  descriptionEn     String?   @db.Text @map("description_en")
-  longDescription   String?   @db.Text @map("long_description")
-  longDescriptionEn String?   @db.Text @map("long_description_en")
-  metaDescription   String?   @db.Text @map("meta_description")
-  metaDescriptionEn String?   @db.Text @map("meta_description_en")
-  features          String?   @db.Text // JSON array of feature strings
-  featuresEn        String?   @db.Text @map("features_en")
+  slug              String   @unique
+  description       String   @db.Text
+  titleEn           String?  @map("title_en")
+  descriptionEn     String?  @map("description_en") @db.Text
+  longDescription   String?  @map("long_description") @db.Text
+  longDescriptionEn String?  @map("long_description_en") @db.Text
+  metaDescription   String?  @map("meta_description") @db.Text
+  metaDescriptionEn String?  @map("meta_description_en") @db.Text
+  features          String?  @db.Text // JSON array of feature strings
+  featuresEn        String?  @map("features_en") @db.Text
   image             String?
   category          String?
   price             Float?
-  priceUnit         String?   @map("price_unit") // per person, per session, per hour
-  isActive          Boolean   @default(true) @map("is_active")
-  sortOrder         Int       @default(0) @map("sort_order")
-  createdAt         DateTime  @default(now()) @map("created_at")
-  updatedAt         DateTime  @updatedAt @map("updated_at")
+  priceUnit         String?  @map("price_unit") // per person, per session, per hour
+  isActive          Boolean  @default(true) @map("is_active")
+  sortOrder         Int      @default(0) @map("sort_order")
+  createdAt         DateTime @default(now()) @map("created_at")
+  updatedAt         DateTime @updatedAt @map("updated_at")
+
+  bookingServices BookingService[]
 
   @@map("services")
 }
@@ -199,7 +224,7 @@ model BlogPost {
   category    String?
   titleEn     String?   @map("title_en")
   excerptEn   String?   @map("excerpt_en")
-  contentEn   String?   @db.Text @map("content_en")
+  contentEn   String?   @map("content_en") @db.Text
   isPublished Boolean   @default(false) @map("is_published")
   publishedAt DateTime? @map("published_at")
   createdAt   DateTime  @default(now()) @map("created_at")
@@ -211,18 +236,18 @@ model BlogPost {
 // ─── Testimonials ───────────────────────────────────────
 
 model Testimonial {
-  id              String   @id @default(cuid())
-  guestName       String   @map("guest_name")
-  guestCountry    String?  @map("guest_country")
-  propertyName    String?  @map("property_name")
-  duration        String?  // "4 jours"
-  year            Int?
-  rating          Int?     // 1-5
-  reviewText      String?  @map("review_text") @db.Text
-  isApproved      Boolean  @default(false) @map("is_approved")
-  propertyNameEn  String?  @map("property_name_en")
-  reviewTextEn    String?  @map("review_text_en") @db.Text
-  createdAt       DateTime @default(now()) @map("created_at")
+  id             String   @id @default(cuid())
+  guestName      String   @map("guest_name")
+  guestCountry   String?  @map("guest_country")
+  propertyName   String?  @map("property_name")
+  duration       String? // "4 jours"
+  year           Int?
+  rating         Int? // 1-5
+  reviewText     String?  @map("review_text") @db.Text
+  isApproved     Boolean  @default(false) @map("is_approved")
+  propertyNameEn String?  @map("property_name_en")
+  reviewTextEn   String?  @map("review_text_en") @db.Text
+  createdAt      DateTime @default(now()) @map("created_at")
 
   @@map("testimonials")
 }
@@ -230,17 +255,17 @@ model Testimonial {
 // ─── Contact ────────────────────────────────────────────
 
 model ContactInquiry {
-  id          String        @id @default(cuid())
-  name        String
-  email       String
-  phone       String?
-  subject     String?
-  message     String        @db.Text
-  propertyId  String?       @map("property_id")
-  status      ContactStatus @default(NEW)
-  createdAt   DateTime      @default(now()) @map("created_at")
+  id         String        @id @default(cuid())
+  name       String
+  email      String
+  phone      String?
+  subject    String?
+  message    String        @db.Text
+  propertyId String?       @map("property_id")
+  status     ContactStatus @default(NEW)
+  createdAt  DateTime      @default(now()) @map("created_at")
 
-  property    Property?     @relation(fields: [propertyId], references: [id], onDelete: SetNull)
+  property Property? @relation(fields: [propertyId], references: [id], onDelete: SetNull)
 
   @@map("contact_inquiries")
 }
@@ -254,13 +279,13 @@ enum ContactStatus {
 // ─── Favorites ──────────────────────────────────────────
 
 model Favorite {
-  id          String   @id @default(cuid())
-  propertyId  String   @map("property_id")
-  sessionId   String?  @map("session_id") // for anonymous users
-  userId      String?  @map("user_id")
-  createdAt   DateTime @default(now()) @map("created_at")
+  id         String   @id @default(cuid())
+  propertyId String   @map("property_id")
+  sessionId  String?  @map("session_id") // for anonymous users
+  userId     String?  @map("user_id")
+  createdAt  DateTime @default(now()) @map("created_at")
 
-  property    Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
 
   @@unique([propertyId, sessionId])
   @@unique([propertyId, userId])
@@ -270,18 +295,18 @@ model Favorite {
 // ─── Locations ──────────────────────────────────────────
 
 model Location {
-  id            String    @id @default(cuid())
+  id            String   @id @default(cuid())
   name          String
-  slug          String    @unique
-  description   String?   @db.Text
-  nameEn        String?   @map("name_en")
-  descriptionEn String?   @db.Text @map("description_en")
+  slug          String   @unique
+  description   String?  @db.Text
+  nameEn        String?  @map("name_en")
+  descriptionEn String?  @map("description_en") @db.Text
   image         String?
   latitude      Float?
   longitude     Float?
-  sortOrder     Int       @default(0) @map("sort_order")
-  createdAt     DateTime  @default(now()) @map("created_at")
-  updatedAt     DateTime  @updatedAt @map("updated_at")
+  sortOrder     Int      @default(0) @map("sort_order")
+  createdAt     DateTime @default(now()) @map("created_at")
+  updatedAt     DateTime @updatedAt @map("updated_at")
 
   @@map("locations")
 }
@@ -289,19 +314,19 @@ model Location {
 // ─── Hero Slides ────────────────────────────────────────
 
 model HeroSlide {
-  id           String    @id @default(cuid())
+  id           String   @id @default(cuid())
   title        String
   subtitle     String?
   image        String
   link         String?
-  buttonText   String?   @map("button_text")
-  titleEn      String?   @map("title_en")
-  subtitleEn   String?   @map("subtitle_en")
-  buttonTextEn String?   @map("button_text_en")
-  sortOrder    Int       @default(0) @map("sort_order")
-  isActive     Boolean   @default(true) @map("is_active")
-  createdAt    DateTime  @default(now()) @map("created_at")
-  updatedAt    DateTime  @updatedAt @map("updated_at")
+  buttonText   String?  @map("button_text")
+  titleEn      String?  @map("title_en")
+  subtitleEn   String?  @map("subtitle_en")
+  buttonTextEn String?  @map("button_text_en")
+  sortOrder    Int      @default(0) @map("sort_order")
+  isActive     Boolean  @default(true) @map("is_active")
+  createdAt    DateTime @default(now()) @map("created_at")
+  updatedAt    DateTime @updatedAt @map("updated_at")
 
   @@map("hero_slides")
 }
@@ -309,15 +334,15 @@ model HeroSlide {
 // ─── Static Pages ───────────────────────────────────────
 
 model StaticPage {
-  id          String    @id @default(cuid())
-  slug        String    @unique
-  title       String
-  content     String    @db.Text
-  metaDesc    String?   @map("meta_desc")
-  titleEn     String?   @map("title_en")
-  contentEn   String?   @db.Text @map("content_en")
-  metaDescEn  String?   @map("meta_desc_en")
-  updatedAt   DateTime  @updatedAt @map("updated_at")
+  id         String   @id @default(cuid())
+  slug       String   @unique
+  title      String
+  content    String   @db.Text
+  metaDesc   String?  @map("meta_desc")
+  titleEn    String?  @map("title_en")
+  contentEn  String?  @map("content_en") @db.Text
+  metaDescEn String?  @map("meta_desc_en")
+  updatedAt  DateTime @updatedAt @map("updated_at")
 
   @@map("static_pages")
 }
@@ -325,13 +350,13 @@ model StaticPage {
 // ─── Notifications ──────────────────────────────────────
 
 model Notification {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   message     String
-  type        String    @default("info") // info, booking, inquiry
-  referenceId String?   @map("reference_id") // ID of related entity
-  isRead      Boolean   @default(false) @map("is_read")
-  createdAt   DateTime  @default(now()) @map("created_at")
+  type        String   @default("info") // info, booking, inquiry
+  referenceId String?  @map("reference_id") // ID of related entity
+  isRead      Boolean  @default(false) @map("is_read")
+  createdAt   DateTime @default(now()) @map("created_at")
 
   @@map("notifications")
 }
@@ -342,7 +367,7 @@ model SiteSetting {
   id        String   @id @default(cuid())
   key       String   @unique
   value     String?  @db.Text
-  valueEn   String?  @db.Text @map("value_en")
+  valueEn   String?  @map("value_en") @db.Text
   updatedAt DateTime @updatedAt @map("updated_at")
 
   @@map("site_settings")
@@ -351,16 +376,16 @@ model SiteSetting {
 // ─── Audit Log ──────────────────────────────────────────
 
 model AuditLog {
-  id          String   @id @default(cuid())
-  userId      String?  @map("user_id")
-  action      String   // CREATE, UPDATE, DELETE
-  entity      String   // Property, Booking, Service, etc.
-  entityId    String?  @map("entity_id")
-  oldValues   Json?    @map("old_values")
-  newValues   Json?    @map("new_values")
-  createdAt   DateTime @default(now()) @map("created_at")
+  id        String   @id @default(cuid())
+  userId    String?  @map("user_id")
+  action    String // CREATE, UPDATE, DELETE
+  entity    String // Property, Booking, Service, etc.
+  entityId  String?  @map("entity_id")
+  oldValues Json?    @map("old_values")
+  newValues Json?    @map("new_values")
+  createdAt DateTime @default(now()) @map("created_at")
 
-  user        User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@map("audit_logs")
 }
@@ -375,4 +400,40 @@ model NewsletterSubscriber {
   createdAt DateTime @default(now()) @map("created_at")
 
   @@map("newsletter_subscribers")
+}
+
+// ─── Availability Notifications ───────────────────────
+
+model AvailabilityNotification {
+  id           String   @id @default(cuid())
+  email        String
+  propertyId   String   @map("property_id")
+  desiredStart DateTime @map("desired_start")
+  desiredEnd   DateTime @map("desired_end")
+  notified     Boolean  @default(false)
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@index([propertyId, notified])
+  @@map("availability_notifications")
+}
+
+// ─── Price Overrides (Seasonal Pricing) ────────────────
+
+model PriceOverride {
+  id         String   @id @default(cuid())
+  propertyId String   @map("property_id")
+  startDate  DateTime @map("start_date")
+  endDate    DateTime @map("end_date")
+  price      Float
+  reason     String?
+  createdAt  DateTime @default(now()) @map("created_at")
+  updatedAt  DateTime @updatedAt @map("updated_at")
+
+  property Property @relation(fields: [propertyId], references: [id], onDelete: Cascade)
+
+  @@unique([propertyId, startDate, endDate])
+  @@index([propertyId, startDate, endDate])
+  @@map("price_overrides")
 }

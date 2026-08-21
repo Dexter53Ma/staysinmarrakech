@@ -23,18 +23,22 @@ interface EmailTemplate {
   updatedAt: string;
 }
 
-const TEMPLATE_KEYS = ["booking_confirmation", "booking_rejection", "contact_reply"] as const;
+const TEMPLATE_KEYS = ["booking_confirmation", "booking_rejection", "contact_reply", "pre_arrival", "post_stay_review"] as const;
 
 const TEMPLATE_LABELS: Record<string, string> = {
   booking_confirmation: "Confirmation de réservation",
   booking_rejection: "Refus de réservation",
   contact_reply: "Réponse au contact",
+  pre_arrival: "Email pré-arrivée (48h avant)",
+  post_stay_review: "Demande d'avis après séjour",
 };
 
 const TEMPLATE_DESCRIPTIONS: Record<string, string> = {
   booking_confirmation: "Envoyé lorsqu'une réservation est acceptée",
   booking_rejection: "Envoyé lorsqu'une réservation est refusée",
   contact_reply: "Réponse automatique aux messages de contact",
+  pre_arrival: "Envoyé 48 heures avant l'arrivée avec les informations pratiques",
+  post_stay_review: "Envoyé 2 jours après le départ pour demander un avis",
 };
 
 const AVAILABLE_VARIABLES = [
@@ -45,6 +49,9 @@ const AVAILABLE_VARIABLES = [
   { name: "total_price", desc: "Prix total" },
   { name: "admin_email", desc: "Email administrateur" },
   { name: "site_url", desc: "URL du site" },
+  { name: "property_address", desc: "Adresse de la propriété" },
+  { name: "reference_code", desc: "Code de référence" },
+  { name: "discount_code", desc: "Code de réduction" },
 ];
 
 function getEmptyTemplates(): EmailTemplate[] {

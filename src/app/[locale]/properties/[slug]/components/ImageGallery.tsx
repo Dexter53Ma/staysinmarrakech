@@ -93,7 +93,7 @@ export default function ImageGallery({ images, selectedIndex, onSelect, title }:
         {selectedIndex > 0 && (
           <button
             onClick={(e) => { e.stopPropagation(); goPrev(); }}
-            className={`absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm hover:bg-white text-gray-800 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${isHovered ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"}`}
+            className={`absolute left-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm hover:bg-white text-gray-800 w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${isHovered ? "opacity-100 translate-x-0" : "opacity-0 -translate-x-2"}`}
           >
             <ChevronLeft className="size-5" />
           </button>
@@ -101,7 +101,7 @@ export default function ImageGallery({ images, selectedIndex, onSelect, title }:
         {selectedIndex < images.length - 1 && (
           <button
             onClick={(e) => { e.stopPropagation(); goNext(); }}
-            className={`absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm hover:bg-white text-gray-800 w-10 h-10 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${isHovered ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2"}`}
+            className={`absolute right-3 top-1/2 -translate-y-1/2 bg-white/90 backdrop-blur-sm hover:bg-white text-gray-800 w-11 h-11 rounded-full flex items-center justify-center shadow-lg transition-all duration-300 ${isHovered ? "opacity-100 translate-x-0" : "opacity-0 translate-x-2"}`}
           >
             <ChevronRight className="size-5" />
           </button>

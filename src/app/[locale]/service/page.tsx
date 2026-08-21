@@ -12,9 +12,30 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ locale: string }> }) {
   const { locale } = await params;
   const t = await getTranslations({ locale, namespace: "services" });
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://staysinmarrakech.netlify.app';
   return {
     title: t("title"),
     description: t("subtitle"),
+    alternates: {
+      canonical: `${siteUrl}/${locale}/service`,
+      languages: {
+        'fr': `${siteUrl}/fr/service`,
+        'en': `${siteUrl}/en/service`,
+      },
+    },
+    openGraph: {
+      title: t("title"),
+      description: t("subtitle"),
+      url: `${siteUrl}/${locale}/service`,
+      siteName: 'StaysInMarrakech',
+      locale: locale === 'fr' ? 'fr_MA' : 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t("title"),
+      description: t("subtitle"),
+    },
   };
 }
 

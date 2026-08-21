@@ -25,6 +25,7 @@ import { TableSkeleton } from "@/components/admin";
 import { Pagination } from "@/components/admin/Pagination";
 import { CheckCircle, XCircle, Eye, RefreshCw, CalendarDays } from "lucide-react";
 import { BulkActions } from "@/components/admin";
+import { Link } from "@/i18n/navigation";
 
 interface Booking {
   id: string;
@@ -187,13 +188,13 @@ export default function AdminBookingsPage() {
 
       {/* Calendar link */}
       <div className="mb-4">
-        <a
+        <Link
           href="/admin/bookings/calendar"
           className="inline-flex items-center gap-2 px-3 py-1.5 rounded-lg text-[12px] font-semibold border border-gray-200/60 bg-white text-gray-600 hover:bg-gray-50 hover:text-gray-800 active:bg-gray-100 active:scale-[0.97] transition-all duration-150"
         >
           <CalendarDays size={14} />
           Calendrier
-        </a>
+        </Link>
       </div>
 
       {/* Filter tabs */}

@@ -301,7 +301,7 @@ export default function PropertyFilters({ filters, onFiltersChange }: PropertyFi
               <h3 className="font-semibold text-gray-900">{t("filters")}</h3>
               <button
                 onClick={() => setMobileOpen(false)}
-                className="p-1 hover:bg-gray-100 rounded"
+                className="w-11 h-11 flex items-center justify-center hover:bg-gray-100 rounded-lg"
               >
                 <X className="size-5" />
               </button>

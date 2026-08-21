@@ -1,10 +1,9 @@
 import type { Metadata } from 'next';
-import Image from "next/image";
-import {Link} from "@/i18n/navigation";
 import { getTranslations } from 'next-intl/server';
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
+import BlogCategoryFilter from "@/components/BlogCategoryFilter";
 
 export const dynamic = "force-dynamic";
 
@@ -14,15 +13,35 @@ export async function generateMetadata({params}: {params: Promise<{locale: strin
   const description = locale === 'en'
     ? "Read our articles about Marrakech: travel tips, luxury villas, local activities and events."
     : "Lisez nos articles sur Marrakech : conseils de voyage, villas de luxe, activités locales et événements.";
+  const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || 'https://staysinmarrakech.netlify.app';
   return {
     title: t('blogTitle'),
     description,
+    alternates: {
+      canonical: `${siteUrl}/${locale}/blog`,
+      languages: {
+        'fr': `${siteUrl}/fr/blog`,
+        'en': `${siteUrl}/en/blog`,
+      },
+    },
+    openGraph: {
+      title: t('blogTitle'),
+      description,
+      url: `${siteUrl}/${locale}/blog`,
+      siteName: 'StaysInMarrakech',
+      locale: locale === 'fr' ? 'fr_MA' : 'en_US',
+      type: 'website',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: t('blogTitle'),
+      description,
+    },
   };
 }
 
 export default async function BlogPage({params}: {params: Promise<{locale: string}>}) {
   const {locale} = await params;
-  const commonT = await getTranslations({locale, namespace: 'common'});
   const posts = await prisma.blogPost.findMany({
     where: { isPublished: true },
     orderBy: { publishedAt: "desc" },
@@ -45,55 +64,7 @@ export default async function BlogPage({params}: {params: Promise<{locale: strin
           <h1 className="text-3xl md:text-4xl font-bold text-[#0d47a1] mb-10 text-center">
             Evasion
           </h1>
-          {posts.length === 0 ? (
-            <p className="text-center text-gray-500 py-12">{commonT("noArticles")}</p>
-          ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {posts.map((post) => (
-                <Link
-                  key={post.slug}
-                  href={`/blog/${post.slug}`}
-                  className="bg-white rounded overflow-hidden shadow-md hover:shadow-lg transition-shadow group"
-                >
-                  <div className="relative w-full h-[200px]">
-                    <Image
-                      src={post.image || "/images/blog/blog1.webp"}
-                      alt={post.title}
-                      fill
-                      className="object-cover group-hover:scale-105 transition-transform duration-300"
-                      sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    />
-                  </div>
-                  <div className="p-[15px]">
-                    <div className="flex items-center gap-3 text-[12px] text-[#7f8c8d] mb-2">
-                      {post.category && (
-                        <span className="bg-[#0d47a1]/10 text-[#0d47a1] px-2 py-0.5 rounded font-medium">
-                          {post.category}
-                        </span>
-                      )}
-                      <span>
-                        {post.publishedAt
-                          ? new Date(post.publishedAt).toLocaleDateString(locale === 'en' ? 'en-US' : 'fr-FR', {
-                              day: "numeric",
-                              month: "long",
-                              year: "numeric",
-                            })
-                          : ""}
-                      </span>
-                      <span>•</span>
-                      <span>{post.author}</span>
-                    </div>
-                    <h2 className="text-[18px] font-bold text-[#0d47a1] mb-2 group-hover:underline">
-                      {post.title}
-                    </h2>
-                    <p className="text-[14px] text-[#34495e] line-clamp-3">
-                      {post.excerpt}
-                    </p>
-                  </div>
-                </Link>
-              ))}
-            </div>
-          )}
+          <BlogCategoryFilter posts={posts} locale={locale} />
         </section>
       </main>
       <Footer />

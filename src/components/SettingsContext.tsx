@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState } from "react";
 import {useLocale} from 'next-intl';
 
 export interface SiteSettings {
@@ -82,29 +82,40 @@ export function SettingsProvider({ children }: { children: React.ReactNode }) {
       .catch(() => setRawSettings({}));
   }, []);
 
-  const getLocalizedValue = (valueFr: string | undefined, valueEn: string | undefined): string | undefined => {
-    if (locale === 'en' && valueEn) return valueEn;
-    return valueFr;
-  };
+  const getLocalizedValue = useCallback(
+    (valueFr: string | undefined, valueEn: string | undefined): string | undefined => {
+      if (locale === 'en' && valueEn) return valueEn;
+      return valueFr;
+    },
+    [locale],
+  );
 
-  const localizedKeys = [
+  const localizedKeys = useMemo(() => [
     'hero_title', 'hero_subtitle', 'site_name', 'site_description', 'address',
     'location_title', 'location_description', 'location_link_text',
     'shortrental_title', 'shortrental_description', 'shortrental_link_text',
     'events_title', 'events_description', 'vacations_title', 'vacations_description',
-  ];
+  ], []);
 
-  const settings: SiteSettings = {};
-  for (const [key, value] of Object.entries(rawSettings)) {
-    if (localizedKeys.includes(key)) {
-      (settings as Record<string, string>)[key] = getLocalizedValue(value, rawSettings[`${key}_en`]) || '';
-    } else {
-      (settings as Record<string, string>)[key] = value;
+  const settings: SiteSettings = useMemo(() => {
+    const result: SiteSettings = {};
+    for (const [key, value] of Object.entries(rawSettings)) {
+      if (localizedKeys.includes(key)) {
+        (result as Record<string, string>)[key] = getLocalizedValue(value, rawSettings[`${key}_en`]) || '';
+      } else {
+        (result as Record<string, string>)[key] = value;
+      }
     }
-  }
+    return result;
+  }, [rawSettings, localizedKeys, getLocalizedValue]);
+
+  const contextValue: SiteSettingsContextValue = useMemo(
+    () => ({ ...settings, getLocalizedValue }),
+    [settings, getLocalizedValue],
+  );
 
   return (
-    <SettingsContext.Provider value={{...settings, getLocalizedValue}}>
+    <SettingsContext.Provider value={contextValue}>
       {children}
     </SettingsContext.Provider>
   );

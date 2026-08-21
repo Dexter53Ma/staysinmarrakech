@@ -2,24 +2,25 @@
 
 import Image from "next/image";
 import {Link} from "@/i18n/navigation";
-import { Eye, BedDouble, Bath, MapPin, ChevronLeft, ChevronRight, Heart, Camera } from "lucide-react";
+import { Eye, BedDouble, Bath, MapPin, ChevronLeft, ChevronRight, Heart, Camera, Check } from "lucide-react";
 import { useTranslations, useLocale } from "next-intl";
 import { PropertyListItem, TYPE_COLORS } from "@/types";
 import { useCurrency } from "@/components/CurrencyContext";
+import { useComparison } from "@/components/ComparisonContext";
 
 const TYPE_KEYS: Record<string, string> = {
-  VILLA: "Villa",
-  APARTMENT: "properties.apartment",
-  HOUSE: "properties.house",
-  LAND: "properties.land",
-  COMMERCIAL: "properties.commercial",
+  VILLA: "villa",
+  APARTMENT: "apartment",
+  HOUSE: "house",
+  LAND: "land",
+  COMMERCIAL: "commercial",
 };
 
 const STATUS_KEYS: Record<string, string> = {
-  AVAILABLE: "properties.available",
-  SOLD: "properties.sold",
-  RENTED: "properties.rented",
-  PENDING: "properties.pending",
+  AVAILABLE: "available",
+  SOLD: "sold",
+  RENTED: "rented",
+  PENDING: "pending",
   MAINTENANCE: "Maintenance",
 };
 
@@ -40,8 +41,10 @@ export default function PropertyGrid({
 }: PropertyGridProps) {
   const { convert, symbol } = useCurrency();
   const t = useTranslations("properties");
+  const tCompare = useTranslations("compare");
   const locale = useLocale();
   const localeStr = locale === "en" ? "en-US" : "fr-FR";
+  const { addToCompare, removeFromCompare, isComparing, isMaxReached, compareList, clearCompare } = useComparison();
   if (properties.length === 0) {
     return (
       <div className="text-center py-20">
@@ -60,23 +63,26 @@ export default function PropertyGrid({
       </p>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-        {properties.map((property) => (
-          <Link
+        {properties.map((property) => {
+          const isSelected = isComparing(property.id);
+          return (
+          <div
             key={property.id}
-            href={`/properties/${property.slug}`}
-            className="group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border border-gray-100 hover:border-gray-200"
+            className={`group bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-500 border ${isSelected ? "border-[#0d47a1] ring-2 ring-[#0d47a1]/20" : "border-gray-100 hover:border-gray-200"}`}
           >
             {/* Image Section */}
             <div className="relative h-60 overflow-hidden">
               {property.images[0] ? (
-                <Image
-                  src={property.images[0].url}
-                  alt={property.images[0].alt || property.title}
-                  fill
-                  unoptimized={property.images[0].url.startsWith("http")}
-                  className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                />
+                <Link href={`/properties/${property.slug}`} className="block w-full h-full">
+                  <Image
+                    src={property.images[0].url}
+                    alt={property.images[0].alt || property.title}
+                    fill
+                    unoptimized={property.images[0].url.startsWith("http")}
+                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                  />
+                </Link>
               ) : (
                 <div className="w-full h-full bg-gray-100 flex items-center justify-center text-gray-400">
                   {t("noImage")}
@@ -100,10 +106,32 @@ export default function PropertyGrid({
                 )}
               </div>
 
+              {/* Compare checkbox */}
+              <button
+                onClick={(e) => {
+                  e.preventDefault();
+                  e.stopPropagation();
+                  if (isSelected) {
+                    removeFromCompare(property.id);
+                  } else {
+                    addToCompare(property.id);
+                  }
+                }}
+                disabled={!isSelected && isMaxReached}
+                className={`absolute top-3 right-14 w-11 h-11 backdrop-blur-sm rounded-full flex items-center justify-center transition-all duration-300 shadow-sm hover:shadow-md ${
+                  isSelected
+                    ? "bg-[#0d47a1] text-white"
+                    : "bg-white/90 text-gray-600 hover:bg-white disabled:opacity-40 disabled:cursor-not-allowed"
+                }`}
+                title={isSelected ? tCompare("removeFromCompare") : tCompare("addToCompare")}
+              >
+                {isSelected ? <Check className="size-4" /> : <span className="text-xs font-bold">↔</span>}
+              </button>
+
               {/* Wishlist button */}
               <button
                 onClick={(e) => { e.preventDefault(); e.stopPropagation(); }}
-                className="absolute top-3 right-3 w-9 h-9 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md group/heart"
+                className="absolute top-3 right-3 w-11 h-11 bg-white/90 backdrop-blur-sm rounded-full flex items-center justify-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md group/heart"
               >
                 <Heart className="size-4 text-gray-600 group-hover/heart:text-red-500 transition-colors" />
               </button>
@@ -124,7 +152,7 @@ export default function PropertyGrid({
             </div>
 
             {/* Content Section */}
-            <div className="p-4">
+            <Link href={`/properties/${property.slug}`} className="block p-4">
               <h3 className="font-bold text-gray-900 group-hover:text-[#0d47a1] transition-colors line-clamp-1 text-base">
                 {property.title}
               </h3>
@@ -158,9 +186,10 @@ export default function PropertyGrid({
                   </span>
                 )}
               </div>
-            </div>
-          </Link>
-        ))}
+            </Link>
+          </div>
+          );
+        })}
       </div>
 
       {totalPages > 1 && (
@@ -168,7 +197,7 @@ export default function PropertyGrid({
           <button
             onClick={() => onPageChange(page - 1)}
             disabled={page === 1}
-            className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="w-11 h-11 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <ChevronLeft className="size-4" />
           </button>
@@ -188,7 +217,7 @@ export default function PropertyGrid({
                 <button
                   key={p}
                   onClick={() => onPageChange(p as number)}
-                  className={`w-9 h-9 rounded-lg text-sm font-medium transition-colors ${
+                  className={`w-11 h-11 rounded-lg text-sm font-medium transition-colors ${
                     page === p
                       ? "bg-[#0d47a1] text-white"
                       : "border border-gray-200 hover:bg-gray-50 text-gray-700"
@@ -201,10 +230,42 @@ export default function PropertyGrid({
           <button
             onClick={() => onPageChange(page + 1)}
             disabled={page === totalPages}
-            className="p-2 rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="w-11 h-11 flex items-center justify-center rounded-lg border border-gray-200 hover:bg-gray-50 disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
           >
             <ChevronRight className="size-4" />
           </button>
+        </div>
+      )}
+      {compareList.length >= 2 && (
+        <div className="fixed bottom-0 left-0 right-0 z-40 bg-[#0a1628]/95 backdrop-blur-md border-t border-white/10 shadow-2xl shadow-black/30">
+          <div className="max-w-[1200px] mx-auto px-4 py-3 flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <div className="flex -space-x-2">
+                {compareList.map((id, i) => (
+                  <div key={id} className="w-8 h-8 rounded-full bg-[#0d47a1] border-2 border-[#0a1628] flex items-center justify-center text-white text-xs font-bold">
+                    {i + 1}
+                  </div>
+                ))}
+              </div>
+              <span className="text-white text-sm font-medium">
+                {tCompare("propertiesSelected", { count: compareList.length })}
+              </span>
+            </div>
+            <div className="flex items-center gap-2">
+              <button
+                onClick={clearCompare}
+                className="text-white/60 hover:text-white text-sm px-3 py-2 rounded-lg hover:bg-white/10 transition-colors"
+              >
+                {tCompare("clearAll")}
+              </button>
+              <Link
+                href="/compare"
+                className="bg-[#ffb000] hover:bg-[#e6a000] text-black text-sm font-bold px-5 py-2.5 rounded-lg transition-colors"
+              >
+                {tCompare("compareBtn")}
+              </Link>
+            </div>
+          </div>
         </div>
       )}
     </div>

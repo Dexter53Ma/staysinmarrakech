@@ -11,7 +11,6 @@ const ALLOWED_TYPES = [
   "image/gif",
   "image/bmp",
   "image/tiff",
-  "image/svg+xml",
   "image/avif",
   "image/heic",
   "image/heif",
@@ -36,9 +35,9 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "Aucun fichier fourni" }, { status: 400 });
     }
 
-    if (!ALLOWED_TYPES.includes(file.type) && !file.type.startsWith("image/")) {
+    if (!ALLOWED_TYPES.includes(file.type)) {
       return NextResponse.json(
-        { error: "Type de fichier non autorisé. Formats acceptés: tous les types d'images, PDF" },
+        { error: "Type de fichier non autorisé. Formats acceptés: images (JPEG, PNG, WebP, GIF, AVIF, HEIC) et PDF" },
         { status: 400 }
       );
     }
@@ -62,7 +61,6 @@ export async function POST(request: NextRequest) {
 
     if (file.type.startsWith("image/")) {
       try {
-        const originalSize = buffer.length;
         const compressed = await sharp(buffer)
           .resize({ width: MAX_WIDTH, height: MAX_HEIGHT, fit: "inside", withoutEnlargement: true })
           .webp({ quality: QUALITY })
@@ -70,7 +68,7 @@ export async function POST(request: NextRequest) {
         buffer = Buffer.from(compressed);
         contentType = "image/webp";
         ext = "webp";
-        console.log(`Compressed: ${file.name} ${(originalSize / 1024).toFixed(0)}KB → ${(buffer.length / 1024).toFixed(0)}KB`);
+
       } catch (sharpError) {
         console.warn(`Could not compress ${file.name}, uploading as original:`, sharpError);
       }

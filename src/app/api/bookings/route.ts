@@ -79,6 +79,46 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    function generateReferenceCode(): string {
+      const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+      let code = "";
+      for (let i = 0; i < 8; i++) {
+        code += chars.charAt(Math.floor(Math.random() * chars.length));
+      }
+      return code;
+    }
+
+    const referenceCode = generateReferenceCode();
+
+    let totalPrice: number | null = null;
+    try {
+      const property = await prisma.property.findUnique({
+        where: { id: propertyId },
+        select: { price: true, cleaningFee: true, serviceFee: true },
+      });
+      if (property) {
+        const overrides = await prisma.priceOverride.findMany({
+          where: {
+            propertyId,
+            startDate: { lt: checkOutDate },
+            endDate: { gt: checkInDate },
+          },
+        });
+        let subtotal = 0;
+        const currentDay = new Date(checkInDate);
+        while (currentDay < checkOutDate) {
+          const dayEnd = new Date(currentDay);
+          dayEnd.setDate(dayEnd.getDate() + 1);
+          const override = overrides.find((o) => currentDay >= o.startDate && currentDay < o.endDate);
+          subtotal += override ? override.price : property.price;
+          currentDay.setDate(currentDay.getDate() + 1);
+        }
+        totalPrice = subtotal + (property.cleaningFee || 0) + (property.serviceFee || 0);
+      }
+    } catch (e) {
+      console.error("[Booking] price calculation failed:", e);
+    }
+
     const booking = await prisma.booking.create({
       data: {
         propertyId,
@@ -89,6 +129,8 @@ export async function POST(request: NextRequest) {
         checkOut: new Date(checkOut),
         guestsCount,
         message: message || null,
+        referenceCode,
+        totalPrice,
       },
       include: { property: { select: { title: true } } },
     });
@@ -102,6 +144,7 @@ export async function POST(request: NextRequest) {
         checkOut: booking.checkOut.toLocaleDateString("fr-FR"),
         guestsCount: booking.guestsCount,
         message: booking.message || undefined,
+        referenceCode: booking.referenceCode || undefined,
       });
     } catch (e) {
       console.error("[Email] booking notification failed:", e);

@@ -5,23 +5,41 @@ import { Calendar as DatePicker } from "@/components/ui/calendar";
 import { useTranslations, useLocale } from "next-intl";
 import { enUS } from "date-fns/locale";
 import { fr } from "date-fns/locale";
-import { CalendarDays, Lock, CheckCircle2 } from "lucide-react";
+import { CalendarDays, Lock, CheckCircle2, Tag } from "lucide-react";
 
 interface BookedRange {
   start: Date;
   end: Date;
 }
 
+interface NightlyPrice {
+  date: string;
+  price: number;
+  basePrice: number;
+  reason: string | null;
+}
+
 interface AvailabilityCalendarProps {
   bookedDates: BookedRange[];
   isDateBooked: (date: Date) => boolean;
+  nightlyPrices?: NightlyPrice[];
+  currency?: string;
 }
 
-export default function AvailabilityCalendar({ bookedDates, isDateBooked }: AvailabilityCalendarProps) {
+export default function AvailabilityCalendar({ bookedDates, isDateBooked, nightlyPrices, currency = "EUR" }: AvailabilityCalendarProps) {
   const [currentMonth, setCurrentMonth] = useState<Date>(new Date());
   const t = useTranslations("properties");
   const locale = useLocale();
   const dateFnsLocale = locale === "en" ? enUS : fr;
+
+  const priceMap = useMemo(() => {
+    if (!nightlyPrices) return {};
+    const map: Record<string, NightlyPrice> = {};
+    for (const np of nightlyPrices) {
+      map[np.date] = np;
+    }
+    return map;
+  }, [nightlyPrices]);
 
   const selectedDates = useMemo(() => {
     return bookedDates.flatMap((b) => {
@@ -44,6 +62,16 @@ export default function AvailabilityCalendar({ bookedDates, isDateBooked }: Avai
     const date = new Date(currentMonth.getFullYear(), currentMonth.getMonth(), d);
     if (date >= today && !isDateBooked(date)) availableCount++;
   }
+
+  const formatPrice = (price: number) => {
+    return new Intl.NumberFormat(locale === "en" ? "en-US" : "fr-FR", {
+      style: "currency",
+      currency,
+      maximumFractionDigits: 0,
+    }).format(price);
+  };
+
+  const hasOverrides = Object.values(priceMap).some((np) => np.reason !== null);
 
   return (
     <div className="relative overflow-hidden rounded-2xl border border-gray-100 bg-white shadow-sm">
@@ -100,6 +128,9 @@ export default function AvailabilityCalendar({ bookedDates, isDateBooked }: Avai
                       const isBooked = isDateBooked(day.date);
                       const isPast = day.date < new Date(new Date().setHours(0, 0, 0, 0));
                       const isToday = day.date.toDateString() === new Date().toDateString();
+                      const dateStr = day.date.toISOString().split("T")[0];
+                      const nightlyPrice = priceMap[dateStr];
+                      const hasOverride = nightlyPrice && nightlyPrice.reason !== null;
 
                       return (
                         <button
@@ -107,23 +138,33 @@ export default function AvailabilityCalendar({ bookedDates, isDateBooked }: Avai
                           disabled={isBooked || isPast}
                           className={`
                             relative w-full h-full rounded-lg text-sm font-medium transition-all duration-300 ease-out
-                            flex items-center justify-center
+                            flex flex-col items-center justify-center gap-0
                             ${isBooked
                               ? "bg-gradient-to-br from-red-50 to-red-100/80 text-red-400 border border-red-200/50 cursor-not-allowed line-through decoration-red-300"
                               : isPast
                                 ? "text-gray-300 cursor-not-allowed"
                                 : isToday
                                   ? "bg-[#0d47a1] text-white shadow-md shadow-[#0d47a1]/30 hover:shadow-lg hover:shadow-[#0d47a1]/40 hover:scale-105"
-                                  : "text-gray-700 hover:bg-gradient-to-br hover:from-[#0d47a1]/10 hover:to-[#0d47a1]/5 hover:text-[#0d47a1] hover:scale-105 cursor-pointer"
+                                  : hasOverride
+                                    ? "text-gray-700 hover:bg-gradient-to-br hover:from-amber-50 hover:to-orange-50 hover:text-amber-800 hover:scale-105 cursor-pointer border border-amber-200/50 bg-amber-50/30"
+                                    : "text-gray-700 hover:bg-gradient-to-br hover:from-[#0d47a1]/10 hover:to-[#0d47a1]/5 hover:text-[#0d47a1] hover:scale-105 cursor-pointer"
                             }
                           `}
                         >
-                          {day.date.getDate()}
+                          <span className="leading-none">{day.date.getDate()}</span>
+                          {nightlyPrice && !isPast && !isBooked && (
+                            <span className={`text-[0.5rem] leading-none mt-0.5 ${hasOverride ? "text-amber-600 font-semibold" : "text-gray-400"}`}>
+                              {formatPrice(nightlyPrice.price)}
+                            </span>
+                          )}
                           {isToday && (
                             <span className="absolute -bottom-0.5 left-1/2 -translate-x-1/2 w-1 h-1 rounded-full bg-white" />
                           )}
                           {isBooked && (
                             <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-red-400" />
+                          )}
+                          {hasOverride && !isBooked && !isPast && (
+                            <span className="absolute top-0.5 right-0.5 w-1.5 h-1.5 rounded-full bg-amber-400" />
                           )}
                         </button>
                       );
@@ -173,6 +214,12 @@ export default function AvailabilityCalendar({ bookedDates, isDateBooked }: Avai
                   <span className="w-3 h-3 rounded-md bg-white border border-gray-200" />
                   <span className="text-xs text-gray-600">{t("available")}</span>
                 </div>
+                {hasOverrides && (
+                  <div className="flex items-center gap-2">
+                    <span className="w-3 h-3 rounded-md bg-amber-50 border border-amber-200/50" />
+                    <span className="text-xs text-gray-600">Prix spécial</span>
+                  </div>
+                )}
               </div>
             </div>
           </div>

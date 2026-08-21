@@ -113,7 +113,7 @@ export default function WishlistPage() {
                     />
                     <button
                       onClick={() => removeFromWishlist(villa.slug)}
-                      className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 flex items-center justify-center text-red-500 hover:bg-white hover:text-red-600 transition-colors shadow"
+                      className="absolute top-3 right-3 w-11 h-11 rounded-full bg-white/90 flex items-center justify-center text-red-500 hover:bg-white hover:text-red-600 transition-colors shadow"
                       aria-label={t("removeFromSelection")}
                     >
                       <Icon icon={faTimes} className="text-sm" />

@@ -62,6 +62,12 @@ function _bookingSchema(locale: string = 'fr') {
     checkOut: z.string().min(1, t(locale, 'dateRequired')),
     guestsCount: z.coerce.number().int().min(1, t(locale, 'minGuests')).max(50),
     message: z.string().max(2000).optional().nullable(),
+    services: z.array(z.object({
+      serviceId: z.string().min(1),
+      quantity: z.coerce.number().int().min(1).max(100),
+      price: z.coerce.number().min(0),
+      notes: z.string().max(500).optional().nullable(),
+    })).optional().nullable(),
   });
 }
 

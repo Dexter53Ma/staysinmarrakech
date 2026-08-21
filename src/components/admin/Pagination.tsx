@@ -23,7 +23,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           size="sm"
           onClick={() => onPageChange(page - 1)}
           disabled={page <= 1}
-          className="h-8 px-3 text-[12px] font-medium rounded-lg border-gray-200/80"
+          className="h-10 px-3 text-[12px] font-medium rounded-lg border-gray-200/80"
         >
           <ChevronLeft size={14} className="mr-1" />
           Précédent
@@ -33,7 +33,7 @@ export function Pagination({ page, totalPages, onPageChange }: PaginationProps) 
           size="sm"
           onClick={() => onPageChange(page + 1)}
           disabled={page >= totalPages}
-          className="h-8 px-3 text-[12px] font-medium rounded-lg border-gray-200/80"
+          className="h-10 px-3 text-[12px] font-medium rounded-lg border-gray-200/80"
         >
           Suivant
           <ChevronRight size={14} className="ml-1" />

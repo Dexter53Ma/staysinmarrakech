@@ -23,6 +23,14 @@ const LOGO_URL = () => `${SITE_URL()}/images/logo.png`;
 // in Resend dashboard → Settings → Domains, then update the FROM address below.
 const FROM_ADDRESS = process.env.RESEND_FROM || "StaysInMarrakech <onboarding@resend.dev>";
 
+export function getFromAddress(): string {
+  return FROM_ADDRESS;
+}
+
+export function getAdminEmail(): string {
+  return ADMIN_EMAIL;
+}
+
 function emailWrapper(content: string): string {
   return `
 <!DOCTYPE html>
@@ -84,6 +92,7 @@ export async function sendBookingNotification(booking: {
   checkOut: string;
   guestsCount: number;
   message?: string;
+  referenceCode?: string;
 }) {
   const content = `
     <h2 style="margin:0 0 4px;font-size:20px;color:#111;">Nouvelle demande de réservation</h2>
@@ -95,6 +104,7 @@ export async function sendBookingNotification(booking: {
       ${infoRow("Arrivée", escapeHtml(booking.checkIn))}
       ${infoRow("Départ", escapeHtml(booking.checkOut))}
       ${infoRow("Voyageurs", String(booking.guestsCount))}
+      ${booking.referenceCode ? infoRow("Référence", escapeHtml(booking.referenceCode)) : ""}
       ${booking.message ? infoRow("Message", escapeHtml(booking.message)) : ""}
     </table>
     <div style="text-align:center;">

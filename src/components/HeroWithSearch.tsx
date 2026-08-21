@@ -185,9 +185,9 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
                     <div className="flex items-center justify-between mb-1">
                       <span className="text-sm text-gray-700 font-medium">{t("guestsLabel")}</span>
                       <div className="flex items-center gap-3">
-                        <button type="button" onClick={() => setGuests(Math.max(1, guests - 1))} className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-500 hover:border-[#0d47a1] hover:text-[#0d47a1] transition-all duration-200 text-base font-bold active:scale-95">−</button>
+                        <button type="button" onClick={() => setGuests(Math.max(1, guests - 1))} className="w-11 h-11 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-500 hover:border-[#0d47a1] hover:text-[#0d47a1] transition-all duration-200 text-base font-bold active:scale-95">−</button>
                         <span className="text-base font-bold text-gray-800 w-6 text-center">{guests}</span>
-                        <button type="button" onClick={() => setGuests(Math.min(20, guests + 1))} className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-500 hover:border-[#0d47a1] hover:text-[#0d47a1] transition-all duration-200 text-base font-bold active:scale-95">+</button>
+                        <button type="button" onClick={() => setGuests(Math.min(20, guests + 1))} className="w-11 h-11 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-500 hover:border-[#0d47a1] hover:text-[#0d47a1] transition-all duration-200 text-base font-bold active:scale-95">+</button>
                       </div>
                     </div>
                     <button type="button" onClick={() => setShowGuestPicker(false)} className="mt-4 w-full bg-[#0d47a1] text-white text-xs font-bold py-2.5 rounded-xl hover:bg-[#0a3a82] transition-all duration-200 active:scale-[0.98]">
@@ -273,9 +273,9 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
                 </div>
               </div>
               <div className="flex items-center gap-2.5">
-                <button type="button" onClick={() => setGuests(Math.max(1, guests - 1))} className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-500 hover:border-[#0d47a1] hover:text-[#0d47a1] transition-all duration-200 text-sm font-bold active:scale-95">−</button>
+                <button type="button" onClick={() => setGuests(Math.max(1, guests - 1))} className="w-11 h-11 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-500 hover:border-[#0d47a1] hover:text-[#0d47a1] transition-all duration-200 text-sm font-bold active:scale-95">−</button>
                 <span className="text-sm font-bold text-gray-800 w-5 text-center">{guests}</span>
-                <button type="button" onClick={() => setGuests(Math.min(20, guests + 1))} className="w-10 h-10 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-500 hover:border-[#0d47a1] hover:text-[#0d47a1] transition-all duration-200 text-sm font-bold active:scale-95">+</button>
+                <button type="button" onClick={() => setGuests(Math.min(20, guests + 1))} className="w-11 h-11 rounded-full border-2 border-gray-200 flex items-center justify-center text-gray-500 hover:border-[#0d47a1] hover:text-[#0d47a1] transition-all duration-200 text-sm font-bold active:scale-95">+</button>
               </div>
             </div>
 
@@ -297,7 +297,7 @@ export default function HeroWithSearch({ heroSlides }: { heroSlides: HeroSlide[]
               <button
                 key={i}
                 onClick={() => setCurrentSlide(i)}
-                className={`h-2 rounded-full transition-all duration-300 ${i === currentSlide ? "bg-[#ffb000] w-8 sm:w-10" : "bg-white/40 hover:bg-white/60 w-2"}`}
+                className={`h-2 rounded-full transition-all duration-300 min-w-[44px] min-h-[44px] flex items-center justify-center ${i === currentSlide ? "bg-[#ffb000] w-8 sm:w-10" : "bg-white/40 hover:bg-white/60 w-2"}`}
                 aria-label={`Slide ${i + 1}`}
               />
             ))}

@@ -21,6 +21,32 @@
     "language": "Language",
     "noArticles": "No articles for now."
   },
+  "analytics": {
+    "title": "Analytics",
+    "description": "Performance overview",
+    "totalProperties": "Total Properties",
+    "totalBookings": "Total Bookings",
+    "totalRevenue": "Total Revenue",
+    "conversionRate": "Conversion Rate",
+    "monthlyBookings": "Monthly Bookings",
+    "last6Months": "Last 6 months",
+    "bookingStatus": "Booking Status",
+    "topProperties": "Top Properties by Views",
+    "period7d": "7 days",
+    "period30d": "30 days",
+    "period90d": "90 days",
+    "periodAll": "All",
+    "pending": "Pending",
+    "confirmed": "Confirmed",
+    "rejected": "Rejected",
+    "cancelled": "Cancelled",
+    "noData": "No data"
+  },
+  "blog": {
+    "allCategories": "All",
+    "relatedArticles": "Related Posts",
+    "noPostsInCategory": "No posts in this category"
+  },
   "navigation": {
     "location": "Rent",
     "vente": "Sale",
@@ -46,7 +72,8 @@
     "privacyPolicy": "Privacy policy",
     "aboutFallback": "StaysInMarrakech specializes in luxury and prestige villa rentals in Marrakech.",
     "locationSaleVillas": "rental & sale villas",
-    "servicesActivities": "services & activities"
+    "servicesActivities": "services & activities",
+    "carte": "Map"
   },
   "homepage": {
     "heroTitle": "Marrakech, Morocco",
@@ -212,6 +239,14 @@
     "dates": "Dates",
     "info": "Info",
     "confirm": "Confirm",
+    "servicesStep": "Services",
+    "servicesTitle": "Additional Services",
+    "servicesDescription": "Add services for a worry-free stay",
+    "skipServices": "Skip",
+    "selectedServices": "Selected Services",
+    "serviceTotal": "Services total",
+    "quantity": "Quantity",
+    "noServices": "No services available at the moment",
     "bedroomsFeature": "Bedrooms",
     "bathroomsFeature": "Bathrooms",
     "garages": "Garages",
@@ -249,7 +284,54 @@
     "resetFilters": "Reset filters",
     "propertyType": "Property type",
     "rentSale": "Rent / Sale",
-    "advancedFilters": "Advanced filters"
+    "advancedFilters": "Advanced filters",
+    "whatsapp": {
+      "inquiry": "Chat on WhatsApp",
+      "message": "Hello, I'm interested in {property}. Price: {price} {currency}/{period}. Can we discuss?"
+    },
+    "cancellation": {
+      "title": "Cancellation Policy",
+      "freeCancellation": "Free cancellation up to 30 days before check-in",
+      "partialRefund": "50% refund between 15 and 30 days before check-in",
+      "noRefund": "No refund less than 15 days before check-in"
+    },
+    "waitlist": {
+      "title": "Notify me when available",
+      "description": "Be the first to know when these dates become available",
+      "emailLabel": "Your email",
+      "submitBtn": "Notify me",
+      "cancel": "Cancel",
+      "successMsg": "You'll be notified when these dates become available"
+    }
+  },
+  "compare": {
+    "title": "Compare Properties",
+    "addToCompare": "Compare",
+    "removeFromCompare": "Remove",
+    "propertiesSelected": "{count} properties selected",
+    "compareBtn": "Compare",
+    "clearAll": "Clear all",
+    "bedrooms": "Bedrooms",
+    "bathrooms": "Bathrooms",
+    "maxGuests": "Max guests",
+    "builtArea": "Built area",
+    "plotArea": "Plot area",
+    "features": "Features",
+    "noProperties": "Add properties to compare",
+    "maxReached": "Maximum 4 properties"
+  },
+  "map": {
+    "title": "Property Map",
+    "loading": "Loading map...",
+    "view": "View",
+    "bedrooms": "bed.",
+    "bathrooms": "bath",
+    "propertiesCount": "properties",
+    "noProperties": "No properties displayed on the map"
+  },
+  "instagram": {
+    "title": "Follow us on Instagram",
+    "follow": "Follow @staysinmarrakech"
   },
   "services": {
     "title": "Our Services & Activities",
@@ -842,6 +924,12 @@
     }
   },
   "locations": {
+    "dynamic": {
+      "villasTitle": "Available properties in",
+      "noVilla": "No property available in this location at the moment.",
+      "seeVilla": "View property",
+      "mapTitle": "Location map"
+    },
     "palmeraie": {
       "title": "Villa rental in the Palmeraie, Marrakech",
       "subtitle": "Discover our luxury villas in Marrakech's most prestigious neighbourhood. The Palmeraie offers a green and peaceful setting, ideal for family holidays or trips with friends.",
@@ -1034,7 +1122,40 @@
   },
   "legal": {
     "mentionsLegales": "Legal notices",
-    "privacyPolicy": "Privacy policy"
+    "privacyPolicy": "Privacy policy",
+    "editorTitle": "1. Publisher",
+    "editorContent": "<strong>StaysInMarrakech</strong><br/>Résidence Farah, Camp Mangin, Gueliz<br/>40000 Marrakech, Morocco<br/>Phone: +212 6 21 18 94 96 / +212 6 21 94 74 93<br/>Email: contact@staysinmarrakech.com",
+    "hostTitle": "2. Hosting",
+    "hostContent": "This website is hosted by Netlify, Inc.<br/>44 Montgomery Street, Suite 300<br/>San Francisco, CA 94104, USA",
+    "ipTitle": "3. Intellectual property",
+    "ipContent": "All content on this website (text, images, videos, logos, trademarks) is the exclusive property of StaysInMarrakech or its partners. Any reproduction, even partial, is prohibited without prior written authorization.",
+    "dataTitle": "4. Personal data",
+    "dataContent": "Information collected through our contact and booking forms is intended for StaysInMarrakech to process your requests. In accordance with the GDPR and Moroccan law 09-08, you have the right to access, rectify and delete your data by contacting contact@staysinmarrakech.com.",
+    "cookiesTitle": "5. Cookies",
+    "cookiesContent": "This website uses technical cookies necessary for its operation. No advertising cookies are used without your prior consent.",
+    "disputesTitle": "6. Disputes",
+    "disputesContent": "These legal notices are governed by Moroccan law. In case of dispute, the courts of Marrakech shall have exclusive jurisdiction.",
+    "lastUpdated": "Last updated: June 28, 2026",
+    "controllerTitle": "1. Data controller",
+    "controllerContent": "The data controller is StaysInMarrakech, located at Résidence Farah, Camp Mangin, Gueliz, 40000 Marrakech, Morocco.",
+    "collectedTitle": "2. Data collected",
+    "collectedIntro": "We collect the following data through our forms:",
+    "collectedItems": ["First and last name", "Email address", "Phone number (optional)", "Message and special requests", "Stay dates and number of travellers"],
+    "purposeTitle": "3. Purpose of processing",
+    "purposeIntro": "Your data is collected to:",
+    "purposeItems": ["Process your booking requests", "Follow up regarding your stay", "Improve our services"],
+    "legalBasisTitle": "4. Legal basis",
+    "legalBasisContent": "Your data processing is based on your consent (contact form) and the performance of a pre-contractual measure (booking request).",
+    "retentionTitle": "5. Data retention",
+    "retentionContent": "Your data is retained for a maximum period of 3 years from the last contact. Transaction-related data is retained in accordance with legal accounting obligations.",
+    "rightsTitle": "6. Your rights",
+    "rightsIntro": "In accordance with the GDPR and Moroccan law 09-08, you have the following rights:",
+    "rightsItems": ["Right of access: obtain a copy of your data", "Right to rectification: correct inaccurate data", "Right to erasure: request deletion of your data", "Right to object: oppose the processing"],
+    "rightsContact": "To exercise your rights, please contact us at: contact@staysinmarrakech.com",
+    "securityTitle": "7. Security",
+    "securityContent": "We implement the necessary technical and organisational measures to protect your data against unauthorised access, loss or alteration.",
+    "contactTitle": "8. Contact",
+    "contactContent": "For any questions regarding the protection of your personal data, please contact us at: contact@staysinmarrakech.com"
   },
   "seo": {
     "homepageTitle": "Luxury villa rental and sale in Marrakech",
@@ -1243,5 +1364,34 @@
     "pax": "guests",
     "viewVilla": "View villa",
     "emptySubtitle": "Find your favourite villas here"
+  },
+  "myBookings": {
+    "title": "My Bookings",
+    "subtitle": "Look up your reservation using your email and reference code",
+    "emailLabel": "Email",
+    "referenceLabel": "Reference code",
+    "lookupBtn": "Look up",
+    "searching": "Searching...",
+    "notFound": "No booking found",
+    "status": "Status",
+    "property": "Property",
+    "dates": "Dates",
+    "guests": "guest(s)",
+    "guest": "Guest",
+    "total": "Total",
+    "statusValues": {
+      "pending": "Pending",
+      "confirmed": "Confirmed",
+      "rejected": "Rejected",
+      "cancelled": "Cancelled"
+    }
+  },
+  "waitlist": {
+    "title": "Notify me when available",
+    "description": "Be the first to know when these dates become available",
+    "emailLabel": "Your email",
+    "submitBtn": "Notify me",
+    "cancel": "Cancel",
+    "successMsg": "You'll be notified when these dates become available"
   }
 }

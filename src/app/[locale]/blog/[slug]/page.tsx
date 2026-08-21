@@ -1,8 +1,10 @@
 import { notFound } from "next/navigation";
+import { getTranslations } from "next-intl/server";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import { prisma } from "@/lib/prisma";
 import BlogPostDetail from "@/components/BlogPostDetail";
+import RelatedPosts from "@/components/RelatedPosts";
 
 export const dynamic = "force-dynamic";
 
@@ -28,6 +30,7 @@ export async function generateMetadata({ params }: { params: Promise<{ locale: s
 
 export default async function BlogPostPage({ params }: { params: Promise<{ locale: string; slug: string }> }) {
   const { locale, slug } = await params;
+  const t = await getTranslations({ locale, namespace: "blog" });
 
   const post = await prisma.blogPost.findUnique({
     where: { slug, isPublished: true },
@@ -62,6 +65,26 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
     distinct: ["category"],
     select: { category: true },
   });
+
+  const relatedPosts = post.category
+    ? await prisma.blogPost.findMany({
+        where: {
+          isPublished: true,
+          category: post.category,
+          slug: { not: slug },
+        },
+        orderBy: { publishedAt: "desc" },
+        take: 3,
+        select: {
+          slug: true,
+          title: true,
+          excerpt: true,
+          image: true,
+          category: true,
+          publishedAt: true,
+        },
+      })
+    : [];
 
   const blogSchema = {
     "@context": "https://schema.org",
@@ -110,6 +133,23 @@ export default async function BlogPostPage({ params }: { params: Promise<{ local
               : "",
           }))}
           categories={categories.map((c) => c.category!).filter(Boolean)}
+        />
+        <RelatedPosts
+          label={t("relatedArticles")}
+          posts={relatedPosts.map((p) => ({
+            slug: p.slug,
+            title: p.title,
+            image: p.image || "/images/blog/blog1.webp",
+            excerpt: p.excerpt || "",
+            category: p.category || "",
+            publishedAt: p.publishedAt
+              ? p.publishedAt.toLocaleDateString(locale === "en" ? "en-US" : "fr-FR", {
+                  day: "numeric",
+                  month: "long",
+                  year: "numeric",
+                })
+              : "",
+          }))}
         />
       </main>
       <Footer />

@@ -25,6 +25,7 @@ import {
   ChevronRight,
   ExternalLink,
   Search,
+  BarChart3,
 } from "lucide-react";
 import CommandPalette from "@/components/admin/CommandPalette";
 
@@ -47,6 +48,7 @@ const NAV_SECTIONS: { title?: string; items: NavItem[] }[] = [
       { label: "Propriétés", href: "/admin/properties", icon: Home },
       { label: "Réservations", href: "/admin/bookings", icon: CalendarDays },
       { label: "Calendrier", href: "/admin/bookings/calendar", icon: CalendarDays },
+      { label: "Tarification", href: "/admin/pricing", icon: CalendarDays },
       { label: "Services", href: "/admin/services", icon: Wrench },
       { label: "Blog", href: "/admin/blog", icon: FileText },
     ],
@@ -59,6 +61,12 @@ const NAV_SECTIONS: { title?: string; items: NavItem[] }[] = [
       { label: "Slides Hero", href: "/admin/hero-slides", icon: ImageIcon },
       { label: "Locations", href: "/admin/locations", icon: MapPin },
       { label: "Pages", href: "/admin/pages", icon: File },
+    ],
+  },
+  {
+    title: "Analyse",
+    items: [
+      { label: "Analytiques", href: "/admin/analytics", icon: BarChart3 },
     ],
   },
   {
@@ -77,6 +85,8 @@ const PAGE_TITLES: Record<string, string> = {
   "/admin": "Dashboard",
   "/admin/properties": "Propriétés",
   "/admin/bookings": "Réservations",
+  "/admin/bookings/calendar": "Calendrier",
+  "/admin/pricing": "Tarification",
   "/admin/services": "Services",
   "/admin/blog": "Blog",
   "/admin/testimonials": "Témoignages",
@@ -89,6 +99,7 @@ const PAGE_TITLES: Record<string, string> = {
   "/admin/settings": "Paramètres",
   "/admin/email-templates": "Templates email",
   "/admin/audit-log": "Journal",
+  "/admin/analytics": "Analytiques",
 };
 
 export default function AdminLayout({ children }: { children: React.ReactNode }) {

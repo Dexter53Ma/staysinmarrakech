@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { sendBookingConfirmation } from "@/lib/resend";
+import { sendBookingConfirmationEmail } from "@/lib/email-templates";
 import { requireAdminApi } from "@/lib/auth";
 import { validateCsrfToken } from "@/lib/csrf";
 import { logAudit } from "@/lib/audit";
@@ -93,12 +93,22 @@ export async function PUT(
 
     if (body.status && body.status !== existing.status) {
       try {
-        await sendBookingConfirmation(
-          existing.guestEmail,
-          existing.guestName,
-          booking.property.title,
-          body.status
-        );
+        if (body.status === "CONFIRMED" && !existing.confirmationSent) {
+          await sendBookingConfirmationEmail({
+            guestName: existing.guestName,
+            guestEmail: existing.guestEmail,
+            propertyTitle: booking.property.title,
+            checkIn: existing.checkIn.toLocaleDateString("fr-FR"),
+            checkOut: existing.checkOut.toLocaleDateString("fr-FR"),
+            totalPrice: existing.totalPrice ? `${existing.totalPrice} €` : "Sur demande",
+            referenceCode: existing.referenceCode || existing.id,
+          });
+
+          await prisma.booking.update({
+            where: { id },
+            data: { confirmationSent: true },
+          });
+        }
       } catch (e) {
         console.error("[Email] booking confirmation failed:", e);
       }

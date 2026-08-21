@@ -180,7 +180,7 @@ export default function VillaCarousel() {
                   )}
                   <button
                     onClick={(e) => { e.preventDefault(); toggleWishlist(villa.name); }}
-                    className="absolute top-3 right-3 w-9 h-9 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md z-10"
+                    className="absolute top-3 right-3 w-11 h-11 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center hover:bg-white transition-all duration-300 shadow-sm hover:shadow-md z-10"
                     aria-label={wishlist.includes(villa.name) ? t("removeSelection") : t("addSelection")}
                   >
                     <Icon

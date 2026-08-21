@@ -159,17 +159,17 @@ export default function ContactPage() {
                   <p className="text-sm text-gray-500 mb-3">{t("followUs")}</p>
                   <div className="flex items-center gap-4">
                     {settings.facebook && (
-                      <a href={settings.facebook} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#0d47a1] rounded-full flex items-center justify-center text-white hover:bg-[#0a3a82] transition-colors">
+                      <a href={settings.facebook} target="_blank" rel="noopener noreferrer" className="w-11 h-11 bg-[#0d47a1] rounded-full flex items-center justify-center text-white hover:bg-[#0a3a82] transition-colors">
                         <Icon icon={faFacebookF} />
                       </a>
                     )}
                     {settings.instagram && (
-                      <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#0d47a1] rounded-full flex items-center justify-center text-white hover:bg-[#0a3a82] transition-colors">
+                      <a href={settings.instagram} target="_blank" rel="noopener noreferrer" className="w-11 h-11 bg-[#0d47a1] rounded-full flex items-center justify-center text-white hover:bg-[#0a3a82] transition-colors">
                         <Icon icon={faInstagram} />
                       </a>
                     )}
                     {settings.linkedin && (
-                      <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" className="w-10 h-10 bg-[#0d47a1] rounded-full flex items-center justify-center text-white hover:bg-[#0a3a82] transition-colors">
+                      <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" className="w-11 h-11 bg-[#0d47a1] rounded-full flex items-center justify-center text-white hover:bg-[#0a3a82] transition-colors">
                         <Icon icon={faLinkedinIn} />
                       </a>
                     )}

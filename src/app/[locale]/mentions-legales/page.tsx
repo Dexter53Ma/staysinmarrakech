@@ -26,41 +26,23 @@ export default async function MentionsLegales({params}: {params: Promise<{locale
           <h1 className="text-3xl font-bold text-[#0d47a1] mb-8">{t('mentionsLegales')}</h1>
 
           <div className="prose prose-gray max-w-none space-y-6 text-sm leading-relaxed text-gray-700">
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">1. Éditeur du site</h2>
-            <p>
-              <strong>StaysInMarrakech</strong><br />
-              Résidence Farah, Camp Mangin, Gueliz<br />
-              40000 Marrakech, Maroc<br />
-              Téléphone : +212 6 21 18 94 96 / +212 6 21 94 74 93<br />
-              Email : contact@staysinmarrakech.com
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('editorTitle')}</h2>
+            <p>{t.rich('editorContent', { strong: (chunks) => <strong>{chunks}</strong>, br: () => <br /> })}</p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">2. Hébergeur</h2>
-            <p>
-              Ce site est hébergé par Netlify, Inc.<br />
-              44 Montgomery Street, Suite 300<br />
-              San Francisco, CA 94104, USA
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('hostTitle')}</h2>
+            <p>{t.rich('hostContent', { br: () => <br /> })}</p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">3. Propriété intellectuelle</h2>
-            <p>
-              L&apos;ensemble du contenu de ce site (textes, images, vidéos, logos, marques) est la propriété exclusive de StaysInMarrakech ou de ses partenaires. Toute reproduction, même partielle, est interdite sans autorisation préalable écrite.
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('ipTitle')}</h2>
+            <p>{t('ipContent')}</p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">4. Données personnelles</h2>
-            <p>
-              Les informations recueillies via nos formulaires de contact et de réservation sont destinées à StaysInMarrakech pour le traitement de vos demandes. Conformément au RGPD et à la loi marocaine 09-08, vous disposez d&apos;un droit d&apos;accès, de rectification et de suppression de vos données en contactant contact@staysinmarrakech.com.
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('dataTitle')}</h2>
+            <p>{t('dataContent')}</p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">5. Cookies</h2>
-            <p>
-              Ce site utilise des cookies techniques nécessaires à son fonctionnement. Aucun cookie publicitaire n&apos;est utilisé sans votre consentement préalable.
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('cookiesTitle')}</h2>
+            <p>{t('cookiesContent')}</p>
 
-            <h2 className="text-xl font-semibold text-gray-900 mt-8">6. Litiges</h2>
-            <p>
-              Les présentes mentions légales sont régies par le droit marocain. En cas de litige, les tribunaux de Marrakech seront seuls compétents.
-            </p>
+            <h2 className="text-xl font-semibold text-gray-900 mt-8">{t('disputesTitle')}</h2>
+            <p>{t('disputesContent')}</p>
           </div>
         </section>
       </main>

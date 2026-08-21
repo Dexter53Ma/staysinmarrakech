@@ -24,6 +24,7 @@ import {
   faConciergeBell,
   faStar,
 } from "@/components/icons";
+import { useComparison } from "@/components/ComparisonContext";
 import type { LucideIcon } from "lucide-react";
 
 interface SubMenuItem {
@@ -36,12 +37,14 @@ interface SubMenuItem {
 export default function Header() {
   const t = useTranslations('navigation');
   const tCommon = useTranslations('common');
+  const tCompare = useTranslations('compare');
   const locale = useLocale();
   const router = useRouter();
   const pathname = usePathname();
   const settings = useSettings();
   const { services } = useServices();
   const { currency, setCurrency } = useCurrency();
+  const { compareList } = useComparison();
   const [mobileOpen, setMobileOpen] = useState(false);
   const [servicesOpen, setServicesOpen] = useState(false);
   const [villasOpen, setVillasOpen] = useState(false);
@@ -58,6 +61,7 @@ export default function Header() {
   ];
 
   const extraNavLinks = [
+    { label: t('carte'), href: '/map' },
     { label: t('agence'), href: '/agence' },
     { label: t('temoignages'), href: '/testimonials' },
     { label: t('blog'), href: '/blog' },
@@ -150,6 +154,12 @@ export default function Header() {
               <Icon icon={faHeart} className="text-[9px]" />
               <span>{t('selection')}</span>
             </Link>
+            {compareList.length > 0 && (
+              <Link href="/compare" className="flex items-center gap-1.5 hover:text-[#ffb000] transition-colors">
+                <span className="text-[9px]">↔</span>
+                <span>{tCompare("compareBtn")} ({compareList.length})</span>
+              </Link>
+            )}
             <LanguageSwitcher />
             <div className="relative" data-dropdown>
               <button onClick={() => { setCurrencyOpen(!currencyOpen); }} className="flex items-center gap-1 hover:text-[#ffb000] transition-colors">
@@ -280,7 +290,7 @@ export default function Header() {
             </Link>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
-              className="lg:hidden text-white w-10 h-10 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
+              className="lg:hidden text-white w-11 h-11 flex items-center justify-center rounded-lg hover:bg-white/10 transition-colors"
               aria-label="Toggle menu"
             >
               <Icon icon={mobileOpen ? faTimes : faBars} className="text-xl" />
@@ -364,6 +374,18 @@ export default function Header() {
                 {t('selection')}
               </Link>
 
+              {/* Compare */}
+              {compareList.length > 0 && (
+                <Link
+                  href="/compare"
+                  onClick={() => setMobileOpen(false)}
+                  className="flex items-center gap-2 text-white text-sm font-semibold uppercase py-3 border-b border-white/10 hover:text-[#ffb000] transition-colors min-h-[44px] active:scale-[0.98]"
+                >
+                  <span className="text-[#ffb000] text-xs">↔</span>
+                  {tCompare("compareBtn")} ({compareList.length})
+                </Link>
+              )}
+
               {/* Language Switcher */}
               <div className="py-3 border-b border-white/10">
                 <p className="text-white/40 text-xs uppercase tracking-wider mb-2">{tCommon('language')}</p>
@@ -392,14 +414,14 @@ export default function Header() {
                 {t('bookNow')}
               </Link>
 
-              <div className="border-t border-white/10 mt-3 pt-3 flex flex-col gap-2 text-white/60 text-xs">
+              <div className="border-t border-white/10 mt-3 pt-3 flex flex-col gap-1 text-white/60 text-xs">
                 {settings.phone_1 && (
-                  <a href={`tel:${settings.phone_1}`} className="flex items-center gap-2 hover:text-[#ffb000]">
+                  <a href={`tel:${settings.phone_1}`} className="flex items-center gap-2 hover:text-[#ffb000] min-h-[44px] py-2 px-1">
                     <Icon icon={faPhone} className="text-[9px]" /> {settings.phone_1}
                   </a>
                 )}
                 {settings.email && (
-                  <a href={`mailto:${settings.email}`} className="flex items-center gap-2 hover:text-[#ffb000]">
+                  <a href={`mailto:${settings.email}`} className="flex items-center gap-2 hover:text-[#ffb000] min-h-[44px] py-2 px-1">
                     <Icon icon={faEnvelope} className="text-[9px]" /> {settings.email}
                   </a>
                 )}
@@ -408,17 +430,17 @@ export default function Header() {
               {/* Social Icons */}
               <div className="flex items-center gap-3 mt-2">
                 {settings.facebook && (
-                  <a href={settings.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
+                  <a href={settings.facebook} target="_blank" rel="noopener noreferrer" aria-label="Facebook" className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
                     <Icon icon={faFacebookF} className="text-sm" />
                   </a>
                 )}
                 {settings.instagram && (
-                  <a href={settings.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
+                  <a href={settings.instagram} target="_blank" rel="noopener noreferrer" aria-label="Instagram" className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
                     <Icon icon={faInstagram} className="text-sm" />
                   </a>
                 )}
                 {settings.linkedin && (
-                  <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
+                  <a href={settings.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn" className="w-11 h-11 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-[#ffb000] hover:text-black transition-colors">
                     <Icon icon={faLinkedinIn} className="text-sm" />
                   </a>
                 )}
