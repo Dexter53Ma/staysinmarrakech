@@ -7,11 +7,15 @@ const eslintConfig = defineConfig([
   ...nextTs,
   globalIgnores([
     ".next/**",
+    ".netlify/**",
+    ".playwright-mcp/**",
     "out/**",
     "build/**",
+    "test-results/**",
     "next-env.d.ts",
     "scripts/**",
     "seed-*.js",
+    "page-audit.mjs",
   ]),
   {
     rules: {

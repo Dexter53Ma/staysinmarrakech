@@ -1,9 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { rateLimit } from "@/lib/rate-limit";
 
 export const dynamic = "force-dynamic";
 
 export async function POST(request: NextRequest) {
+  const limit = await rateLimit(request, { limit: 5, windowMs: 60_000 });
+  if (!limit.allowed) return limit.response!;
+
   try {
     const { email, referenceCode } = await request.json();
 

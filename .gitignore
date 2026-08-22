@@ -48,3 +48,11 @@ next-env.d.ts
 
 # Local Netlify folder
 .netlify
+
+# local dev/audit artifacts
+/*.log
+/*.png
+/network_requests.txt
+/test-output.html
+/screenshots/
+tsconfig.tsbuildinfo
